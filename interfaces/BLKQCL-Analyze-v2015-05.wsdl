@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:blk="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Analyze/" targetNamespace="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Analyze/">
+	<wsdl:types>
+		<xs:schema targetNamespace="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Analyze/" elementFormDefault="qualified"/>
+		<xsi:schema xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Analyze/" elementFormDefault="qualified">
+			<xsi:include schemaLocation="BLKQCL-Analyze-v2015-05.xsd"/>
+			<xsi:element name="GetAnalysisEngines">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetAnalysisEnginesResponse" type="blk:EngineDefinitionsType"/>
+			<xsi:element name="Analyze">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="EngineID" type="xsi:ID"/>
+						<xsi:element name="Parameters" type="blk:ParametersType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="AnalyzeResponse" type="blk:ResultsType"/>
+		</xsi:schema>
+	</wsdl:types>
+	<wsdl:message name="GetAnalysisEngines">
+		<wsdl:part name="parameter" element="blk:GetAnalysisEngines"/>
+	</wsdl:message>
+	<wsdl:message name="GetAnalysisEnginesResponse">
+		<wsdl:part name="parameter" element="blk:GetAnalysisEnginesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="Analyze">
+		<wsdl:part name="parameter" element="blk:Analyze"/>
+	</wsdl:message>
+	<wsdl:message name="AnalyzeResponse">
+		<wsdl:part name="parameter" element="blk:AnalyzeResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="IAnalyze">
+		<wsdl:operation name="GetAnalysisEngines">
+			<wsdl:input message="blk:GetAnalysisEngines"/>
+			<wsdl:output message="blk:GetAnalysisEnginesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="Analyze">
+			<wsdl:input message="blk:Analyze"/>
+			<wsdl:output message="blk:AnalyzeResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+</wsdl:definitions>

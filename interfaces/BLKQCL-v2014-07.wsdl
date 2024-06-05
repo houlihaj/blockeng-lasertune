@@ -1,0 +1,3119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:blkqcl="http://www.blockeng.com/Schemas/2014-07/BLKQCL/" targetNamespace="http://www.blockeng.com/Schemas/2014-07/BLKQCL/">
+	<wsdl:types>
+		<xsi:schema xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.blockeng.com/Schemas/2014-07/BLKQCL/" elementFormDefault="qualified">
+			<xsi:include schemaLocation="BLKQCL-ACURegisterNames-v2014-07.xsd"/>
+			<xsi:include schemaLocation="BLKQCL-CCURegisterNames-v2014-07.xsd"/>
+			<xsi:simpleType name="AccelerationType">
+				<xsi:annotation>
+					<xsi:documentation>In meters per second^2</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="ACURegisterValueType">
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="65535"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="AlarmType">
+				<xsi:annotation>
+					<xsi:documentation>Error_PulseParameterFault means duty cycle or some such exceeded . This can happen even with our checking because of externally trigged starts</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Critical_CannotTalkToFPGA"/>
+					<xsi:enumeration value="Critical_LaserOverDriving"/>
+					<xsi:enumeration value="Critical_LaserOverheating"/>
+					<xsi:enumeration value="Critical_MirrorOverCurrent"/>
+					<xsi:enumeration value="Critical_MirrorNoCurrent"/>
+					<xsi:enumeration value="Critical_SystemOverTemperature"/>
+					<xsi:enumeration value="Critical_LowVoltageFromPowerBoard"/>
+					<xsi:enumeration value="Error_LaserTemperatureNotSettled"/>
+					<xsi:enumeration value="Error_SystemTemperatureNotSettled"/>
+					<xsi:enumeration value="Error_DetectorTemperatureNotLocked"/>
+					<xsi:enumeration value="Error_ThermalControlFault"/>
+					<xsi:enumeration value="Error_PulseParameterFault"/>
+					<xsi:enumeration value="Warning_AmbientTemperatureTooHigh"/>
+					<xsi:enumeration value="Warning_VibrationTooHigh"/>
+					<xsi:enumeration value="Warning_DetectorSignalTooCloseToSaturationLevel"/>
+					<xsi:enumeration value="Warning_LaserImpedenceTooHigh"/>
+					<xsi:enumeration value="Warning_MirrorImpedenceTooHigh"/>
+					<xsi:enumeration value="Warning_CalibrationTooHigh"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="BatteryStatusState">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="TooHot"/>
+					<xsi:enumeration value="NoLongerCharging"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="CCUDACValueType">
+				<xsi:annotation>
+					<xsi:documentation>The data format on the CCU device is 32-bit</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="4294967295"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="CCURegisterValueType">
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="4294967295"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="CurrentType">
+				<xsi:annotation>
+					<xsi:documentation>Always measured in amps</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="DutyCycleType">
+				<xsi:annotation>
+					<xsi:documentation>Percentage (0..100)</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="100"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="FolderNameType">
+				<xsi:restriction base="xs:string">
+					<xsi:pattern value="[a-zA-Z0-9\-_ \(\)]*"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="FileNameType">
+				<xsi:restriction base="xs:string">
+					<xsi:pattern value="[a-zA-Z0-9\-_ \(\)]*.?[a-zA-Z0-9\-_]*"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="FrequencyType">
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="HumidityType">
+				<xsi:annotation>
+					<xsi:documentation>Releative Humidity (%) - 0..100</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="100"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="IntensityType">
+				<xsi:annotation>
+					<xsi:documentation>This is a relative, unitless indicator of signal intensity</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="LaserDACValueType">
+				<xsi:annotation>
+					<xsi:documentation>Value from Laser D to A hardware register - 12 bit unsigned integer</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="4095"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="LaserControlModeType">
+				<xsi:annotation>
+					<xsi:documentation>These modes only apply to laser operation with MoveTune(), StepTune(), SweepTune(), and ExternallyControlledTune().
+
+These modes control how the laser pulses when performing a tune operation.
+
+In InternallyControlled mode, the pulsing is completely controlled by parameters to the .*Tune() functions, and other settings in UserSettings. Also, in this mode, a signal is sent to the TRIG_OUT line indicating whether or not the laser is currently on (see TRIG_OUTDelayTime).
+
+In ExternallyTriggered, most aspects of the laser pulse are defined by the *.Tune() functions and User Settings (e.g. PulseDuration - as with InternallyControlled) - except that the start of each pulse is governed by rising edge of the TRIG_IN signal. The trailing edge of the TRIG_IN signal has no meaning. It is a user error, and will generate an Alarm, if the external triggers come more frequently than the PulseDuration, or the limits of duty cycle.
+
+This external trigger must trigger for the start of each laser pulse - not just once to begin the laser firing process.
+
+In ExternallyTriggered mode, TRIG_OUT is not supported.
+
+In ExternallyControlled mode, the TRIG_IN signal fully controls the laser pulse. The rising edge of the signal turns the laser on, and the falling edge of the TRIG_IN signal turns off the laser. All pulse settings in UserSettings are ignored in this mode. However, system duty-cycle limits are still operative, and if violated, will generate an Alarm.
+
+In ExternallyControlled mode, TRIG_OUT is not supported.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="InternallyControlled"/>
+					<xsi:enumeration value="ExternallyControlled"/>
+					<xsi:enumeration value="ExternallyTriggered"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="LaserOnOffTransitionType">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="LaserOff"/>
+					<xsi:enumeration value="LaserOn"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="LaserOperationResultKey">
+				<xsi:restriction base="xs:string"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="MirrorCurrentAtoDValueType">
+				<xsi:annotation>
+					<xsi:documentation>Value from Laser D to A hardware register - 12 bit unsigned integer</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="4095"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="MirrorDACValueType">
+				<xsi:annotation>
+					<xsi:documentation>Value from Mirror D to A hardware register - 16 bit unsigned integer</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="65535"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="PersistenceTransferEncoding">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="text"/>
+					<xsi:enumeration value="binary-base64"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="PowerStateType">
+				<xsi:annotation>
+					<xsi:documentation>
+			* 	:Off
+			* 	:Hibernate
+			*           ACPI - S4
+			*			(not sure we need to support this)
+            * 	:Sleep
+            *            ACPI - S3
+			*			(not sure we need to support this)
+            * 	:ReadyToAcceptCommands
+            *              Services / GUI running, and powered. TEC may or may not be enabled (to save power)
+            *              and even if enabled, may not have reached equilibrium temperature yet.
+            *   :ReadyToFire
+            *             Warmed up, FPGA fully set to fire. This implies also having reached equilibrium temperature.
+            </xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Off"/>
+					<xsi:enumeration value="Hibernate"/>
+					<xsi:enumeration value="Suspend"/>
+					<xsi:enumeration value="ReadyToAcceptCommands"/>
+					<xsi:enumeration value="ReadyToFire"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="RangeFinderDistanceType">
+				<xsi:annotation>
+					<xsi:documentation>In meters</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="SensorDataKind">
+				<xsi:annotation>
+					<xsi:documentation>This is a kind of sensor data to be read. Typically a set of these are provided to ReadSensors()</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Accelerometer"/>
+					<xsi:enumeration value="ActiveLaser"/>
+					<xsi:enumeration value="ActiveLaserWaveNumber"/>
+					<xsi:enumeration value="DetectorTemperature"/>
+					<xsi:enumeration value="ElectricalBoardTemperature"/>
+					<xsi:enumeration value="LaserCurrent"/>
+					<xsi:enumeration value="LaserFiringRecentWaveNumber"/>
+					<xsi:enumeration value="LaserTemperature"/>
+					<xsi:enumeration value="LaserVoltage"/>
+					<xsi:enumeration value="MirrorTemperature"/>
+					<xsi:enumeration value="OpticsTemperature"/>
+					<xsi:enumeration value="RangeFinder"/>
+					<xsi:enumeration value="SystemHumidity"/>
+					<xsi:enumeration value="SystemTemperature"/>
+					<xsi:enumeration value="TECPowerConsumptionStats"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="SolenoidType">
+				<xsi:annotation>
+					<xsi:documentation>TBD</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="PowerCal"/>
+					<xsi:enumeration value="WavelengthCal"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="SolenoidStateType">
+				<xsi:annotation>
+					<xsi:documentation>TBD</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Internal"/>
+					<xsi:enumeration value="External"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="StepTransitionControlModeType">
+				<xsi:annotation>
+					<xsi:documentation>When used with StepTune, internal mode transitions from wavenumber to wave number based on the dwellTime. In WAVELineTriggered mode, StepTune transitions are trigged by a signal on the WAVE line: its rising edge – starts the next laser pulse. Note - tihs feature is only available if FactorySettings contains the StepWaveNumberTransitionsExternallyTriggeredViaWAVESignalSupported feature.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Internal"/>
+					<xsi:enumeration value="WAVELineTriggered"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="SupportedFeatureType">
+				<xsi:annotation>
+					<xsi:documentation>StepWaveNumberTransitionsExternallyTriggeredViaWAVESignalSupported determines if the WAVE (input) hardware is present and feature supported to allow trigging step transitions on this trigger. 'Internal" or "Automatic" stepping is always supported. If used, then ExternallyTriggered Step means each pulse advances to the next wave number step entry.
+
+WaveNumberExternallyControlledViaWAVESignalSupported determines if the WAVE line in is supported, and the feature that the full wave-number control is provided by the analog input (0V corresponds to 600 cm-1, and 2.5 V -> 2238 cm-1, and linear  in between).	
+
+If ACU_FPGA_ProgramCommand is present, then hardware supports the ACU_FPGA_Program feature. If not, installing new ACU_FPGA firmware requires a power cycle.
+
+If CCU_FPGA_ProgramCommand is present, then hardware supports the CCU_FPGA_Program feature. If not, installing new CCU_FPGA firmware requires a power cycle.
+
+If ACU_FPGA_SerialLink921600Baud is present, then ACU hardware supports (has a crystal for) a 921600 baud serial link.
+			</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Accelerometer"/>
+					<xsi:enumeration value="ACU_FPGA_ProgramCommand"/>
+					<xsi:enumeration value="ACU_FPGA_SerialLink921600Baud"/>
+					<xsi:enumeration value="App_Acquire"/>
+					<xsi:enumeration value="App_Analyze"/>
+					<xsi:enumeration value="App_Tune"/>
+					<xsi:enumeration value="CCU_FPGA_ProgramCommand"/>
+					<xsi:enumeration value="FanARemappedToSolenoidPowerCal"/>
+					<xsi:enumeration value="FanBRemappedToSolenoidWavelengthCal"/>
+					<xsi:enumeration value="PowerState_Hibernate"/>
+					<xsi:enumeration value="RangeFinder"/>
+					<xsi:enumeration value="ScanDetector"/>
+					<xsi:enumeration value="StepWaveNumberTransitionsExternallyTriggeredViaWAVESignalSupported"/>
+					<xsi:enumeration value="TouchScreen"/>
+					<xsi:enumeration value="TriggerButton"/>
+					<xsi:enumeration value="WaveNumberExternallyControlledViaWAVESignalSupported"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="SweepRateType">
+				<xsi:annotation>
+					<xsi:documentation>cm^-1/ms  (inverse centimeter per millisecond)</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minInclusive value="0"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="TemperatureType">
+				<xsi:annotation>
+					<xsi:documentation>Temperatures are all in degrees Centigrade</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="TunerNumberType">
+				<xsi:annotation>
+					<xsi:documentation>The system can have from 1 to 4 tuners, and this is used as an enumerated index of which tuner a given command is operating on.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="1"/>
+					<xsi:maxInclusive value="4"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="VelocityType">
+				<xsi:annotation>
+					<xsi:documentation>In meters / second</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="VoltageType">
+				<xsi:annotation>
+					<xsi:documentation>Always measured in volts</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="VolumeIDType">
+				<xsi:annotation>
+					<xsi:documentation>High level category of storage locations (internal, usb drive, or sd-card)</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="InternalStorage"/>
+					<xsi:enumeration value="USBDrive"/>
+					<xsi:enumeration value="SDCard"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="WaveNumberDistanceType">
+				<xsi:annotation>
+					<xsi:documentation>The non-negative distance between two WaveNumbers</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minExclusive value="0"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="WaveNumberType">
+				<xsi:annotation>
+					<xsi:documentation>A WaveNumber is the reciprocal of wave-length. The units are in cm-1 (1/centimeters). WaveNumberType is a floating point number. The minimal legal value is zero (not inclusive) and there is no upper bound.
+However, the BLKQCL device only supports wave numbers between 600.0 and 2438.4. The exact range for your device depends on the particular lasers and configuration. See the GetFactorySettings API for more details.
+This entire API is defined in terms of WaveNumbers, and not wave-lengths.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minExclusive value="0"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:complexType name="AlarmSetType">
+				<xsi:sequence>
+					<xsi:element name="Alarm" type="blkqcl:AlarmType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="BatteryStatusType">
+				<xsi:sequence>
+					<xsi:element name="BatteryCapable" type="xs:boolean"/>
+					<xsi:element name="BatteryPresent" type="xs:boolean" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Only present if capable</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="BatteryPercentCharged" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Only present if present. Return result is a percentage charged</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="xs:float">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="100"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="ExternalPowerPresent" type="xs:boolean">
+						<xsi:annotation>
+							<xsi:documentation>Returns true if 'plugged in'</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="Charging" type="xs:boolean" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Only present if BatteryPresent, and only true if ExternalPowerPresent, but can be false if externalpowerpresent, either because charged, or because of a fault. </xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="StatusStates" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is only present if battery-capable (and maybe only if battery-present).
+
+It is a list of states - which could have been called 'faults' - but I avoided that word because it implies problems, and some states might not be real problems (like not charging due to temperature issues, or time the battery has been on, or other such matters).</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="State" minOccurs="0" maxOccurs="unbounded">
+									<xsi:annotation>
+										<xsi:documentation>***UNSUPPORTED-IN-THIS-VERSION***. TBD - these need to be enumerated and documented!</xsi:documentation>
+									</xsi:annotation>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="DeviceDescriptionType">
+				<xsi:annotation>
+					<xsi:documentation>Generic device information, like serial number and device model.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="DeviceFriendlyName" type="xs:string">
+						<xsi:annotation>
+							<xsi:documentation>This is the name that shows up primarily in SSDP. Reasonable for this to be the same as Model Name</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ModelName" type="xs:string"/>
+					<xsi:element name="ModelNumber" type="xs:string"/>
+					<xsi:element name="SerialNumber" type="xs:string"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="FactorySettingsType">
+				<xsi:sequence>
+					<xsi:element name="SystemTemperatureRange" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the allowed range of operational tempreatures for the entire system (enclosure). See ReadSensors().SystemTemperature.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blkqcl:TemperatureType" use="required"/>
+							<xsi:attribute name="upperBound" type="blkqcl:TemperatureType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="OpticsTemperatureRange" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the allowed range of operational tempreatures for the Optics subsystem (see ReadSensors().OpticsTemperature).</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blkqcl:TemperatureType" use="required"/>
+							<xsi:attribute name="upperBound" type="blkqcl:TemperatureType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserStitchPoints" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>When the LaserrWaveNumberRanges overlap, this defines how to disambiguate.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Explicit" maxOccurs="3">
+									<xsi:complexType>
+										<xsi:sequence>
+											<xsi:element name="LowerTuner" type="blkqcl:TunerNumberType">
+												<xsi:annotation>
+													<xsi:documentation>This is not the lower numbered tuner, but the lower wavenumber tuner</xsi:documentation>
+												</xsi:annotation>
+											</xsi:element>
+											<xsi:element name="UpperTuner" type="blkqcl:TunerNumberType"/>
+											<xsi:element name="WaveNumber" type="blkqcl:WaveNumberType">
+												<xsi:annotation>
+													<xsi:documentation>This is the waveNumber - shared by both tuners (upper and lower) - but selected to be mark the start of the upperTuner Range (so not included in lowerTuner)</xsi:documentation>
+												</xsi:annotation>
+											</xsi:element>
+										</xsi:sequence>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserPulseDurationLimit" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This value bounds the values of the user settable 'PulseDuration'
+</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="xs:duration" use="required"/>
+							<xsi:attribute name="upperBound" type="xs:duration" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserDutyCycleLimit" type="blkqcl:DutyCycleType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the maximum value the user can set for the laser duty cycle. 
+
+This applies to each of the 4 lasers.
+
+DutyCycle = PulseDuration/PulsePeriod (expressed as a percentage).</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="Tuners" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This list contians configuraiton data for exactly the set of installed tuners. This set can be disjoint (such as 1, and 3.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Tuner" minOccurs="0" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:complexContent>
+											<xsi:extension base="blkqcl:TunerFactorySettingsType">
+												<xsi:attribute name="Tuner" type="blkqcl:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:complexContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="PreDarkToLight" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the time from the end of the pre-dark sample to the start of the light sample.  This value must be greater than 0. </xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="LightToPostDark" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the time from the end of the light sample to the start of the post-dark sample.  The only restriction on this register value is that it must be greater than 0.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="BiasDAC" type="blkqcl:CCUDACValueType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Detector DAC Bias {to-be-reviewed - what units?}</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SampleDelayRange" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>See the user settings CCUSettings::SampleDelay</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="xs:duration" use="required"/>
+							<xsi:attribute name="upperBound" type="xs:duration" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="DetectorTemperatureSetPointRange" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Constrian the ranges for the CCU TEC setpoints</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blkqcl:TemperatureType" use="required"/>
+							<xsi:attribute name="upperBound" type="blkqcl:TemperatureType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="DetectorTECPIDParameters" type="blkqcl:PIDType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>PID control paramters for CCU FPGA TEC unit</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="DefaultUserSettings" type="blkqcl:UserSetttingsType" minOccurs="0"/>
+					<xsi:element name="DetectorDarkMode" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Adjustment to Predark/Postdark sample width. This adjustment is in the form of a factor applied to the user setting SampleWidth, and is applied to both the predark and postdark stages of detection.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="xs:string">
+								<xsi:enumeration value="SAMPLE_WIDTH_DIVIDED_BY_4"/>
+								<xsi:enumeration value="SAMPLE_WIDTH_DIVIDED_BY_2"/>
+								<xsi:enumeration value="SAMPLE_WIDTH"/>
+								<xsi:enumeration value="SAMPLE_WIDTH_TIMES_2"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="SupportedFeatures" minOccurs="0">
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="SupportedFeature" type="blkqcl:SupportedFeatureType" minOccurs="0" maxOccurs="unbounded"/>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="IntensityOverTimeMapType">
+				<xsi:annotation>
+					<xsi:documentation>Similar to SpectrumType, but associates intensity and time (time x axis, intensity y axis)</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Measurement" minOccurs="0" maxOccurs="unbounded">
+						<xsi:complexType>
+							<xsi:attribute name="time" type="xs:duration" use="required"/>
+							<xsi:attribute name="intensity" type="blkqcl:IntensityType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="WaveNumberToDriveVoltageCalibrationTableType">
+				<xsi:annotation>
+					<xsi:documentation>The WaveNumberToDriveVoltage calibration table is betwneen wave number and driving voltage. The driving voltage is in ADC counts.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Map" minOccurs="0" maxOccurs="unbounded">
+						<xsi:complexType>
+							<xsi:attribute name="waveNumber" type="blkqcl:WaveNumberType" use="required"/>
+							<xsi:attribute name="drivingVoltage" type="blkqcl:MirrorDACValueType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="LaserTuneStepType">
+				<xsi:choice>
+					<xsi:element name="Move">
+						<xsi:annotation>
+							<xsi:documentation>The Move operation simply turns the laser on, and on a particular wavenumber This is mostly the equivilent of a Step tune with dwellTime 0, start=end, stepSize meaningless, except that the laser is always ON at the end of a move tune.
+
+Note meaing of duringTransition is that if OFF, we force the laser off before the move. If duringTransition is ON, we simply skip that turn-off step. 'duringTransition' ON does not imply turning the laser on before move - just implies NOT turning it off before move.
+</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:attribute name="waveNumber" type="blkqcl:WaveNumberType" use="required"/>
+							<xsi:attribute name="duringTransition" use="required">
+								<xsi:simpleType>
+									<xsi:restriction base="blkqcl:LaserOnOffTransitionType"/>
+								</xsi:simpleType>
+							</xsi:attribute>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="Step">
+						<xsi:annotation>
+							<xsi:documentation>A step tune turns the laser on for each step from start to stop (by step size increments). The laser stops and weights 'dwellTime' at each increment. And at the end of a step tune, the laser is turned off.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:attribute name="startWaveNumber" type="blkqcl:WaveNumberType" use="required"/>
+							<xsi:attribute name="stopWaveNumber" type="blkqcl:WaveNumberType" use="required"/>
+							<xsi:attribute name="dwellTime" type="xs:duration" use="required"/>
+							<xsi:attribute name="stepSize" type="blkqcl:WaveNumberDistanceType" use="required"/>
+							<xsi:attribute name="duringTransition" type="blkqcl:LaserOnOffTransitionType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="Sweep">
+						<xsi:complexType>
+							<xsi:attribute name="startWaveNumber" type="blkqcl:WaveNumberType" use="required"/>
+							<xsi:attribute name="stopWaveNumber" type="blkqcl:WaveNumberType" use="required"/>
+							<xsi:attribute name="sweepSpeed" type="blkqcl:SweepRateType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="Delay">
+						<xsi:complexType>
+							<xsi:attribute name="duration" type="xs:duration" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:choice>
+			</xsi:complexType>
+			<xsi:complexType name="CurrentToWaveNumberCalibrationTableType">
+				<xsi:annotation>
+					<xsi:documentation>The CurrentToWaveNumber calibration table is between current readback and wave number. The ADC values are 12-bit ADC counts</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Map" minOccurs="0" maxOccurs="unbounded">
+						<xsi:complexType>
+							<xsi:attribute name="ADC" type="blkqcl:MirrorCurrentAtoDValueType" use="required"/>
+							<xsi:attribute name="waveNumber" type="blkqcl:WaveNumberType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="LaserOperationResultsType">
+				<xsi:annotation>
+					<xsi:documentation>A given laser move (or step tune, or scan tune) MAY be confiugred to return a sequence (time series) of results.
+
+For a move-tune, this array will contain one result. For a step-tune, the number of results will depend upon the number of tune's implied by the step range, and granularity. And for a scan tune, the grantularity of reporting will be chosen by the BRK-15 automatically.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Measurement" type="blkqcl:LaserMoveResultsItemDetailType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="LaserMoveResultsItemDetailType">
+				<xsi:annotation>
+					<xsi:documentation>Internally measured wave-number result.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="WaveNumber" type="blkqcl:WaveNumberType"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="NetworkAdapaterStatusType">
+				<xsi:annotation>
+					<xsi:documentation>NOTE: Future versions of this API will add restructions on the element types. Also, w</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="InterfaceName" type="xs:string"/>
+					<xsi:element name="InterfaceType" type="xs:string" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>EG. Ethernet, or Local Loopback</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="MACAddress" type="xs:string" minOccurs="0"/>
+					<xsi:element name="IPAddress" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+						<xsi:annotation>
+							<xsi:documentation>IPv4 or IPv6 address</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SubnetMask" type="xs:string" minOccurs="0"/>
+					<xsi:element name="DefaultGateway" type="xs:string" minOccurs="0"/>
+					<xsi:element name="Flags" minOccurs="0">
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Flag" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+									<xsi:annotation>
+										<xsi:documentation>EG UP, BROADCAST, MULTICAST, RUNNING, DOWN, LOOPBACK</xsi:documentation>
+									</xsi:annotation>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="PIDType">
+				<xsi:annotation>
+					<xsi:documentation>See http://en.wikipedia.org/wiki/PID_controller</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="P">
+						<xsi:simpleType>
+							<xsi:restriction base="xsi:unsignedShort">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="65535"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="I">
+						<xsi:simpleType>
+							<xsi:restriction base="xsi:unsignedShort">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="65535"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="D">
+						<xsi:simpleType>
+							<xsi:restriction base="xsi:unsignedShort">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="65535"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="SensorDataType">
+				<xsi:sequence>
+					<xsi:element name="DetectorTemperature" type="blkqcl:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the temperature of the detector instrument.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="OpticsTemperature" type="blkqcl:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the average temperature of the optical part of the system. This value may be directly read by a particular (cold plate) sensor, or may be inferred from mirror or other temperatures.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SystemTemperature" type="blkqcl:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is average air temperature inside the device (box). This may be approximated by using the ElectricalBoardTemperature.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ElectricalBoardTemperature" type="blkqcl:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Temperature sersor to measure the temperature of the digital electronics board.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SystemHumidity" type="blkqcl:HumidityType" minOccurs="0"/>
+					<xsi:element name="LaserTemperature" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Sensor temperature readings from each laser.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Temperature" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blkqcl:TemperatureType">
+												<xsi:attribute name="Tuner" type="blkqcl:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserCurrent" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Current (I) actively being used to drive each laser.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Current" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blkqcl:CurrentType">
+												<xsi:attribute name="Tuner" type="blkqcl:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserVoltage" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Voltage (V) actively being used to drive each laser.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Voltage" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blkqcl:VoltageType">
+												<xsi:attribute name="Tuner" type="blkqcl:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="MirrorTemperature" minOccurs="0">
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Temperature" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blkqcl:TemperatureType">
+												<xsi:attribute name="Tuner" type="blkqcl:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="Accelerometer" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Speed in m/s,and acceleration in m/s^^2, and angular velocity in radians/second.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="AngularVelocityX" type="blkqcl:VelocityType"/>
+								<xsi:element name="AngularVelocityY" type="blkqcl:VelocityType"/>
+								<xsi:element name="AngularVelocityZ" type="blkqcl:VelocityType"/>
+								<xsi:element name="AccelerationX" type="blkqcl:AccelerationType"/>
+								<xsi:element name="AccelerationY" type="blkqcl:AccelerationType"/>
+								<xsi:element name="AccelerationZ" type="blkqcl:AccelerationType"/>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="ActiveLaser" type="blkqcl:TunerNumberType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>At most one laser can be active at a time. This returns an indicator of which if any is active.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ActiveLaserWaveNumber" type="blkqcl:WaveNumberType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Returns the active lasers current objective wave number. This may be omitted if the laser is instantaneously off (pulsing). Use LaserFiringRecentWaveNumber to get the most recently valid value.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="LaserFiringRecentWaveNumber" type="blkqcl:WaveNumberType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>If provided - reports the most recent wave number the laser was firing at (roughly). This represents a snapshot
+								at a point in time, and may be quite far off if the laser is changing frequency quickly. This may be reported when the laser is off, so that
+								the caller (GUI?) can see where the laser was recently (for example as a scan ends). But this will generally be omitted if the
+								LaserFiring is false.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="RangeFinder" type="blkqcl:RangeFinderDistanceType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Distance in meters</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="TECPowerConsumptionStats" type="blkqcl:TECPowerConsumptionStatsType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This returns the actual (current in the time sense) Current (in the electrons sense) being used for each installed tuner to drive the given tuner to the set-point temperature (as well as for the cold-plate TEC). 
+This current usage could be for either cooling or warming.
+
+Please note that GetFactorysettings().TECCurrentLimits can be combined with these above values to produce a percentage of max current.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="SensorRequestReadType">
+				<xsi:choice>
+					<xsi:element name="All">
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="staleDataTolerance">
+								<xsi:annotation>
+									<xsi:documentation>Data reported back is always somewhat outdated, but sometimes the caller has more or less tollerance for out of date values.
+
+Being able to report back more out of date values allows for significantly greater performance (due to caching) - so specify a longer duration (say 2-3 seconds) to get better performance.</xsi:documentation>
+								</xsi:annotation>
+								<xsi:simpleType>
+									<xsi:restriction base="xsi:duration">
+										<xsi:minInclusive value="PT0S"/>
+									</xsi:restriction>
+								</xsi:simpleType>
+							</xsi:attribute>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:sequence>
+						<xsi:element name="Sensor" minOccurs="0" maxOccurs="unbounded">
+							<xsi:complexType>
+								<xsi:simpleContent>
+									<xsi:extension base="blkqcl:SensorDataKind">
+										<xsi:attribute name="staleDataTolerance">
+											<xsi:annotation>
+												<xsi:documentation>Data reported back is always somewhat outdated, but sometimes the caller has more or less tollerance for out of date values.
+
+Being able to report back more out of date values allows for significantly greater performance (due to caching) - so specify a longer duration (say 2-3 seconds) to get better performance.</xsi:documentation>
+											</xsi:annotation>
+											<xsi:simpleType>
+												<xsi:restriction base="xs:duration">
+													<xsi:minInclusive value="PT0S"/>
+												</xsi:restriction>
+											</xsi:simpleType>
+										</xsi:attribute>
+									</xsi:extension>
+								</xsi:simpleContent>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:choice>
+			</xsi:complexType>
+			<xsi:complexType name="SpectrumType">
+				<xsi:annotation>
+					<xsi:documentation>A spectrum is stepwise approximation of the instensity of measurement across a freqency range. In practice, its a set of frequency/intensity measurements {(λ,I). See also IntensityOverTimeMapType.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Measurement" minOccurs="0" maxOccurs="unbounded">
+						<xsi:complexType>
+							<xsi:attribute name="waveNumber" type="blkqcl:WaveNumberType" use="required"/>
+							<xsi:attribute name="intensity" type="blkqcl:IntensityType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="TECPowerConsumptionStatsType">
+				<xsi:annotation>
+					<xsi:documentation>This is used to define upper bounds, and to report back current (right now actual) current (electrons flying) usage.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="TunerTECCurrent" maxOccurs="4">
+						<xsi:annotation>
+							<xsi:documentation>Current being used for each installed tuner to drive the given tuner to the set-point temperature.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:simpleContent>
+								<xsi:extension base="blkqcl:CurrentType">
+									<xsi:attribute name="Tuner" type="blkqcl:TunerNumberType" use="required"/>
+								</xsi:extension>
+							</xsi:simpleContent>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="TunerFactorySettingsType">
+				<xsi:annotation>
+					<xsi:documentation>per tuner factory settings</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="LaserOperationTemperatures" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This bounds the values users may set on the LaserTemperature settings.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blkqcl:TemperatureType" use="required"/>
+							<xsi:attribute name="upperBound" type="blkqcl:TemperatureType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserWaveNumberRanges" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This defines - per tuner - the range of wave numbers each tuner supports.
+
+Note - the wave number ranges across a set of tuners must not have holes (genus 0/contiguous). Tuners may (likely will) have overhapping ranges (disambiguated by Factory settings for stitching). 
+
+And there is no requirement of relative ordering of the wave length ranges corresponding in any way to the ordering of tuner numbers.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blkqcl:WaveNumberType" use="required"/>
+							<xsi:attribute name="upperBound" type="blkqcl:WaveNumberType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserPumpingVoltageBounds" minOccurs="0">
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blkqcl:VoltageType" use="required"/>
+							<xsi:attribute name="upperBound" type="blkqcl:VoltageType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserVariablePumpingVoltage" minOccurs="0">
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="PumpingVoltage" maxOccurs="unbounded">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blkqcl:VoltageType">
+												<xsi:attribute name="waveNumber" type="blkqcl:WaveNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserMaximumPumpingCurrent" type="blkqcl:CurrentType" minOccurs="0"/>
+					<xsi:element name="LaserVoltageSettleTime" type="xsi:duration" minOccurs="0"/>
+					<xsi:element name="MirrorMovementRange" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>These values represent per-laser bounds on the possible values which the laser mirror can be set to. These are in the units of DAC counts, and so to map them to wave numbers, you must use the results of GetCurrentToWaveNumberCalibrartionTable()</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blkqcl:MirrorDACValueType" use="required"/>
+							<xsi:attribute name="upperBound" type="blkqcl:MirrorDACValueType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="MirrorResonantFrequency" type="blkqcl:FrequencyType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is used to compute the Step LUT rate</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="MirrorOperationFrequency" type="blkqcl:FrequencyType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This only applies to scans in interleaved mode.
+
+Measured in Hz</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="TunerTECControlParameters" type="blkqcl:PIDType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>PID control parameters for laser temperature PID controller (PID values - but separately specify setpoint).
+There is one of these set of PID parameters for each installed tuner.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="WaveNumberToDriveVoltageCalibrationTable" type="blkqcl:WaveNumberToDriveVoltageCalibrationTableType" minOccurs="0"/>
+					<xsi:element name="CurrentToWaveNumberCalibrationTable" type="blkqcl:CurrentToWaveNumberCalibrationTableType" minOccurs="0"/>
+					<xsi:element name="ReferenceNormalizationParameters" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Parameters used in conjunction with the normalizaiton sensors to in the field re-calibrate WaveNumberToDriveVoltage and CurrentToWaveNumber calibration tables.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="ScanningSpeed" type="blkqcl:SweepRateType"/>
+								<xsi:element name="StartPosition" type="blkqcl:MirrorCurrentAtoDValueType"/>
+								<xsi:element name="StopPosition" type="blkqcl:MirrorCurrentAtoDValueType"/>
+								<xsi:element name="NumberOfSamples" type="xsi:unsignedInt"/>
+								<xsi:element name="LaserTemperature" type="blkqcl:TemperatureType"/>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="TECCurrentUpperBound" type="blkqcl:CurrentType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This defines the upper bounds on the current allowed for the tuner TEC (regardless of cooling or heating).
+
+Note - these values can be used to compute a percentage-of-max value in ILaserOperation::ReadSensors().TECPowerConsumptionStats</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ReferenceMirrorPosition" type="blkqcl:MirrorCurrentAtoDValueType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Where at factory we measured the impedence of laser. This has todo with drift as the laser ages.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ReferenceLaserVoltage" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Where at factory we measured the impedence of laser. This has todo with drift as the laser ages.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="blkqcl:VoltageType">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="100"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="UserSetttingsType">
+				<xsi:sequence>
+					<xsi:element name="LaserTemperature" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This specifies the laser temprerature fore each laser (1..4). These numbers must be within the range specified by the factory settings LaserOperationTemperatures.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Tuner" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blkqcl:TemperatureType">
+												<xsi:attribute name="Tuner" type="blkqcl:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserPumpingVoltage" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>You may select either to use the builtin variable pumping voltage profiles defined in the per-tuner factory settings, or use a fixed profile</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Tuner" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:choice>
+											<xsi:element name="Variable">
+												<xsi:annotation>
+													<xsi:documentation>This means using the factory set/specified laser profile</xsi:documentation>
+												</xsi:annotation>
+												<xsi:complexType>
+													<xsi:sequence/>
+												</xsi:complexType>
+											</xsi:element>
+											<xsi:element name="Fixed">
+												<xsi:annotation>
+													<xsi:documentation>Use exactlty the given voltages for each of the given tuners.
+
+These values must be in the range specified in the Factory settings per-tuner values LaserPumpingVoltageBounds</xsi:documentation>
+												</xsi:annotation>
+												<xsi:complexType>
+													<xsi:attribute name="Voltage" type="blkqcl:VoltageType" use="required"/>
+												</xsi:complexType>
+											</xsi:element>
+										</xsi:choice>
+										<xsi:attribute name="Tuner" type="blkqcl:TunerNumberType" use="required"/>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="PulseDuration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This applies to all 4 tuners.
+
+This value - though user settable - is constrained by the factory setting LaserPulseDurationLimit</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="xs:duration">
+								<xsi:minInclusive value="PT0S"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="PulsePeriod" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This period applies to all installed  tuners.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="xs:duration">
+								<xsi:minInclusive value="PT0S"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="LaserControlMode" type="blkqcl:LaserControlModeType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>See LaserControlModeType</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="TRIG_OUTDelayTime" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This only applies when UserSettings.LaserControlMode is InternallyControlled, and then it is the delay between when the laser after the signal is sent before the laser pulse is fired.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="IdleAutoPowerStateChanges" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Timer based power level transitions.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Off" type="xsi:duration" minOccurs="0"/>
+								<xsi:element name="Hibernate" type="xsi:duration" minOccurs="0"/>
+								<xsi:element name="Sleep" type="xsi:duration" minOccurs="0"/>
+								<xsi:element name="LaserNotReady" type="xsi:duration" minOccurs="0"/>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="MonitorDACEnable" type="xs:boolean" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Setting this bit to '1' will enable the incoming detector ADC data to feed back out to the monitor DAC.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="GainDAC" type="blkqcl:CCUDACValueType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>A write to this register results in the write data being used to set the 16-bit DAC for detector gain.
+{to-be-reviewed - Should be ADC Value or other units?}
+</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SampleDelay" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the time from the rising sample trigger edge to the start of the light sample.  The only restriction on this register value is that it must be greater or equal to (Predark-sample-width + PREDARK_TO_LIGHT - 3), where Predark-sample-width is a function of the factory settings SampleWidth, and the Factory setting DetectorDarkMode.
+					</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SampleWidth" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the futation of light sample.  This value must be greater than 0.  See SAMPLE_DELAY register description for other restriction.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="DetectorTemperatureSetPoint" type="blkqcl:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Target (objective) temperature for CCU detector operation</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="VersionInfoType">
+				<xsi:annotation>
+					<xsi:documentation>Description of the firmware and OS images, as well as serial numbers</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="ModelName" type="xsi:string"/>
+					<xsi:element name="ModelNumber" type="xsi:string"/>
+					<xsi:element name="FactorySerialNumber" type="xsi:string"/>
+					<xsi:element name="ACU-FPGA-SoftwareVersion" type="xsi:string"/>
+					<xsi:element name="CCU-FPGA-SoftwareVersion" type="xsi:string"/>
+					<xsi:element name="BLK-Controller-SoftwareVersion" type="xsi:string"/>
+					<xsi:element name="OS-SoftwareVersion" type="xsi:string"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:element name="ACUPeek">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="RegisterName" type="blkqcl:ACURegisterNameType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ACUPeekResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Value" type="blkqcl:ACURegisterValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ACUPoke">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="RegisterName" type="blkqcl:ACURegisterNameType"/>
+						<xsi:element name="Value" type="blkqcl:ACURegisterValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ACUPokeResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CaptureDeviceDiagnostics">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CaptureDeviceDiagnosticsResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="BLOB">
+							<xsi:complexType>
+								<xsi:simpleContent>
+									<xsi:extension base="xsi:base64Binary">
+										<xsi:attribute name="internetMediaType" type="xsi:string" use="required">
+											<xsi:annotation>
+												<xsi:documentation>http://www.iana.org/assignments/media-types/media-types.xhtml for a list of possible types, but usually application/zip</xsi:documentation>
+											</xsi:annotation>
+										</xsi:attribute>
+									</xsi:extension>
+								</xsi:simpleContent>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CCUPeek">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="RegisterName" type="blkqcl:CCURegisterNameType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CCUPeekResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Value" type="blkqcl:CCURegisterValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CCUPoke">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="RegisterName" type="blkqcl:CCURegisterNameType"/>
+						<xsi:element name="Value" type="blkqcl:CCURegisterValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CCUPokeResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ClearAlarms">
+				<xsi:complexType>
+					<xsi:choice>
+						<xsi:element name="All">
+							<xsi:complexType>
+								<xsi:sequence/>
+							</xsi:complexType>
+						</xsi:element>
+						<xsi:element name="Alarms" type="blkqcl:AlarmSetType"/>
+					</xsi:choice>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ClearAlarmsResponse">
+				<xsi:complexType>
+					<xsi:complexContent>
+						<xsi:extension base="blkqcl:AlarmSetType">
+							<xsi:sequence>
+								<xsi:element name="RemainingAlarms" type="blkqcl:AlarmSetType"/>
+							</xsi:sequence>
+						</xsi:extension>
+					</xsi:complexContent>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="Delay" type="xs:duration"/>
+			<xsi:element name="DelayResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ExternallyControlledTune">
+				<xsi:annotation>
+					<xsi:documentation>This function turns the laser on (subject to the UserSettings LaserControlMode). 
+
+The selected WaveNumbers are completed controlled externally via the WAVE analog input.
+
+The 'ExternallyControlled' part of the name refers to control of the wave number, not the laser pulse (see LaserControlMode).
+
+The wavenumber is linearly related to the input voltage, with 0 corresponding to 600cm-1, and 2.5V corresponding to 2238cm-1.
+
+This operation is only available the WaveNumberExternallyControlledViaWAVESignalSupported feature is in the FactorySettings.FeaturesSupported set.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ExternallyControlledTuneResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetAlarms">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetAlarmsResponse" type="blkqcl:AlarmSetType"/>
+			<xsi:element name="GetAvailableUpdates">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetAvailableUpdatesResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="AvailableUpdate" minOccurs="0" maxOccurs="unbounded">
+							<xsi:complexType>
+								<xsi:sequence>
+									<xsi:element name="Version" type="xs:string">
+										<xsi:annotation>
+											<xsi:documentation>Only rule about format of version is that string compare less compares to version being earlier</xsi:documentation>
+										</xsi:annotation>
+									</xsi:element>
+									<xsi:element name="Description"/>
+									<xsi:element name="Downloaded" type="xs:boolean"/>
+								</xsi:sequence>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetBatteryStatus">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetBatteryStatusResponse" type="blkqcl:BatteryStatusType"/>
+			<xsi:element name="GetCurrentToWaveNumberCalibrationTable">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:choice>
+							<xsi:element name="RawData">
+								<xsi:complexType>
+									<xsi:sequence/>
+								</xsi:complexType>
+							</xsi:element>
+							<xsi:element name="Normalized">
+								<xsi:complexType>
+									<xsi:sequence/>
+								</xsi:complexType>
+							</xsi:element>
+						</xsi:choice>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetCurrentToWaveNumberCalibrationTableResponse" type="blkqcl:CurrentToWaveNumberCalibrationTableType"/>
+			<xsi:element name="GetCurrentOperationStatus">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetCurrentOperationStatusResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="TextSummary" type="xs:string"/>
+						<xsi:element name="MajorOperation" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>This element - if present - is the current major operation ongoing.</xsi:documentation>
+							</xsi:annotation>
+							<xsi:complexType>
+								<xsi:choice>
+									<xsi:element name="MoveTune">
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="target" type="blkqcl:WaveNumberType" minOccurs="0"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="StepTune">
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="start" type="blkqcl:WaveNumberType" minOccurs="0"/>
+												<xsi:element name="end" type="blkqcl:WaveNumberType" minOccurs="0"/>
+												<xsi:element name="delta" type="blkqcl:WaveNumberDistanceType" minOccurs="0"/>
+												<xsi:element name="stepControlMode" type="blkqcl:StepTransitionControlModeType" minOccurs="0"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="SweepTune">
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="start" type="blkqcl:WaveNumberType" minOccurs="0"/>
+												<xsi:element name="end" type="blkqcl:WaveNumberType" minOccurs="0"/>
+												<xsi:element name="sweepRate" type="blkqcl:SweepRateType" minOccurs="0"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="ExternallyControlledTune">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="Delay">
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="duration" type="xsi:duration" minOccurs="0"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="StepScan">
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="start" type="blkqcl:WaveNumberType" minOccurs="0"/>
+												<xsi:element name="end" type="blkqcl:WaveNumberType" minOccurs="0"/>
+												<xsi:element name="delta" type="blkqcl:WaveNumberDistanceType" minOccurs="0"/>
+												<xsi:element name="scansPerSpectrum" type="xsi:unsignedInt" minOccurs="0"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="SweepScan">
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="start" type="blkqcl:WaveNumberType" minOccurs="0"/>
+												<xsi:element name="end" type="blkqcl:WaveNumberType" minOccurs="0"/>
+												<xsi:element name="sweepRate" type="blkqcl:SweepRateType" minOccurs="0"/>
+												<xsi:element name="scansPerSpectrum" type="xsi:unsignedInt" minOccurs="0"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="InterleavedScan">
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="singleSpectrumMeasurementTime" type="xs:duration" minOccurs="0"/>
+												<xsi:element name="scansPerSpectrum" type="xsi:unsignedInt" minOccurs="0"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="UpdatingFactorySettings">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="UpdatingUserSettings">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="InitializingHardware">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="SoftwareUpdate">
+										<xsi:annotation>
+											<xsi:documentation>In this mode, software is being installed, and most operations are disabled</xsi:documentation>
+										</xsi:annotation>
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="updateStageDetails" minOccurs="0">
+													<xsi:simpleType>
+														<xsi:restriction base="xsi:string">
+															<xsi:enumeration value="DownloadingUpdate"/>
+															<xsi:enumeration value="PerformingUpdate"/>
+															<xsi:enumeration value="UpdatingACUFPGAFirmware"/>
+															<xsi:enumeration value="UpdatingCCUFPGAFirmware"/>
+														</xsi:restriction>
+													</xsi:simpleType>
+												</xsi:element>
+												<xsi:element name="mayAutomaticallyReboot" type="xsi:boolean" minOccurs="0"/>
+												<xsi:element name="mayShutdownAndRequireUserPowerOn" type="xsi:boolean" minOccurs="0"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="ShuttingDown">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+								</xsi:choice>
+							</xsi:complexType>
+						</xsi:element>
+						<xsi:element name="MajorOperationStartedAt" type="xsi:dateTime" minOccurs="0"/>
+						<xsi:element name="LaserFiring" type="xs:boolean">
+							<xsi:annotation>
+								<xsi:documentation>This returns whether or not the major operation in progress calls for having the laser on right now, or not.
+
+Note that this CAN be true even if there is no major operation (say after a MoveTune()).
+
+ReadSensors() - in contrast - returns the instantaneous value of which laser is active (which due to duty cycle might not be any - even while concpetually firing).</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="WAVEControlledTuneFrequencyMode" type="xsi:boolean" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>This is only available if LaserFiring. If true, then the system is operating in a mode where the active laser frequency is driven by the external WAVE input signal. This is enabled by calling ExternallyControlledTune(). This is NOT enabled when just using ExternallyTriggeredTransitions in StepTune.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="WaitingForThermalsInOperationalRange" type="xsi:boolean" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>If true, the current major operation is blocked waiting for the thermal system to be within operational range parameters.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="WaitingLaserPulse_TRIG_IN" type="xsi:boolean" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>If true, the system may be waiting for an external trigger to pulse the laser</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="WaitingLaserWaveNumber_WAVE_IN" type="xsi:boolean" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>If true, the system may be waiting for an external trigger to  advance the laser wave number.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ThermalControlUnitsEnabled" type="xs:boolean">
+							<xsi:annotation>
+								<xsi:documentation>The system automatically disables thermal control depending on power state. See GetPowerState/SetPowerState. This is mostly informational, and not strictly needed for anything.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ActiveConnections">
+							<xsi:annotation>
+								<xsi:documentation>These numbers may not be instantianeous, but averaged over the last  30 seconds</xsi:documentation>
+							</xsi:annotation>
+							<xsi:complexType>
+								<xsi:sequence>
+									<xsi:element name="HTTPConnections" type="xs:unsignedInt"/>
+									<xsi:element name="DistinctSourceAddresses">
+										<xsi:complexType>
+											<xsi:sequence>
+												<xsi:element name="Address" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+											</xsi:sequence>
+										</xsi:complexType>
+									</xsi:element>
+								</xsi:sequence>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetDeviceName">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetDeviceNameResponse" type="xsi:string"/>
+			<xsi:element name="GetDeviceDescription">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetDeviceDescriptionResponse" type="blkqcl:DeviceDescriptionType"/>
+			<xsi:element name="GetFactorySettings">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetFactorySettingsResponse" type="blkqcl:FactorySettingsType">
+				<xsi:annotation>
+					<xsi:documentation>For the factory settings, all elements will be provided in the response</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="GetInstalledTuners">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetInstalledTunersResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Tuner" type="blkqcl:TunerNumberType" minOccurs="0" maxOccurs="4"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetLaserPointerOn">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetLaserPointerOnResponse" type="xs:boolean"/>
+			<xsi:element name="GetNetworkAdaptersStatus">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetNetworkAdaptersStatusResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="NetworkAdapter" type="blkqcl:NetworkAdapaterStatusType" minOccurs="0" maxOccurs="unbounded"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetPowerState">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetPowerStateResponse" type="blkqcl:PowerStateType"/>
+			<xsi:element name="GetSolenoid">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Which" type="blkqcl:SolenoidType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetSolenoidResponse" type="blkqcl:SolenoidStateType"/>
+			<xsi:element name="GetVersionDetails">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetVersionDetailsResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Version" type="blkqcl:VersionInfoType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetUserSettings">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetUserSettingsResponse" type="blkqcl:UserSetttingsType"/>
+			<xsi:element name="GetWaveNumberToDriveVoltageCalibrationTable">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:choice>
+							<xsi:element name="RawData">
+								<xsi:complexType>
+									<xsi:sequence/>
+								</xsi:complexType>
+							</xsi:element>
+							<xsi:element name="Normalized">
+								<xsi:complexType>
+									<xsi:sequence/>
+								</xsi:complexType>
+							</xsi:element>
+						</xsi:choice>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetWaveNumberToDriveVoltageCalibrationTableResponse" type="blkqcl:WaveNumberToDriveVoltageCalibrationTableType"/>
+			<xsi:element name="InstallUpdate">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Version" type="xs:string">
+							<xsi:annotation>
+								<xsi:documentation>From GetAvaiilableUpdate/Version</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DownloadOnly" type="xs:boolean">
+							<xsi:annotation>
+								<xsi:documentation>If true, then the update won't be installed, but just downloaded. Using this allows a UI to better report progress and manage cancelation (up to the point where it begins real instllation)</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="InstallUpdateResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="InterleavedScan">
+				<xsi:annotation>
+					<xsi:documentation>This function scans all supported laser frequencies, emitting laser radiation, and reading back a measured spectrum (from the detector). This function runs for singleSpectrumMeasurementTime and returns data in buckets of width scanResolution wave numbers.
+If scansPerSpectrum > 1, this function captures multiple results with a time gap of delayBetweenCoAdds between then, and averages the results.
+scansPerSpectrum is sometimes called ‘# of co-adds’.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="SingleSpectrumMeasurementTime" type="xsi:duration">
+							<xsi:annotation>
+								<xsi:documentation/>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ScanResolution" type="blkqcl:WaveNumberDistanceType" default="10.0" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Resulution in wave numbers of resulting binned spectrum. Defaults to 10</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ScansPerSpectrum" type="xsi:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present. Sometimes also called # of co-adds</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenCoAdds" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="InterleavedScanResponse" type="blkqcl:SpectrumType"/>
+			<xsi:element name="MoveTune">
+				<xsi:annotation>
+					<xsi:documentation>The Move operation simply turns the laser on, and on a particular wavenumber This is mostly the equivilent of a Step tune with dwellTime 0, start=end, stepSize meaningless, except that the laser is always ON at the end of a move tune.
+
+Note meaing of duringTransition is that if OFF, we force the laser off before the move. If duringTransition is ON, we simply skip that turn-off step. 'duringTransition' ON does not imply turning the laser on before move - just implies NOT turning it off before move.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:attribute name="waveNumber" type="blkqcl:WaveNumberType" use="required"/>
+					<xsi:attribute name="duringTransition" use="optional" default="LaserOn">
+						<xsi:simpleType>
+							<xsi:restriction base="blkqcl:LaserOnOffTransitionType"/>
+						</xsi:simpleType>
+					</xsi:attribute>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="MoveTuneResponse" type="blkqcl:LaserMoveResultsItemDetailType"/>
+			<xsi:element name="PersistenceClear">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Volume" type="blkqcl:VolumeIDType"/>
+						<xsi:element name="Folder" type="blkqcl:FolderNameType"/>
+						<xsi:element name="File" type="blkqcl:FileNameType" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>If file name is omitted, then the entire folder is cleared</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="PersistenceClearResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="PersistenceGet">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Volume" type="blkqcl:VolumeIDType"/>
+						<xsi:element name="Folder" type="blkqcl:FolderNameType"/>
+						<xsi:element name="File" type="blkqcl:FileNameType"/>
+						<xsi:element name="TransferEncoding" type="blkqcl:PersistenceTransferEncoding" default="text" minOccurs="0"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="PersistenceGetResponse" type="xs:string">
+				<xsi:annotation>
+					<xsi:documentation>Note - the result will be a text string if the argument TransferEncoding was text, and will be a base64 encoding of the binary stored data if the transfer encoding was binary-base64</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="PersistencePut">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Volume" type="blkqcl:VolumeIDType"/>
+						<xsi:element name="Folder" type="blkqcl:FolderNameType"/>
+						<xsi:element name="File" type="blkqcl:FileNameType"/>
+						<xsi:element name="TransferEncoding" type="blkqcl:PersistenceTransferEncoding" default="text" minOccurs="0"/>
+						<xsi:element name="Value" type="xs:string">
+							<xsi:annotation>
+								<xsi:documentation>This will be interpretted as either plain text or base64 encoded binary data, depending on teh paramter TransferEncoding</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="PersistencePutResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ResetToFactoryDefaults">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ResetToFactoryDefaultsResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ReadSensors" type="blkqcl:SensorRequestReadType"/>
+			<xsi:element name="ReadSensorsResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Sensors" type="blkqcl:SensorDataType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetUserSettings" type="blkqcl:UserSetttingsType"/>
+			<xsi:element name="SetUserSettingsResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetDeviceDescription" type="blkqcl:DeviceDescriptionType"/>
+			<xsi:element name="SetDeviceDescriptionResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetLaserPointerOn" type="xs:boolean"/>
+			<xsi:element name="SetLaserPointerOnResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetSolenoid">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Which" type="blkqcl:SolenoidType"/>
+						<xsi:element name="State" type="blkqcl:SolenoidStateType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetSolenoidResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetPowerState">
+				<xsi:simpleType>
+					<xsi:restriction base="blkqcl:PowerStateType"/>
+				</xsi:simpleType>
+			</xsi:element>
+			<xsi:element name="SetPowerStateResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetDeviceName" type="xs:string"/>
+			<xsi:element name="SetDeviceNameResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetFactorySettings" type="blkqcl:FactorySettingsType"/>
+			<xsi:element name="SetFactorySettingsResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StepScan">
+				<xsi:annotation>
+					<xsi:documentation>This function scans all from the start to the end, in increments of delta.
+At each step, it measures (without detector) an approximation of the driving laser wave number, and returns those wavenumbers for each step.
+If spectrumResultCount > 1, this function captures multiple results with a time gap of delayBetweenCoAdds between then, and averages the results.
+scansPerSpectrum is sometimes called ‘# of co-adds’.
+Note this delta is both the step size - space between scans, and the resulting bin size of the spectrum results.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Start" type="blkqcl:WaveNumberType"/>
+						<xsi:element name="End" type="blkqcl:WaveNumberType"/>
+						<xsi:element name="Delta" type="blkqcl:WaveNumberDistanceType">
+							<xsi:annotation>
+								<xsi:documentation>Note this delta is both the step size - space between scans, and  the resulting bin size of the spectrum results.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DwellTime" type="xs:duration" minOccurs="1">
+							<xsi:annotation>
+								<xsi:documentation>Time to dwell on each step. This must be greater than zero.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DuringTransition" type="blkqcl:LaserOnOffTransitionType" default="LaserOn" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to LaserOn</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ScansPerSpectrum" type="xsi:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present. This is also called # of co-adds.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenCoAdds" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StepScanResponse" type="blkqcl:SpectrumType"/>
+			<xsi:element name="StopLasers">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="AndAllPendingForUp" type="xs:duration" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>If this parameter is provided, StopLasers will disable all pending laser operations for up to the argument duration timeframe.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StopLasersResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StepTune">
+				<xsi:annotation>
+					<xsi:documentation>A step tune turns the laser on for each step from start to end (by delta increments). 
+In stepControlledMode==Internal (the default), the laser stops and waits 'dwellTime' at each increment. 
+In stepControlledMode==WAVELineTriggered’ mode, the dwellTime is ignored (and must be PT0S if provided), and the laser transitions with the rising edge of the WAVE hardware signal line.
+
+And at the end of a step tune, the laser is turned off.
+
+Note - stepControlMode==WAVELineTriggered mode is only available if FactorySettings.SupportedFeatures contains the StepWaveNumberTransitionsExternallyTriggeredViaWAVESignalSupported feature.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:attribute name="start" type="blkqcl:WaveNumberType" use="required"/>
+					<xsi:attribute name="end" type="blkqcl:WaveNumberType" use="required"/>
+					<xsi:attribute name="delta" type="blkqcl:WaveNumberDistanceType" use="required"/>
+					<xsi:attribute name="stepControlMode" type="blkqcl:StepTransitionControlModeType" default="Internal"/>
+					<xsi:attribute name="dwellTime" type="xsi:duration" use="optional" default="PT0S"/>
+					<xsi:attribute name="duringTransition" type="blkqcl:LaserOnOffTransitionType" use="optional" default="LaserOn"/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StepTuneResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Measurement" type="blkqcl:LaserMoveResultsItemDetailType" minOccurs="0" maxOccurs="unbounded"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SweepScan">
+				<xsi:annotation>
+					<xsi:documentation>This function scans in the designated range (from start to end, at a rate measured in cm^-1/ms  -inverse centimeters per millisecond).
+This function returns data in buckets of width scanResolution wave numbers.
+If spectrumResultCount > 1, this function captures multiple results with a time gap of delayBetweenCoAdds between then, and averages the results.
+scansPerSpectrum is sometimes called ‘# of co-adds’.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Start" type="blkqcl:WaveNumberType"/>
+						<xsi:element name="End" type="blkqcl:WaveNumberType"/>
+						<xsi:element name="SweepRate" type="blkqcl:SweepRateType"/>
+						<xsi:element name="ScanResolution" type="blkqcl:WaveNumberDistanceType" default="10" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>The ScanResolution speciifies the number of 'bins' (histograms) in the Spectrum Result. This defaults to 10.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ScansPerSpectrum" type="xsi:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present. This is also called # of co-adds.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenCoAdds" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SweepScanResponse" type="blkqcl:SpectrumType"/>
+			<xsi:element name="SweepTune">
+				<xsi:complexType>
+					<xsi:attribute name="start" type="blkqcl:WaveNumberType" use="required"/>
+					<xsi:attribute name="end" type="blkqcl:WaveNumberType" use="required"/>
+					<xsi:attribute name="sweepRate" type="blkqcl:SweepRateType" use="required"/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SweepTuneResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Measurement" type="blkqcl:LaserMoveResultsItemDetailType" minOccurs="0" maxOccurs="unbounded"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+		</xsi:schema>
+	</wsdl:types>
+	<wsdl:message name="GetFactorySettings">
+		<wsdl:part name="parameter" element="blkqcl:GetFactorySettings"/>
+	</wsdl:message>
+	<wsdl:message name="GetFactorySettingsResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetFactorySettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetWaveNumberToDriveVoltageCalibrationTable">
+		<wsdl:part name="parameter" element="blkqcl:GetWaveNumberToDriveVoltageCalibrationTable"/>
+	</wsdl:message>
+	<wsdl:message name="GetWaveNumberToDriveVoltageCalibrationTableResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetWaveNumberToDriveVoltageCalibrationTableResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetCurrentToWaveNumberCalibrationTable">
+		<wsdl:part name="parameter" element="blkqcl:GetCurrentToWaveNumberCalibrationTable"/>
+	</wsdl:message>
+	<wsdl:message name="GetCurrentToWaveNumberCalibrationTableResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetCurrentToWaveNumberCalibrationTableResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ResetToFactoryDefaults">
+		<wsdl:part name="parameter" element="blkqcl:ResetToFactoryDefaults"/>
+	</wsdl:message>
+	<wsdl:message name="ResetToFactoryDefaultsResponse">
+		<wsdl:part name="parameter" element="blkqcl:ResetToFactoryDefaultsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StopLasers">
+		<wsdl:part name="parameter" element="blkqcl:StopLasers"/>
+	</wsdl:message>
+	<wsdl:message name="StopLasersResponse">
+		<wsdl:part name="parameter" element="blkqcl:StopLasersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ReadSensors">
+		<wsdl:part name="parameter" element="blkqcl:ReadSensors"/>
+	</wsdl:message>
+	<wsdl:message name="ReadSensorsResponse">
+		<wsdl:part name="parameter" element="blkqcl:ReadSensorsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetLaserPointerOn">
+		<wsdl:part name="parameter" element="blkqcl:GetLaserPointerOn"/>
+	</wsdl:message>
+	<wsdl:message name="GetLaserPointerOnResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetLaserPointerOnResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetSolenoid">
+		<wsdl:part name="parameter" element="blkqcl:GetSolenoid"/>
+	</wsdl:message>
+	<wsdl:message name="GetSolenoidResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetSolenoidResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserPointerOn">
+		<wsdl:part name="parameter" element="blkqcl:SetLaserPointerOn"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserPointerOnResponse">
+		<wsdl:part name="parameter" element="blkqcl:SetLaserPointerOnResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetSolenoid">
+		<wsdl:part name="parameter" element="blkqcl:SetSolenoid"/>
+	</wsdl:message>
+	<wsdl:message name="SetSolenoidResponse">
+		<wsdl:part name="parameter" element="blkqcl:SetSolenoidResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetVersionDetails">
+		<wsdl:part name="parameter" element="blkqcl:GetVersionDetails"/>
+	</wsdl:message>
+	<wsdl:message name="GetVersionDetailsResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetVersionDetailsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceName">
+		<wsdl:part name="parameter" element="blkqcl:GetDeviceName"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceNameResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetDeviceNameResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetDeviceName">
+		<wsdl:part name="parameter" element="blkqcl:SetDeviceName"/>
+	</wsdl:message>
+	<wsdl:message name="SetDeviceNameResponse">
+		<wsdl:part name="parameter" element="blkqcl:SetDeviceNameResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetPowerState">
+		<wsdl:part name="parameter" element="blkqcl:SetPowerState"/>
+	</wsdl:message>
+	<wsdl:message name="SetPowerStateResponse">
+		<wsdl:part name="parameter" element="blkqcl:SetPowerStateResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetFactorySettings">
+		<wsdl:part name="parameter" element="blkqcl:SetFactorySettings"/>
+	</wsdl:message>
+	<wsdl:message name="SetFactorySettingsResponse">
+		<wsdl:part name="parameter" element="blkqcl:SetFactorySettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetUserSettings">
+		<wsdl:part name="parameter" element="blkqcl:GetUserSettings"/>
+	</wsdl:message>
+	<wsdl:message name="GetUserSettingsResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetUserSettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetUserSettings">
+		<wsdl:part name="parameter" element="blkqcl:SetUserSettings"/>
+	</wsdl:message>
+	<wsdl:message name="SetUserSettingsResponse">
+		<wsdl:part name="parameter" element="blkqcl:SetUserSettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetAlarms">
+		<wsdl:part name="parameter" element="blkqcl:GetAlarms"/>
+	</wsdl:message>
+	<wsdl:message name="GetAlarmsResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetAlarmsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ClearAlarms">
+		<wsdl:part name="parameter" element="blkqcl:ClearAlarms"/>
+	</wsdl:message>
+	<wsdl:message name="ClearAlarmsResponse">
+		<wsdl:part name="parameter" element="blkqcl:ClearAlarmsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ACUPeek">
+		<wsdl:part name="parameter" element="blkqcl:ACUPeek"/>
+	</wsdl:message>
+	<wsdl:message name="ACUPeekResponse">
+		<wsdl:part name="parameter" element="blkqcl:ACUPeekResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ACUPoke">
+		<wsdl:part name="parameter" element="blkqcl:ACUPoke"/>
+	</wsdl:message>
+	<wsdl:message name="ACUPokeResponse">
+		<wsdl:part name="parameter" element="blkqcl:ACUPokeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="CCUPeek">
+		<wsdl:part name="parameter" element="blkqcl:CCUPeek"/>
+	</wsdl:message>
+	<wsdl:message name="CCUPeekResponse">
+		<wsdl:part name="parameter" element="blkqcl:CCUPeekResponse"/>
+	</wsdl:message>
+	<wsdl:message name="CCUPoke">
+		<wsdl:part name="parameter" element="blkqcl:CCUPoke"/>
+	</wsdl:message>
+	<wsdl:message name="CCUPokeResponse">
+		<wsdl:part name="parameter" element="blkqcl:CCUPokeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetBatteryStatus">
+		<wsdl:part name="parameter" element="blkqcl:GetBatteryStatus"/>
+	</wsdl:message>
+	<wsdl:message name="GetBatteryStatusResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetBatteryStatusResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StepScan">
+		<wsdl:part name="parameter" element="blkqcl:StepScan"/>
+	</wsdl:message>
+	<wsdl:message name="StepScanResponse">
+		<wsdl:part name="parameter" element="blkqcl:StepScanResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetInstalledTuners">
+		<wsdl:part name="parameter" element="blkqcl:GetInstalledTuners"/>
+	</wsdl:message>
+	<wsdl:message name="GetInstalledTunersResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetInstalledTunersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetPowerState">
+		<wsdl:part name="parameter" element="blkqcl:GetPowerState"/>
+	</wsdl:message>
+	<wsdl:message name="GetPowerStateResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetPowerStateResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SweepScan">
+		<wsdl:part name="parameter" element="blkqcl:SweepScan"/>
+	</wsdl:message>
+	<wsdl:message name="SweepScanResponse">
+		<wsdl:part name="parameter" element="blkqcl:SweepScanResponse"/>
+	</wsdl:message>
+	<wsdl:message name="InterleavedScan">
+		<wsdl:part name="parameter" element="blkqcl:InterleavedScan"/>
+	</wsdl:message>
+	<wsdl:message name="InterleavedScanResponse">
+		<wsdl:part name="parameter" element="blkqcl:InterleavedScanResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceDescription">
+		<wsdl:part name="parameter" element="blkqcl:GetDeviceDescription"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceDescriptionResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetDeviceDescriptionResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetDeviceDescription">
+		<wsdl:part name="parameter" element="blkqcl:SetDeviceDescription"/>
+	</wsdl:message>
+	<wsdl:message name="SetDeviceDescriptionResponse">
+		<wsdl:part name="parameter" element="blkqcl:SetDeviceDescriptionResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetCurrentOperationStatus">
+		<wsdl:part name="parameter" element="blkqcl:GetCurrentOperationStatus"/>
+	</wsdl:message>
+	<wsdl:message name="GetCurrentOperationStatusResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetCurrentOperationStatusResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StepTune">
+		<wsdl:part name="parameter" element="blkqcl:StepTune"/>
+	</wsdl:message>
+	<wsdl:message name="StepTuneResponse">
+		<wsdl:part name="parameter" element="blkqcl:StepTuneResponse"/>
+	</wsdl:message>
+	<wsdl:message name="MoveTune">
+		<wsdl:part name="parameter" element="blkqcl:MoveTune"/>
+	</wsdl:message>
+	<wsdl:message name="MoveTuneResponse">
+		<wsdl:part name="parameter" element="blkqcl:MoveTuneResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SweepTune">
+		<wsdl:part name="parameter" element="blkqcl:SweepTune"/>
+	</wsdl:message>
+	<wsdl:message name="SweepTuneResponse">
+		<wsdl:part name="parameter" element="blkqcl:SweepTuneResponse"/>
+	</wsdl:message>
+	<wsdl:message name="Delay">
+		<wsdl:part name="parameter" element="blkqcl:Delay"/>
+	</wsdl:message>
+	<wsdl:message name="DelayResponse">
+		<wsdl:part name="parameter" element="blkqcl:DelayResponse"/>
+	</wsdl:message>
+	<wsdl:message name="PersistenceClear">
+		<wsdl:part name="parameter" element="blkqcl:PersistenceClear"/>
+	</wsdl:message>
+	<wsdl:message name="PersistenceClearResponse">
+		<wsdl:part name="parameter" element="blkqcl:PersistenceClearResponse"/>
+	</wsdl:message>
+	<wsdl:message name="PersistenceGet">
+		<wsdl:part name="parameter" element="blkqcl:PersistenceGet"/>
+	</wsdl:message>
+	<wsdl:message name="PersistenceGetResponse">
+		<wsdl:part name="parameter" element="blkqcl:PersistenceGetResponse"/>
+	</wsdl:message>
+	<wsdl:message name="PersistencePut">
+		<wsdl:part name="parameter" element="blkqcl:PersistencePut"/>
+	</wsdl:message>
+	<wsdl:message name="PersistencePutResponse">
+		<wsdl:part name="parameter" element="blkqcl:PersistencePutResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetAvailableUpdates">
+		<wsdl:part name="parameter" element="blkqcl:GetAvailableUpdates"/>
+	</wsdl:message>
+	<wsdl:message name="GetAvailableUpdatesResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetAvailableUpdatesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="InstallUpdate">
+		<wsdl:part name="parameter" element="blkqcl:InstallUpdate"/>
+	</wsdl:message>
+	<wsdl:message name="InstallUpdateResponse">
+		<wsdl:part name="parameter" element="blkqcl:InstallUpdateResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ExternallyControlledTune">
+		<wsdl:part name="parameter" element="blkqcl:ExternallyControlledTune"/>
+	</wsdl:message>
+	<wsdl:message name="ExternallyControlledTuneResponse">
+		<wsdl:part name="parameter" element="blkqcl:ExternallyControlledTuneResponse"/>
+	</wsdl:message>
+	<wsdl:message name="CaptureDeviceDiagnostics">
+		<wsdl:part name="parameter" element="blkqcl:CaptureDeviceDiagnostics"/>
+	</wsdl:message>
+	<wsdl:message name="CaptureDeviceDiagnosticsResponse">
+		<wsdl:part name="parameter" element="blkqcl:CaptureDeviceDiagnosticsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetNetworkAdaptersStatus">
+		<wsdl:part name="parameter" element="blkqcl:GetNetworkAdaptersStatus"/>
+	</wsdl:message>
+	<wsdl:message name="GetNetworkAdaptersStatusResponse">
+		<wsdl:part name="parameter" element="blkqcl:GetNetworkAdaptersStatusResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="IConfiguration">
+		<wsdl:documentation>This interface provides read/write support to setup information for the laser which is independent of any
+particular laser run. 
+
+Most of the information this interface provides read-only access (set through the manufacturing interface),
+however, some of the settings are under user control (user overrides).
+</wsdl:documentation>
+		<wsdl:operation name="GetFactorySettings">
+			<wsdl:documentation>FactorySettingsType GetFactorySettings();
+
+Returns the factory settings for calibration tables, and user-settable configuration options.  
+
+See also GetUserSettings, and ResetToFactoryDefaults.
+
+N.B. These values are all persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetFactorySettings"/>
+			<wsdl:output message="blkqcl:GetFactorySettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetUserSettings">
+			<wsdl:documentation>PerDeviceUserSettingsaType GetUserSettings();
+
+Returns current, effective configuraion settings. 
+
+This does not include the WaveNumberToDriveVoltage nor CurrentToWaveNumber calibration tables.
+
+N.B. These values are all persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetUserSettings"/>
+			<wsdl:output message="blkqcl:GetUserSettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetUserSettings">
+			<wsdl:documentation>void SetUserSettings (PerDeviceUserSettings (each elt optional));
+
+This allows resetting the user-settable options. 
+
+Only options provided are changed.
+
+N.B. These values are all persistent across reboots.
+
+Note it is illegal to set values on tuners that are not installed.</wsdl:documentation>
+			<wsdl:input message="blkqcl:SetUserSettings"/>
+			<wsdl:output message="blkqcl:SetUserSettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ResetToFactoryDefaults">
+			<wsdl:documentation>
+This throws away all user customizations, including device name, and normalized calibration tables.
+
+It does not re-install any particular software/firmware versions - it merely throws away user settings (and clears the log).
+
+All these changes are persisent.</wsdl:documentation>
+			<wsdl:input message="blkqcl:ResetToFactoryDefaults"/>
+			<wsdl:output message="blkqcl:ResetToFactoryDefaultsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetVersionDetails">
+			<wsdl:documentation>struct VersionInfoType {
+   string PLDVersion;
+   string DCUVersion;
+};
+
+VersionInfoType GetVersionDetails();
+
+This returns the software versions, and serial numbers of several major system components. 
+
+[NOTE; VersionInfoType details need to be nailed down]</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetVersionDetails"/>
+			<wsdl:output message="blkqcl:GetVersionDetailsResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ILaserOperation">
+		<wsdl:documentation>This interface is for basic operational control of the laser system. 
+
+It turns lasers on and off (including scans, sweeps, programmed sequences etc), and reads back sensor data.</wsdl:documentation>
+		<wsdl:operation name="StopLasers">
+			<wsdl:documentation>void StopLasers(optional duration AndAllPendingForUp);
+
+Stop just the current, or all pending Laser operations (this includes operations started with RunLasers or with Scan/StepScan/etc).
+This also turns off the lasers (which could be left on via a RunLasers operation).
+
+If andAllPendingForUpTo is provided, then any future RunLasers calls for that period will be rejected. This can be useful with a value of 1second for example - to accomodate separate communications pipelines.</wsdl:documentation>
+			<wsdl:input message="blkqcl:StopLasers"/>
+			<wsdl:output message="blkqcl:StopLasersResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ReadSensors">
+			<wsdl:documentation>struct SensorData {
+         float      AmbientTemperature;
+         float      SystemTemperature;
+         float      SystemHumidity;
+         float      MirrorSensorTemprature[4];
+         float      Accelerometer;
+         Tuner    ActiveLaser; // if any
+}
+SensorData ReadSensors();  // read all sensors
+SensorData ReadSensors([set of sensors to read]);
+</wsdl:documentation>
+			<wsdl:input message="blkqcl:ReadSensors"/>
+			<wsdl:output message="blkqcl:ReadSensorsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetLaserPointerOn">
+			<wsdl:documentation>bool GetLaserPointerOn ()
+
+The laser is invisible, but for visual alignment, a visible auxiliary laser can be turned on as a pointer.</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetLaserPointerOn"/>
+			<wsdl:output message="blkqcl:GetLaserPointerOnResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserPointerOn">
+			<wsdl:documentation>void SetLaserPointerOn (bool on)
+
+The laser is invisible, but for visual alignment, a visible auxiliary laser can be turned on as a pointer.</wsdl:documentation>
+			<wsdl:input message="blkqcl:SetLaserPointerOn"/>
+			<wsdl:output message="blkqcl:SetLaserPointerOnResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetSolenoid">
+			<wsdl:documentation>SolenoidType = (PowerCal, WavelengthCal);
+SollenoidStateType = (Internal, External);
+
+SolenoidState GetSolenoid (SolenoidType  Which);
+
+Return the state of the given solenoid.
+</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetSolenoid"/>
+			<wsdl:output message="blkqcl:GetSolenoidResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetSolenoid">
+			<wsdl:documentation>SolenoidType = (PowerCal, WavelengthCal);
+SollenoidStateType = (Internal, External);
+
+void SetSolenoid (SolenoidType  Which, SolenoidStateType targetState);
+
+Set the given Solenoid (which) to the given SolenoidState (Internal or External)</wsdl:documentation>
+			<wsdl:input message="blkqcl:SetSolenoid"/>
+			<wsdl:output message="blkqcl:SetSolenoidResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StepScan">
+			<wsdl:documentation>SpectrumType StepScan (
+            WaveNumberType start, WaveNumberType end, WaveNumberDistanceType delta,
+            Duration dwellTime = 0,
+            LaserOnOffTransitionType duringTransition = LaserOn,
+            unsigned int scansPerSpectrum = 1,
+            Duration delayBetweenCoAdds = 0
+        );
+Note that SpectrumType is defined to be a functional mapping of  lambda to intensity (x is lambda, y is intesity).
+</wsdl:documentation>
+			<wsdl:input message="blkqcl:StepScan"/>
+			<wsdl:output message="blkqcl:StepScanResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SweepScan">
+			<wsdl:documentation>SpectrumType SweepScan (
+                                         WaveNumberType start, 
+                                         WaveNumberType end, 
+                                          SweepSpeedType sweepRate, 
+                                         unsigned int scanResolution= 10,
+                                         unsigned int scansPerSpectrum= 1,
+                                         duration delayBetweenCoAdds = 0
+        );
+Note that SpectrumType is defined to be a functional mapping of  lambda to intensity (x is lambda, y is intesity).
+</wsdl:documentation>
+			<wsdl:input message="blkqcl:SweepScan"/>
+			<wsdl:output message="blkqcl:SweepScanResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="InterleavedScan">
+			<wsdl:documentation>SpectrumType InterleavedScan (
+                                         duration singleSpectrumMeasurementTime,
+                                         WaveNumberType deltaResolution = 10.0, 
+                                         unsigned int scansPerSpectrum= 1,
+                                         duration delayBetweenCoAdds = PT0S
+        );
+Note that SpectrumType is defined to be a functional mapping of  lambda to intensity (x is lambda, y is intesity).
+
+</wsdl:documentation>
+			<wsdl:input message="blkqcl:InterleavedScan"/>
+			<wsdl:output message="blkqcl:InterleavedScanResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StepTune">
+			<wsdl:input message="blkqcl:StepTune"/>
+			<wsdl:output message="blkqcl:StepTuneResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="MoveTune">
+			<wsdl:input message="blkqcl:MoveTune"/>
+			<wsdl:output message="blkqcl:MoveTuneResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SweepTune">
+			<wsdl:input message="blkqcl:SweepTune"/>
+			<wsdl:output message="blkqcl:SweepTuneResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="Delay">
+			<wsdl:documentation>This does nothing but wait the given amount of time. This can be used as part of a pipelined sequence of operations to adjust the timing of operations (since operations run one after the other within a given command channel).</wsdl:documentation>
+			<wsdl:input message="blkqcl:Delay"/>
+			<wsdl:output message="blkqcl:DelayResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ExternallyControlledTune">
+			<wsdl:input message="blkqcl:ExternallyControlledTune"/>
+			<wsdl:output message="blkqcl:ExternallyControlledTuneResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="IDeviceManagement">
+		<wsdl:documentation>For Basic device operations, getting version info, faults, power management, etc.</wsdl:documentation>
+		<wsdl:operation name="CaptureDeviceDiagnostics">
+			<wsdl:input message="blkqcl:CaptureDeviceDiagnostics"/>
+			<wsdl:output message="blkqcl:CaptureDeviceDiagnosticsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceDescription">
+			<wsdl:input message="blkqcl:GetDeviceDescription"/>
+			<wsdl:output message="blkqcl:GetDeviceDescriptionResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceName">
+			<wsdl:documentation>String GetDeviceName()
+
+N.B. The Device Name is persistent.</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetDeviceName"/>
+			<wsdl:output message="blkqcl:GetDeviceNameResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetDeviceName">
+			<wsdl:documentation>void SetDeviceName(String deviceName);
+
+N.B. The Device Name is persistent.</wsdl:documentation>
+			<wsdl:input message="blkqcl:SetDeviceName"/>
+			<wsdl:output message="blkqcl:SetDeviceNameResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetPowerState">
+			<wsdl:documentation>Return current power state:
+  Off, Hibernate, Sleep, ReadyForCommands,ReadyToFire.
+
+Note - if the device is still starting up and initializing, GetPowerState() will return Off.</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetPowerState"/>
+			<wsdl:output message="blkqcl:GetPowerStateResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetPowerState">
+			<wsdl:documentation>Go to power state:
+  Off, Hibernate, Sleep, ReadyForCommands,ReadyToFire
+
+To shutdown, call SetPowerState(off);
+
+To hibernbate, call SetPowerState(hibernate);
+
+To assure the system is ready to fire lasers (heated up) - call SetPowerState(readytofire);
+</wsdl:documentation>
+			<wsdl:input message="blkqcl:SetPowerState"/>
+			<wsdl:output message="blkqcl:SetPowerStateResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetAlarms">
+			<wsdl:documentation>Set(String) GetAlarms();
+
+Get the set of all current alarms. 
+
+Some alarms may clear automatically, while others will only clear if you call ClearAlarms.</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetAlarms"/>
+			<wsdl:output message="blkqcl:GetAlarmsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ClearAlarms">
+			<wsdl:documentation>void ClearAlarms ();
+void ClearAlarms(Set(String));
+
+See also GetAlarms. Clears either all alarms, or the given set of alarms. 
+
+Note - requesting that an alarm clears doesn't gaurantee that it clears. 
+This is why ClearAlarms returns the new set of current alarms.</wsdl:documentation>
+			<wsdl:input message="blkqcl:ClearAlarms"/>
+			<wsdl:output message="blkqcl:ClearAlarmsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetBatteryStatus">
+			<wsdl:documentation>Return the status (including presense) of the devices battery</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetBatteryStatus"/>
+			<wsdl:output message="blkqcl:GetBatteryStatusResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentOperationStatus">
+			<wsdl:documentation>Return status information about major, high level activities the blkqcl is performing.
+
+Note - this returns STALE information. It doesn't lock, or read sensors, so this can always be called very cheaply.
+
+However, to force a read of sensors (for example, the current wave number) - use ReadSensors().</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetCurrentOperationStatus"/>
+			<wsdl:output message="blkqcl:GetCurrentOperationStatusResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetNetworkAdaptersStatus">
+			<wsdl:input message="blkqcl:GetNetworkAdaptersStatus"/>
+			<wsdl:output message="blkqcl:GetNetworkAdaptersStatusResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetAvailableUpdates">
+			<wsdl:documentation>Available updates are checked from the internet/cloud, and any inserted SDCard/USB thumb drive</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetAvailableUpdates"/>
+			<wsdl:output message="blkqcl:GetAvailableUpdatesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="InstallUpdate">
+			<wsdl:documentation>This can be used to either Install the given update, or just to pre-download/check the update (download only)</wsdl:documentation>
+			<wsdl:input message="blkqcl:InstallUpdate"/>
+			<wsdl:output message="blkqcl:InstallUpdateResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="IManufacturing">
+		<wsdl:documentation>This interface is only indtended for use by special BlockEngineering software, and should not be used by customers, 
+as it can damage the equipment, and cause unsafe operation. 
+
+This interface is intended for use in initial manufactguring, as well as in re-manufacturing/service.
+
+Note: This interface is AUTHORIZATION-TOKEN protected.</wsdl:documentation>
+		<wsdl:operation name="GetWaveNumberToDriveVoltageCalibrationTable">
+			<wsdl:documentation>Mapping[WaveNumber,DrivingVoltage] GetWaveNumberToDriveVoltageCalibrationTable(Raw or Normalized);
+
+Returns WaveNumberToDriveVoltage table BEFORE or AFTER normalization. 
+
+To get original settings use GetFactorySettings
+
+Each mirror voltage must have at least 4096 control increments.  
+Each mirror position is equated to mirror current readback which uses a 12-bit ADC so there are 4096 readback positions.
+</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetWaveNumberToDriveVoltageCalibrationTable"/>
+			<wsdl:output message="blkqcl:GetWaveNumberToDriveVoltageCalibrationTableResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentToWaveNumberCalibrationTable">
+			<wsdl:documentation>Mapping[ADC,WaveNumber] GetCurrentToWaveNumberCalibrationTable(Raw or Normalized);
+
+Returns CurrentToWaveNumber table BEFORE or AFTER normalization. 
+
+To get the original settings: use GetFactorySettings.
+
+Each mirror is controlled with a 16-bit DAC so there are 65,536 counts for setting a mirror position.</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetCurrentToWaveNumberCalibrationTable"/>
+			<wsdl:output message="blkqcl:GetCurrentToWaveNumberCalibrationTableResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetInstalledTuners">
+			<wsdl:documentation>Set&lt;TunerNumberType&gt; GetInstalledTuners()
+
+This returns the set of all installed tuners. Only the installed tuners can be configured, and only the installed tuners will
+have configuraiton data returned about them. The set of installed tuners cannot change without turning off the blkqcl device, and turning it back on (with changed hardware installation).
+
+Note that this set can be disjoint (e.g tuner 1, and tuner 3, but no tuner 2).</wsdl:documentation>
+			<wsdl:input message="blkqcl:GetInstalledTuners"/>
+			<wsdl:output message="blkqcl:GetInstalledTunersResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetFactorySettings">
+			<wsdl:documentation>void SetFactorySettings ([optioanl-params]*)
+
+See FactorySettingsType for a list of all the settings, but these include:
+
+    InstalledLaserCount integer(1..4)
+    blkqcl:LaserDutyCycleLimit
+...
+
+Beacause each paramter is optional, SetFactorySettings can be used to update individiaul paramters.
+Those note specified, won't be updated (so there is no need for GetAll, make a change, and then SetAll).
+
+N.B. These values are all persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blkqcl:SetFactorySettings"/>
+			<wsdl:output message="blkqcl:SetFactorySettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetDeviceDescription">
+			<wsdl:input message="blkqcl:SetDeviceDescription"/>
+			<wsdl:output message="blkqcl:SetDeviceDescriptionResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ILowLevelHardwareAccess">
+		<wsdl:documentation>This is a very low level, and dangerous API, just intended for software and hardware developers - in building the system.
+
+This is not intended for use in manufacturing or QA.
+
+Note: This interface is AUTHORIZATION-TOKEN protected.</wsdl:documentation>
+		<wsdl:operation name="ACUPeek">
+			<wsdl:documentation>uint16_t ACUPeek(ACURegisterNameType);
+
+Read back the named (enumerated) register.
+
+[NB: for now this list of registers is restricted to the FPGA, but later could be extended]</wsdl:documentation>
+			<wsdl:input message="blkqcl:ACUPeek"/>
+			<wsdl:output message="blkqcl:ACUPeekResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ACUPoke">
+			<wsdl:documentation>void ACUPoke (ACURegisterNameType, uint16_t value);
+
+Set the named (enumerated) hardware register.
+
+[NB: for now this list of registers is restricted to the FPGA, but later could be extended]</wsdl:documentation>
+			<wsdl:input message="blkqcl:ACUPoke"/>
+			<wsdl:output message="blkqcl:ACUPokeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="CCUPeek">
+			<wsdl:documentation>uint16_t CCUPeek(CCURegisterNameType);
+
+Read back the named (enumerated) register.
+
+[NB: for now this list of registers is restricted to the FPGA, but later could be extended]</wsdl:documentation>
+			<wsdl:input message="blkqcl:CCUPeek"/>
+			<wsdl:output message="blkqcl:CCUPeekResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="CCUPoke">
+			<wsdl:documentation>void CCUPoke (CCURegisterNameType, uint16_t value);
+
+Set the named (enumerated) hardware register.
+
+[NB: for now this list of registers is restricted to the FPGA, but later could be extended]</wsdl:documentation>
+			<wsdl:input message="blkqcl:CCUPoke"/>
+			<wsdl:output message="blkqcl:CCUPokeResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="IPersistence">
+		<wsdl:documentation>Limited persistence support. This can be used by applications which interact with the BLKQCL device to store small amounts of information persistently (across runs), and to access external memory devices (such as USB flash drives or SD cards). 
+
+This API provides no security interface (other than security by obscurity - there is no way to enumerate folders), no hierarchical folders, and no folder/meta information/traversal APIs.
+
+This CAN be used to store small amounts of user-preference state specific to an application (not session), and can be used to store larger amounts of data on removable media (such as scan results).
+
+
+
+</wsdl:documentation>
+		<wsdl:operation name="PersistenceClear">
+			<wsdl:input message="blkqcl:PersistenceClear"/>
+			<wsdl:output message="blkqcl:PersistenceClearResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="PersistenceGet">
+			<wsdl:input message="blkqcl:PersistenceGet"/>
+			<wsdl:output message="blkqcl:PersistenceGetResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="PersistencePut">
+			<wsdl:input message="blkqcl:PersistencePut"/>
+			<wsdl:output message="blkqcl:PersistencePutResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SOAP-IConfiguration" type="blkqcl:IConfiguration">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="GetFactorySettings">
+			<soap:operation soapAction="GetFactorySettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ResetToFactoryDefaults">
+			<soap:operation soapAction="ResetToFactoryDefaults"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetUserSettings">
+			<soap:operation soapAction="GetUserSettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetUserSettings">
+			<soap:operation soapAction="SetUserSettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetVersionDetails">
+			<soap:operation soapAction="GetVersionDetails"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-ILaserOperation" type="blkqcl:ILaserOperation">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="StopLasers">
+			<soap:operation soapAction="StopLasers"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ReadSensors">
+			<soap:operation soapAction="ReadSensors"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetLaserPointerOn">
+			<soap:operation soapAction="GetLaserPointerOn"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserPointerOn">
+			<soap:operation soapAction="SetLaserPointerOn"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetSolenoid">
+			<soap:operation soapAction="GetSolenoid"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetSolenoid">
+			<soap:operation soapAction="SetSolenoid"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StepScan">
+			<soap:operation soapAction="StepScan"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SweepScan">
+			<soap:operation soapAction="SweepScan"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="InterleavedScan">
+			<soap:operation soapAction="InterleavedScan"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StepTune">
+			<soap:operation soapAction="StepTune"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="MoveTune">
+			<soap:operation soapAction="MoveTune"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SweepTune">
+			<soap:operation soapAction="SweepTune"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="Delay">
+			<soap:operation soapAction="Delay"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ExternallyControlledTune">
+			<soap:operation soapAction="ExternallyControlledTune"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-IDeviceManagement" type="blkqcl:IDeviceManagement">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="GetDeviceDescription">
+			<soap:operation soapAction="GetDeviceDescription"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceName">
+			<soap:operation soapAction="GetDeviceName"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetDeviceName">
+			<soap:operation soapAction="SetDeviceName"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetPowerState">
+			<soap:operation soapAction="GetPowerState"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetPowerState">
+			<soap:operation soapAction="SetPowerState"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetAlarms">
+			<soap:operation soapAction="GetAlarms"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ClearAlarms">
+			<soap:operation soapAction="ClearAlarms"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetBatteryStatus">
+			<soap:operation soapAction="GetBatteryStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentOperationStatus">
+			<soap:operation soapAction="GetCurrentOperationStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetNetworkAdaptersStatus">
+			<soap:operation soapAction="GetNetworkAdaptersStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetAvailableUpdates">
+			<soap:operation soapAction="GetAvailableUpdates"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="InstallUpdate">
+			<soap:operation soapAction="InstallUpdate"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CaptureDeviceDiagnostics">
+			<soap:operation soapAction="CaptureDeviceDiagnostics"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-IManufacturing" type="blkqcl:IManufacturing">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="GetWaveNumberToDriveVoltageCalibrationTable">
+			<soap:operation soapAction="GetWaveNumberToDriveVoltageCalibrationTable"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentToWaveNumberCalibrationTable">
+			<soap:operation soapAction="GetCurrentToWaveNumberCalibrationTable"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetFactorySettings">
+			<soap:operation soapAction="SetFactorySettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetDeviceDescription">
+			<soap:operation soapAction="SetDeviceDescription"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetInstalledTuners">
+			<soap:operation soapAction="GetInstalledTuners"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-ILowLevelHardwareAccess" type="blkqcl:ILowLevelHardwareAccess">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ACUPeek">
+			<soap:operation soapAction="ACUPeek"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ACUPoke">
+			<soap:operation soapAction="ACUPoke"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CCUPeek">
+			<soap:operation soapAction="CCUPeek"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CCUPoke">
+			<soap:operation soapAction="CCUPoke"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-IPersistence" type="blkqcl:IPersistence">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="PersistenceClear">
+			<soap:operation soapAction="PersistenceClear"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="PersistenceGet">
+			<soap:operation soapAction="PersistenceGet"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="PersistencePut">
+			<soap:operation soapAction="PersistencePut"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SOAP-Service">
+		<wsdl:port name="SOAP-IConfiguration" binding="blkqcl:SOAP-IConfiguration">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+		<wsdl:port name="SOAP-ILaserOperation" binding="blkqcl:SOAP-ILaserOperation">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+		<wsdl:port name="SOAP-IDeviceManagement" binding="blkqcl:SOAP-IDeviceManagement">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+		<wsdl:port name="SOAP-IManufacturing" binding="blkqcl:SOAP-IManufacturing">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+		<wsdl:port name="SOAP-ILowLevelHardwareAccess" binding="blkqcl:SOAP-ILowLevelHardwareAccess">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+		<wsdl:port name="SOAP-IPersistence" binding="blkqcl:SOAP-IPersistence">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

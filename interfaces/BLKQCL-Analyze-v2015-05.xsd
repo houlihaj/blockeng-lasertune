@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsi:schema xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:blkanalyze="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Analyze/" xmlns:blkqcl-common="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Common/" targetNamespace="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Analyze/" elementFormDefault="qualified" blkqcl-common:schemaLocation="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Common/ BLKQCL-Common-v2015-05.xsd">
+	<xsi:import namespace="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Common/" schemaLocation="BLKQCL-Common-v2015-05.xsd"/>
+	<xsi:complexType name="ParameterDefinitionType">
+		<xsi:sequence>
+			<xsi:element name="id" type="blkanalyze:ItemIDType"/>
+			<xsi:element name="Names" type="blkqcl-common:LanguageCodedStrings">
+				<xsi:annotation>
+					<xsi:documentation>Result name for display purposes. Note the provision of multiple names (even for a given language) allows a UI to choose the appropriate name based on size constraints. For example, in a space controlled display, use the shorter name, and in a drill-down (e.g. hover text) use the longer name.</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="Type" type="blkanalyze:ParameterKind"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="ParametersDefinitionType">
+		<xsi:sequence>
+			<xsi:element name="Parameter" type="blkanalyze:ParameterDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="ResultDefinitionType">
+		<xsi:sequence>
+			<xsi:element name="Names" type="blkqcl-common:LanguageCodedStrings">
+				<xsi:annotation>
+					<xsi:documentation>Result name for display purposes. Note the provision of multiple names (even for a given language) allows a UI to choose the appropriate name based on size constraints. For example, in a space controlled display, use the shorter name, and in a drill-down (e.g. hover text) use the longer name.</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="id" type="blkanalyze:ItemIDType">
+				<xsi:annotation>
+					<xsi:documentation>An opaque (guid) name to use as a key</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="Cardinality" minOccurs="0">
+				<xsi:complexType>
+					<xsi:attribute name="minOccurs" type="xsi:unsignedInt" default="1"/>
+					<xsi:attribute name="maxOccurs" type="xsi:unsignedInt" default="1"/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="Type">
+				<xsi:complexType>
+					<xsi:choice>
+						<xsi:element name="PassFail">
+							<xsi:complexType>
+								<xsi:sequence/>
+							</xsi:complexType>
+						</xsi:element>
+						<xsi:element name="ConcentrationPercentage">
+							<xsi:complexType>
+								<xsi:sequence/>
+							</xsi:complexType>
+						</xsi:element>
+						<xsi:element name="Float">
+							<xsi:complexType>
+								<xsi:sequence>
+									<xsi:element name="Min" type="xsi:double" minOccurs="0"/>
+									<xsi:element name="Max" type="xsi:double" minOccurs="0"/>
+								</xsi:sequence>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:choice>
+				</xsi:complexType>
+			</xsi:element>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="ResultsDefinitionType">
+		<xsi:sequence>
+			<xsi:element name="Result" type="blkanalyze:ResultDefinitionType" maxOccurs="unbounded"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="ResultType">
+		<xsi:choice>
+			<xsi:element name="PassFail" type="blkanalyze:PassFailResultType"/>
+			<xsi:element name="ConcentrationPercentage" type="blkanalyze:ConcentrationPercentResultType"/>
+			<xsi:element name="Float" type="xsi:double"/>
+		</xsi:choice>
+		<xsi:attribute name="resultDefIDRef" type="blkanalyze:ItemIDType" use="required">
+			<xsi:annotation>
+				<xsi:documentation>This is the ID of the result, which allows lookup of print names, description, and other meta information about this result.</xsi:documentation>
+			</xsi:annotation>
+		</xsi:attribute>
+	</xsi:complexType>
+	<xsi:complexType name="ResultsType">
+		<xsi:sequence>
+			<xsi:element name="Result" type="blkanalyze:ResultType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="ParameterType">
+		<xsi:sequence>
+			<xsi:element name="parameterIDRef" type="blkanalyze:ItemIDType"/>
+			<xsi:choice>
+				<xsi:element name="Spectrum" type="blkqcl-common:SpectrumType"/>
+				<xsi:element name="Float" type="xsi:double"/>
+				<xsi:element name="Temperature" type="blkqcl-common:TemperatureType"/>
+				<xsi:element name="Pressure" type="xsi:double"/>
+				<xsi:element name="String" type="xsi:string"/>
+				<xsi:element name="Integer" type="xsi:int"/>
+				<xsi:element name="Boolean" type="xsi:boolean"/>
+			</xsi:choice>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="ParametersType">
+		<xsi:sequence>
+			<xsi:element name="Parameter" type="blkanalyze:ParameterType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:simpleType name="PassFailResultType">
+		<xsi:restriction base="xsi:string">
+			<xsi:enumeration value="Pass"/>
+			<xsi:enumeration value="Fail"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:complexType name="EngineDefinitionType">
+		<xsi:sequence>
+			<xsi:element name="id" type="blkanalyze:ItemIDType">
+				<xsi:annotation>
+					<xsi:documentation>GUID identifying (this verison of) the service.</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="Names" type="blkqcl-common:LanguageCodedStrings"/>
+			<xsi:element name="Parameters" type="blkanalyze:ParametersDefinitionType"/>
+			<xsi:element name="Results" type="blkanalyze:ResultsDefinitionType"/>
+			<xsi:element name="Descriptions" type="blkqcl-common:LanguageCodedStrings" minOccurs="0"/>
+			<xsi:element name="Invocation">
+				<xsi:complexType>
+					<xsi:choice>
+						<xsi:element name="URL" type="xsi:string"/>
+						<xsi:element name="LocalExecution_JSON" type="xsi:string">
+							<xsi:annotation>
+								<xsi:documentation>Execute the given command line, with stdin a JSON rep of paramters, and producing a JSON rep of Results on stdout</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="LocalExecution_CSV" type="xsi:string">
+							<xsi:annotation>
+								<xsi:documentation>Execute the given command line, with stdin a CSV spectrum, and producing a CSV list of results (id,value). Note - this invocation mechanism only works with simple result types, and a single input spectrum.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:choice>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ExternalControllerURL" type="xsi:string" minOccurs="0">
+				<xsi:annotation>
+					<xsi:documentation>If present, this is the URL of a WS supporting the IExternalController WSDL Interface which can be used for this service.</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="EngineDefinitionsType">
+		<xsi:sequence>
+			<xsi:element name="EngineDefinition" type="blkanalyze:EngineDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:element name="EngineDefinitions" type="blkanalyze:EngineDefinitionsType"/>
+	<xsi:simpleType name="ParameterKind">
+		<xsi:restriction base="xsi:string">
+			<xsi:enumeration value="Spectrum"/>
+			<xsi:enumeration value="Float"/>
+			<xsi:enumeration value="Temperature"/>
+			<xsi:enumeration value="Pressure"/>
+			<xsi:enumeration value="String"/>
+			<xsi:enumeration value="Integer"/>
+			<xsi:enumeration value="Boolean"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="ResultKind">
+		<xsi:restriction base="xsi:string">
+			<xsi:enumeration value="PassFail"/>
+			<xsi:enumeration value="ConcentrationPercentage"/>
+			<xsi:enumeration value="Float"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="ConcentrationPercentResultType">
+		<xsi:restriction base="xsi:double">
+			<xsi:minInclusive value="0"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="ItemIDType">
+		<xsi:restriction base="xsi:token"/>
+	</xsi:simpleType>
+</xsi:schema>

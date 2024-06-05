@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsi:schema xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:blkapp="http://www.blockeng.com/Schemas/2016-05/BLKQCL-App/" xmlns:blkqcl-common="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Common/" targetNamespace="http://www.blockeng.com/Schemas/2016-05/BLKQCL-App/" elementFormDefault="qualified" blkqcl-common:schemaLocation="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Common/ BLKQCL-Common-v2015-05.xsd">
+	<xsi:import namespace="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Common/" schemaLocation="BLKQCL-Common-v2015-05.xsd"/>
+	<xsi:complexType name="AppConfigurationType">
+		<xsi:sequence>
+			<xsi:element name="LocalService" minOccurs="0">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="SystemDServiceFileTemplate" type="xsi:string" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>If present, when app installed, this is added to systemd automatically.
+
+The service will be enabled and started iff the app is installed and enabled.
+
+This file path is a relative path from the installation root
+
+This file is a normal systemd file, except that it doesnt contain any absolute pathnames. It contains the special string [INSTALLDIR] any place where the full path to a file is needed (typically the ExecStart line)</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="WS-Port-Number" type="xsi:unsignedInt">
+							<xsi:annotation>
+								<xsi:documentation>The GUI connects to this address to control the app</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="InstallationRoot" type="xsi:string" minOccurs="0">
+				<xsi:annotation>
+					<xsi:documentation>Directory on disk where App is installed. This is optional for the case when the app is not installed (a package to install)</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="HTMLRoot" type="xsi:string" minOccurs="0">
+				<xsi:annotation>
+					<xsi:documentation>Relative Path from the instllation root. Typically this is 'html'
+
+It is legal to have an app installed with no GUI (for example, if it just has a WS interface).</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="Enabled" type="xsi:boolean" minOccurs="0">
+				<xsi:annotation>
+					<xsi:documentation>Allow installing an app, but disabling it, so it doesnt have its service run, or app UI appear in the GUI.</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="Features" minOccurs="0">
+				<xsi:annotation>
+					<xsi:documentation>Arbitrary key-value pairs whose meaning is defined by the app</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Feature" minOccurs="0" maxOccurs="unbounded">
+							<xsi:complexType>
+								<xsi:attribute name="Key" type="xsi:NCName" use="required"/>
+								<xsi:attribute name="Value" type="xsi:NCName" use="required"/>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="AppShortName" type="xsi:NCName" minOccurs="1">
+				<xsi:annotation>
+					<xsi:documentation>Key. And is relpath from top of url hierarcht name idsplayed (e.g. /Tune is where the AppName Tune html is loaded from).</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="AppDisplayName" type="xsi:string" minOccurs="0">
+				<xsi:annotation>
+					<xsi:documentation>Generally same as AppShortName, but can be used to override what is  displayed in menu and other places app name is shown</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="AppsConfigurationType">
+		<xsi:sequence>
+			<xsi:element name="App" type="blkapp:AppConfigurationType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsi:sequence>
+	</xsi:complexType>
+</xsi:schema>

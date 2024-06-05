@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsi:schema xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:blkqcl-common="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Common/" targetNamespace="http://www.blockeng.com/Schemas/2015-05/BLKQCL-Common/" elementFormDefault="qualified">
+	<xsi:simpleType name="IntensityType">
+		<xsi:annotation>
+			<xsi:documentation>This is a relative, unitless indicator of signal intensity</xsi:documentation>
+		</xsi:annotation>
+		<xsi:restriction base="xsi:double"/>
+	</xsi:simpleType>
+	<xsi:simpleType name="TemperatureType">
+		<xsi:annotation>
+			<xsi:documentation>Temperatures are all in degrees Centigrade</xsi:documentation>
+		</xsi:annotation>
+		<xsi:restriction base="xs:double"/>
+	</xsi:simpleType>
+	<xsi:simpleType name="WaveNumberType">
+		<xsi:annotation>
+			<xsi:documentation>A WaveNumber is the reciprocal of wave-length. The units are in cm-1 (1/centimeters). WaveNumberType is a floating point number. The minimal legal value is zero (not inclusive) and there is no upper bound.
+</xsi:documentation>
+		</xsi:annotation>
+		<xsi:restriction base="xsi:double">
+			<xsi:minExclusive value="0"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="WaveNumberDistanceType">
+		<xsi:annotation>
+			<xsi:documentation>The non-negative distance between two WaveNumbers</xsi:documentation>
+		</xsi:annotation>
+		<xsi:restriction base="xs:double">
+			<xsi:minExclusive value="0"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:complexType name="SpectrumType">
+		<xsi:annotation>
+			<xsi:documentation>A spectrum is stepwise approximation of the instensity of measurement across a freqency range. In practice, its a set of frequency/intensity measurements {(λ,I).</xsi:documentation>
+		</xsi:annotation>
+		<xsi:sequence>
+			<xsi:element name="Measurement" minOccurs="0" maxOccurs="unbounded">
+				<xsi:complexType>
+					<xsi:attribute name="waveNumber" type="blkqcl-common:WaveNumberType" use="required"/>
+					<xsi:attribute name="intensity" type="blkqcl-common:IntensityType" use="required"/>
+				</xsi:complexType>
+			</xsi:element>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:simpleType name="LanguageCode">
+		<xsi:annotation>
+			<xsi:documentation>ISO 639 language code -2 or -3</xsi:documentation>
+		</xsi:annotation>
+		<xsi:restriction base="xsi:string">
+			<xsi:minLength value="2"/>
+			<xsi:maxLength value="3"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:complexType name="LanguageCodedStrings">
+		<xsi:annotation>
+			<xsi:documentation>Note the provision of multiple names (even for a given language) allows a UI to choose the appropriate name based on size constraints. For example, in a space controlled display, use the shorter name, and in a drill-down (e.g. hover text) use the longer name.</xsi:documentation>
+		</xsi:annotation>
+		<xsi:sequence>
+			<xsi:element name="Text" maxOccurs="unbounded">
+				<xsi:complexType>
+					<xsi:simpleContent>
+						<xsi:extension base="xsi:string">
+							<xsi:attribute name="language" type="blkqcl-common:LanguageCode" default="en"/>
+						</xsi:extension>
+					</xsi:simpleContent>
+				</xsi:complexType>
+			</xsi:element>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="IntensityOverTimeMapType">
+		<xsi:annotation>
+			<xsi:documentation>Similar to SpectrumType, but associates intensity and time (time x axis, intensity y axis)</xsi:documentation>
+		</xsi:annotation>
+		<xsi:sequence>
+			<xsi:element name="Measurement" minOccurs="0" maxOccurs="unbounded">
+				<xsi:complexType>
+					<xsi:attribute name="time" type="xs:duration" use="required"/>
+					<xsi:attribute name="intensity" type="blkqcl-common:IntensityType" use="required"/>
+				</xsi:complexType>
+			</xsi:element>
+		</xsi:sequence>
+	</xsi:complexType>
+</xsi:schema>

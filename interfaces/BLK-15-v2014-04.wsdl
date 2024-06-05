@@ -1,0 +1,3775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:blk15="http://www.blockeng.com/Schemas/2014-04/BLK-15/" targetNamespace="http://www.blockeng.com/Schemas/2014-04/BLK-15/">
+	<wsdl:types>
+		<xsi:schema xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.blockeng.com/Schemas/2014-04/BLK-15/" elementFormDefault="qualified">
+			<xsi:simpleType name="AccelerationType">
+				<xsi:annotation>
+					<xsi:documentation>In meters per second^2</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="VelocityType">
+				<xsi:annotation>
+					<xsi:documentation>In meters / second</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="RangeFinderDistanceType">
+				<xsi:annotation>
+					<xsi:documentation>In meters</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="LaserDACValueType">
+				<xsi:annotation>
+					<xsi:documentation>Value from Laser D to A hardware register - 12 bit unsigned integer</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="4095"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="MirrorDACValueType">
+				<xsi:annotation>
+					<xsi:documentation>Value from Mirror D to A hardware register - 16 bit unsigned integer</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="65535"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="CCUDACValueType">
+				<xsi:annotation>
+					<xsi:documentation>{to-be-reviewed}</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="65535"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="MirrorCurrentAtoDValueType">
+				<xsi:annotation>
+					<xsi:documentation>Value from Laser D to A hardware register - 12 bit unsigned integer</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="4095"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="AlarmType">
+				<xsi:annotation>
+					<xsi:documentation>Error_PulseParameterFault means duty cycle or some such exceeded . This can happen even with our checking because of externally trigged starts</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Critical_CannotTalkToFPGA"/>
+					<xsi:enumeration value="Critical_LaserOverDriving"/>
+					<xsi:enumeration value="Critical_LaserOverheating"/>
+					<xsi:enumeration value="Critical_MirrorOverCurrent"/>
+					<xsi:enumeration value="Critical_MirrorNoCurrent"/>
+					<xsi:enumeration value="Critical_SystemOverTemperature"/>
+					<xsi:enumeration value="Critical_LowVoltageFromPowerBoard"/>
+					<xsi:enumeration value="Error_LaserTemperatureNotSettled"/>
+					<xsi:enumeration value="Error_SystemTemperatureNotSettled"/>
+					<xsi:enumeration value="Error_DetectorTemperatureNotLocked"/>
+					<xsi:enumeration value="Error_ThermalControlFault"/>
+					<xsi:enumeration value="Error_PulseParameterFault"/>
+					<xsi:enumeration value="Warning_AmbientTemperatureTooHigh"/>
+					<xsi:enumeration value="Warning_VibrationTooHigh"/>
+					<xsi:enumeration value="Warning_DetectorSignalTooCloseToSaturationLevel"/>
+					<xsi:enumeration value="Warning_LaserImpedenceTooHigh"/>
+					<xsi:enumeration value="Warning_MirrorImpedenceTooHigh"/>
+					<xsi:enumeration value="Warning_CalibrationTooHigh"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="BatteryStatusState">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="TooHot"/>
+					<xsi:enumeration value="NoLongerCharing"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="CurrentType">
+				<xsi:annotation>
+					<xsi:documentation>Always measured in amps</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="DutyCycleType">
+				<xsi:annotation>
+					<xsi:documentation>Percentage (0..100)</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="100"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="FrequencyType">
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="HumidityType">
+				<xsi:annotation>
+					<xsi:documentation>Releative Humidity (%) - 0..100</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="100"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="IntensityType">
+				<xsi:annotation>
+					<xsi:documentation>This is a relative, unitless indicator of signal intensity</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="LaserOnOffTransitionType">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="LaserOff"/>
+					<xsi:enumeration value="LaserOn"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="LaserOperationResultKey">
+				<xsi:restriction base="xs:string"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="PowerStateType">
+				<xsi:annotation>
+					<xsi:documentation>
+			* 	:Off
+			* 	:Hibernate
+			*           ACPI - S4
+			*			(not sure we need to support this)
+            * 	:Sleep
+            *            ACPI - S3
+			*			(not sure we need to support this)
+            * 	:ReadyToAcceptCommands
+            *              Services / GUI running, and powered. TEC may or may not be enabled (to save power)
+            *              and even if enabled, may not have reached equilibrium temperature yet.
+            *   :ReadyToFire
+            *             Warmed up, FPGA fully set to fire. This implies also having reached equilibrium temperature.
+            </xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Off"/>
+					<xsi:enumeration value="Hibernate"/>
+					<xsi:enumeration value="Suspend"/>
+					<xsi:enumeration value="ReadyToAcceptCommands"/>
+					<xsi:enumeration value="ReadyToFire"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="ACURegisterNameType">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="SOFT_RESET"/>
+					<xsi:enumeration value="FPGA_REV"/>
+					<xsi:enumeration value="SCRATCH_REG"/>
+					<xsi:enumeration value="ACU_ADC_EN"/>
+					<xsi:enumeration value="NORM_SAMPLES"/>
+					<xsi:enumeration value="NORM_SOLENOID"/>
+					<xsi:enumeration value="NORM_ACCUM_GO"/>
+					<xsi:enumeration value="NORM_ACCUM_LO"/>
+					<xsi:enumeration value="NORM_ACCUM_HI"/>
+					<xsi:enumeration value="FIFO_HEALTH"/>
+					<xsi:enumeration value="GOOD_PACKETS_LO"/>
+					<xsi:enumeration value="GOOD_PACKETS_HI"/>
+					<xsi:enumeration value="BAD_PACKETS_LO"/>
+					<xsi:enumeration value="BAD_PACKETS_HI"/>
+					<xsi:enumeration value="PACKETS_SENT_LO"/>
+					<xsi:enumeration value="PACKETS_SENT_HI"/>
+					<xsi:enumeration value="WL_STEP_SWEEP_MODE"/>
+					<xsi:enumeration value="WL_STEP_SWEEP_UPDATE"/>
+					<xsi:enumeration value="WL_SWEEP_RATE_LO"/>
+					<xsi:enumeration value="WL_SWEEP_RATE_HI"/>
+					<xsi:enumeration value="WL_SWEEP_LUT_LAST_ENTRY"/>
+					<xsi:enumeration value="WL_REPORT_STATIC"/>
+					<xsi:enumeration value="EXT_CURRENT_WL"/>
+					<xsi:enumeration value="MIRROR_STEP_ON_TARGET"/>
+					<xsi:enumeration value="WL_TO_DRIVE_LUT_ADDR"/>
+					<xsi:enumeration value="WL_TO_DRIVE_LUT_DATA"/>
+					<xsi:enumeration value="WL_SWEEP_LUT_ADDR"/>
+					<xsi:enumeration value="WL_SWEEP_LUT_DATA"/>
+					<xsi:enumeration value="READ_TO_WL_LUT_ADDR"/>
+					<xsi:enumeration value="READ_TO_WL_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR0_SCAN_MODE"/>
+					<xsi:enumeration value="MIRROR1_SCAN_MODE"/>
+					<xsi:enumeration value="MIRROR2_SCAN_MODE"/>
+					<xsi:enumeration value="MIRROR3_SCAN_MODE"/>
+					<xsi:enumeration value="MIRROR0_SCAN_PHASE_INC_STATIC"/>
+					<xsi:enumeration value="MIRROR1_SCAN_PHASE_INC_STATIC"/>
+					<xsi:enumeration value="MIRROR2_SCAN_PHASE_INC_STATIC"/>
+					<xsi:enumeration value="MIRROR3_SCAN_PHASE_INC_STATIC"/>
+					<xsi:enumeration value="MIRROR0_SCAN_GAIN"/>
+					<xsi:enumeration value="MIRROR1_SCAN_GAIN"/>
+					<xsi:enumeration value="MIRROR2_SCAN_GAIN"/>
+					<xsi:enumeration value="MIRROR3_SCAN_GAIN"/>
+					<xsi:enumeration value="MIRROR0_SCAN_DRIVE_OFFSET"/>
+					<xsi:enumeration value="MIRROR1_SCAN_DRIVE_OFFSET"/>
+					<xsi:enumeration value="MIRROR2_SCAN_DRIVE_OFFSET"/>
+					<xsi:enumeration value="MIRROR3_SCAN_DRIVE_OFFSET"/>
+					<xsi:enumeration value="MIRROR0_SCAN_LUT_ADDR"/>
+					<xsi:enumeration value="MIRROR1_SCAN_LUT_ADDR"/>
+					<xsi:enumeration value="MIRROR2_SCAN_LUT_ADDR"/>
+					<xsi:enumeration value="MIRROR3_SCAN_LUT_ADDR"/>
+					<xsi:enumeration value="MIRROR0_SCAN_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR1_SCAN_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR2_SCAN_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR3_SCAN_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR0_STEP_LUT_RATE_LO"/>
+					<xsi:enumeration value="MIRROR1_STEP_LUT_RATE_LO"/>
+					<xsi:enumeration value="MIRROR2_STEP_LUT_RATE_LO"/>
+					<xsi:enumeration value="MIRROR3_STEP_LUT_RATE_LO"/>
+					<xsi:enumeration value="MIRROR0_STEP_LUT_RATE_HI"/>
+					<xsi:enumeration value="MIRROR1_STEP_LUT_RATE_HI"/>
+					<xsi:enumeration value="MIRROR2_STEP_LUT_RATE_HI"/>
+					<xsi:enumeration value="MIRROR3_STEP_LUT_RATE_HI"/>
+					<xsi:enumeration value="MIRROR0_STEP_LUT_LAST_ENTRY"/>
+					<xsi:enumeration value="MIRROR1_STEP_LUT_LAST_ENTRY"/>
+					<xsi:enumeration value="MIRROR2_STEP_LUT_LAST_ENTRY"/>
+					<xsi:enumeration value="MIRROR3_STEP_LUT_LAST_ENTRY"/>
+					<xsi:enumeration value="MIRROR0_STEP_LUT_ADDR"/>
+					<xsi:enumeration value="MIRROR1_STEP_LUT_ADDR"/>
+					<xsi:enumeration value="MIRROR2_STEP_LUT_ADDR"/>
+					<xsi:enumeration value="MIRROR3_STEP_LUT_ADDR"/>
+					<xsi:enumeration value="MIRROR0_STEP_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR1_STEP_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR2_STEP_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR3_STEP_LUT_DATA"/>
+					<xsi:enumeration value="MIRROR0_SPI_PERIOD"/>
+					<xsi:enumeration value="MIRROR1_SPI_PERIOD"/>
+					<xsi:enumeration value="MIRROR2_SPI_PERIOD"/>
+					<xsi:enumeration value="MIRROR3_SPI_PERIOD"/>
+					<xsi:enumeration value="MIRROR0_MANUAL_VOLTAGE"/>
+					<xsi:enumeration value="MIRROR1_MANUAL_VOLTAGE"/>
+					<xsi:enumeration value="MIRROR2_MANUAL_VOLTAGE"/>
+					<xsi:enumeration value="MIRROR3_MANUAL_VOLTAGE"/>
+					<xsi:enumeration value="MIRROR0_VOLTAGE"/>
+					<xsi:enumeration value="MIRROR1_VOLTAGE"/>
+					<xsi:enumeration value="MIRROR2_VOLTAGE"/>
+					<xsi:enumeration value="MIRROR3_VOLTAGE"/>
+					<xsi:enumeration value="MIRROR0_CURRENT"/>
+					<xsi:enumeration value="MIRROR1_CURRENT"/>
+					<xsi:enumeration value="MIRROR2_CURRENT"/>
+					<xsi:enumeration value="MIRROR3_CURRENT"/>
+					<xsi:enumeration value="LASER_POINTER"/>
+					<xsi:enumeration value="TRIG_PRESENT"/>
+					<xsi:enumeration value="TRIG_CTL"/>
+					<xsi:enumeration value="PULSES_LO"/>
+					<xsi:enumeration value="PULSES_HI"/>
+					<xsi:enumeration value="PULSE_WIDTH"/>
+					<xsi:enumeration value="PULSE_PERIOD_FRAC"/>
+					<xsi:enumeration value="PULSE_PERIOD_INT_LO"/>
+					<xsi:enumeration value="PULSE_PERIOD_INT_HI"/>
+					<xsi:enumeration value="EXT_SAMPLE_TRIG_DLY"/>
+					<xsi:enumeration value="LASER_MASTER_EN"/>
+					<xsi:enumeration value="LASER_SCAN_EN"/>
+					<xsi:enumeration value="FIRING"/>
+					<xsi:enumeration value="LASER_STEP_EN"/>
+					<xsi:enumeration value="PULSE_PARAM_ERROR"/>
+					<xsi:enumeration value="LASER_CURRENT_ERROR"/>
+					<xsi:enumeration value="LASER_PULSE_ERROR"/>
+					<xsi:enumeration value="LASER_CLR_ERROR"/>
+					<xsi:enumeration value="LASER0_VOLTAGE_CTL_MODE"/>
+					<xsi:enumeration value="LASER1_VOLTAGE_CTL_MODE"/>
+					<xsi:enumeration value="LASER2_VOLTAGE_CTL_MODE"/>
+					<xsi:enumeration value="LASER3_VOLTAGE_CTL_MODE"/>
+					<xsi:enumeration value="LASER0_VOLTAGE_FIXED"/>
+					<xsi:enumeration value="LASER1_VOLTAGE_FIXED"/>
+					<xsi:enumeration value="LASER2_VOLTAGE_FIXED"/>
+					<xsi:enumeration value="LASER3_VOLTAGE_FIXED"/>
+					<xsi:enumeration value="LASER0_VOLTAGE_SETTLE_TIME"/>
+					<xsi:enumeration value="LASER1_VOLTAGE_SETTLE_TIME"/>
+					<xsi:enumeration value="LASER2_VOLTAGE_SETTLE_TIME"/>
+					<xsi:enumeration value="LASER3_VOLTAGE_SETTLE_TIME"/>
+					<xsi:enumeration value="LASER0_CURRENT_MAX"/>
+					<xsi:enumeration value="LASER1_CURRENT_MAX"/>
+					<xsi:enumeration value="LASER2_CURRENT_MAX"/>
+					<xsi:enumeration value="LASER3_CURRENT_MAX"/>
+					<xsi:enumeration value="LASER0_PULSE_WIDTH_PROTECT"/>
+					<xsi:enumeration value="LASER1_PULSE_WIDTH_PROTECT"/>
+					<xsi:enumeration value="LASER2_PULSE_WIDTH_PROTECT"/>
+					<xsi:enumeration value="LASER3_PULSE_WIDTH_PROTECT"/>
+					<xsi:enumeration value="LASER0_PULSE_DUTY_PROTECT1"/>
+					<xsi:enumeration value="LASER1_PULSE_DUTY_PROTECT1"/>
+					<xsi:enumeration value="LASER2_PULSE_DUTY_PROTECT1"/>
+					<xsi:enumeration value="LASER3_PULSE_DUTY_PROTECT1"/>
+					<xsi:enumeration value="LASER0_PULSE_DUTY_PROTECT2"/>
+					<xsi:enumeration value="LASER1_PULSE_DUTY_PROTECT2"/>
+					<xsi:enumeration value="LASER2_PULSE_DUTY_PROTECT2"/>
+					<xsi:enumeration value="LASER3_PULSE_DUTY_PROTECT2"/>
+					<xsi:enumeration value="LASER0_PULSE_DUTY_PROTECT3"/>
+					<xsi:enumeration value="LASER1_PULSE_DUTY_PROTECT3"/>
+					<xsi:enumeration value="LASER2_PULSE_DUTY_PROTECT3"/>
+					<xsi:enumeration value="LASER3_PULSE_DUTY_PROTECT3"/>
+					<xsi:enumeration value="LASER0_PULSE_DUTY_PROTECT4"/>
+					<xsi:enumeration value="LASER1_PULSE_DUTY_PROTECT4"/>
+					<xsi:enumeration value="LASER2_PULSE_DUTY_PROTECT4"/>
+					<xsi:enumeration value="LASER3_PULSE_DUTY_PROTECT4"/>
+					<xsi:enumeration value="LASER0_VOLTAGE_CURRENT_READ"/>
+					<xsi:enumeration value="LASER1_VOLTAGE_CURRENT_READ"/>
+					<xsi:enumeration value="LASER2_VOLTAGE_CURRENT_READ"/>
+					<xsi:enumeration value="LASER3_VOLTAGE_CURRENT_READ"/>
+					<xsi:enumeration value="LASER0_VOLTAGE"/>
+					<xsi:enumeration value="LASER1_VOLTAGE"/>
+					<xsi:enumeration value="LASER2_VOLTAGE"/>
+					<xsi:enumeration value="LASER3_VOLTAGE"/>
+					<xsi:enumeration value="LASER0_CURRENT"/>
+					<xsi:enumeration value="LASER1_CURRENT"/>
+					<xsi:enumeration value="LASER2_CURRENT"/>
+					<xsi:enumeration value="LASER3_CURRENT"/>
+					<xsi:enumeration value="LASER0_VOLTAGE_CTL_LUT_ADDR"/>
+					<xsi:enumeration value="LASER1_VOLTAGE_CTL_LUT_ADDR"/>
+					<xsi:enumeration value="LASER2_VOLTAGE_CTL_LUT_ADDR"/>
+					<xsi:enumeration value="LASER3_VOLTAGE_CTL_LUT_ADDR"/>
+					<xsi:enumeration value="LASER0_VOLTAGE_CTL_LUT_DATA"/>
+					<xsi:enumeration value="LASER1_VOLTAGE_CTL_LUT_DATA"/>
+					<xsi:enumeration value="LASER2_VOLTAGE_CTL_LUT_DATA"/>
+					<xsi:enumeration value="LASER3_VOLTAGE_CTL_LUT_DATA"/>
+					<xsi:enumeration value="TUNERS_PROM_SHIFT_LEN"/>
+					<xsi:enumeration value="TUNERS_PROM_SHIFT_OUT_LO"/>
+					<xsi:enumeration value="TUNERS_PROM_SHIFT_OUT_HI"/>
+					<xsi:enumeration value="TUNERS_PROM_EXECUTE"/>
+					<xsi:enumeration value="TUNER0_1_PROM_SHIFT_IN"/>
+					<xsi:enumeration value="TUNER2_3_PROM_SHIFT_IN"/>
+					<xsi:enumeration value="LASER0_TEMP_MAX"/>
+					<xsi:enumeration value="LASER1_TEMP_MAX"/>
+					<xsi:enumeration value="LASER2_TEMP_MAX"/>
+					<xsi:enumeration value="LASER3_TEMP_MAX"/>
+					<xsi:enumeration value="MIRROR0_TEMP_MAX"/>
+					<xsi:enumeration value="MIRROR1_TEMP_MAX"/>
+					<xsi:enumeration value="MIRROR2_TEMP_MAX"/>
+					<xsi:enumeration value="MIRROR3_TEMP_MAX"/>
+					<xsi:enumeration value="LASER0_TEC_CURRENT_MAX"/>
+					<xsi:enumeration value="LASER1_TEC_CURRENT_MAX"/>
+					<xsi:enumeration value="LASER2_TEC_CURRENT_MAX"/>
+					<xsi:enumeration value="LASER3_TEC_CURRENT_MAX"/>
+					<xsi:enumeration value="TUNERS_TEC_CURRENT_MAX"/>
+					<xsi:enumeration value="TEMP_CTL_MAST_EN"/>
+					<xsi:enumeration value="TEMP_CTL_MOD_EN"/>
+					<xsi:enumeration value="LASER0_TEMP"/>
+					<xsi:enumeration value="LASER1_TEMP"/>
+					<xsi:enumeration value="LASER2_TEMP"/>
+					<xsi:enumeration value="LASER3_TEMP"/>
+					<xsi:enumeration value="MIRROR0_TEMP"/>
+					<xsi:enumeration value="MIRROR1_TEMP"/>
+					<xsi:enumeration value="MIRROR2_TEMP"/>
+					<xsi:enumeration value="MIRROR3_TEMP"/>
+					<xsi:enumeration value="COLD_PLATE_TEMP"/>
+					<xsi:enumeration value="LASER0_TEC_CURRENT"/>
+					<xsi:enumeration value="LASER1_TEC_CURRENT"/>
+					<xsi:enumeration value="LASER2_TEC_CURRENT"/>
+					<xsi:enumeration value="LASER3_TEC_CURRENT"/>
+					<xsi:enumeration value="TUNERS_TEC_CURRENT"/>
+					<xsi:enumeration value="LASER0_TEC_VOLTAGE"/>
+					<xsi:enumeration value="LASER1_TEC_VOLTAGE"/>
+					<xsi:enumeration value="LASER2_TEC_VOLTAGE"/>
+					<xsi:enumeration value="LASER3_TEC_VOLTAGE"/>
+					<xsi:enumeration value="TUNERS_TEC_VOLTAGE"/>
+					<xsi:enumeration value="TEMP_ERROR"/>
+					<xsi:enumeration value="TEC_ERROR"/>
+					<xsi:enumeration value="THERM_CLR_ERROR"/>
+					<xsi:enumeration value="LASER0_TEMP_SETPOINT"/>
+					<xsi:enumeration value="LASER1_TEMP_SETPOINT"/>
+					<xsi:enumeration value="LASER2_TEMP_SETPOINT"/>
+					<xsi:enumeration value="LASER3_TEMP_SETPOINT"/>
+					<xsi:enumeration value="LASER0_TEMP_COEF_THRESH"/>
+					<xsi:enumeration value="LASER1_TEMP_COEF_THRESH"/>
+					<xsi:enumeration value="LASER2_TEMP_COEF_THRESH"/>
+					<xsi:enumeration value="LASER3_TEMP_COEF_THRESH"/>
+					<xsi:enumeration value="LASER0_TEMP_COEF_P_HI"/>
+					<xsi:enumeration value="LASER1_TEMP_COEF_P_HI"/>
+					<xsi:enumeration value="LASER2_TEMP_COEF_P_HI"/>
+					<xsi:enumeration value="LASER3_TEMP_COEF_P_HI"/>
+					<xsi:enumeration value="LASER0_TEMP_COEF_I_HI"/>
+					<xsi:enumeration value="LASER1_TEMP_COEF_I_HI"/>
+					<xsi:enumeration value="LASER2_TEMP_COEF_I_HI"/>
+					<xsi:enumeration value="LASER3_TEMP_COEF_I_HI"/>
+					<xsi:enumeration value="LASER0_TEMP_COEF_D_HI"/>
+					<xsi:enumeration value="LASER1_TEMP_COEF_D_HI"/>
+					<xsi:enumeration value="LASER2_TEMP_COEF_D_HI"/>
+					<xsi:enumeration value="LASER3_TEMP_COEF_D_HI"/>
+					<xsi:enumeration value="LASER0_TEMP_COEF_P_LO"/>
+					<xsi:enumeration value="LASER1_TEMP_COEF_P_LO"/>
+					<xsi:enumeration value="LASER2_TEMP_COEF_P_LO"/>
+					<xsi:enumeration value="LASER3_TEMP_COEF_P_LO"/>
+					<xsi:enumeration value="LASER0_TEMP_COEF_I_LO"/>
+					<xsi:enumeration value="LASER1_TEMP_COEF_I_LO"/>
+					<xsi:enumeration value="LASER2_TEMP_COEF_I_LO"/>
+					<xsi:enumeration value="LASER3_TEMP_COEF_I_LO"/>
+					<xsi:enumeration value="LASER0_TEMP_COEF_D_LO"/>
+					<xsi:enumeration value="LASER1_TEMP_COEF_D_LO"/>
+					<xsi:enumeration value="LASER2_TEMP_COEF_D_LO"/>
+					<xsi:enumeration value="LASER3_TEMP_COEF_D_LO"/>
+					<xsi:enumeration value="LASER0_TEC_PWM_PERIOD"/>
+					<xsi:enumeration value="LASER1_TEC_PWM_PERIOD"/>
+					<xsi:enumeration value="LASER2_TEC_PWM_PERIOD"/>
+					<xsi:enumeration value="LASER3_TEC_PWM_PERIOD"/>
+					<xsi:enumeration value="LASER0_TEC_PWM_WIDTH_MAX"/>
+					<xsi:enumeration value="LASER1_TEC_PWM_WIDTH_MAX"/>
+					<xsi:enumeration value="LASER2_TEC_PWM_WIDTH_MAX"/>
+					<xsi:enumeration value="LASER3_TEC_PWM_WIDTH_MAX"/>
+					<xsi:enumeration value="LASER0_TEC_MANUAL"/>
+					<xsi:enumeration value="LASER1_TEC_MANUAL"/>
+					<xsi:enumeration value="LASER2_TEC_MANUAL"/>
+					<xsi:enumeration value="LASER3_TEC_MANUAL"/>
+					<xsi:enumeration value="LASER0_TEC_MANUAL_PWM_WIDTH"/>
+					<xsi:enumeration value="LASER1_TEC_MANUAL_PWM_WIDTH"/>
+					<xsi:enumeration value="LASER2_TEC_MANUAL_PWM_WIDTH"/>
+					<xsi:enumeration value="LASER3_TEC_MANUAL_PWM_WIDTH"/>
+					<xsi:enumeration value="TUNERS_TEC_TEMP_SETPOINT"/>
+					<xsi:enumeration value="TUNERS_TEC_TEMP_COEF_THRESH"/>
+					<xsi:enumeration value="TUNERS_TEC_TEMP_COEF_P_HI"/>
+					<xsi:enumeration value="TUNERS_TEC_TEMP_COEF_I_HI"/>
+					<xsi:enumeration value="TUNERS_TEC_TEMP_COEF_D_HI"/>
+					<xsi:enumeration value="TUNERS_TEC_TEMP_COEF_P_LO"/>
+					<xsi:enumeration value="TUNERS_TEC_TEMP_COEF_I_LO"/>
+					<xsi:enumeration value="TUNERS_TEC_TEMP_COEF_D_LO"/>
+					<xsi:enumeration value="TUNERS_TEC_PWM_PERIOD"/>
+					<xsi:enumeration value="TUNERS_TEC_PWM_WIDTH_MAX"/>
+					<xsi:enumeration value="TUNERS_TEC_MANUAL"/>
+					<xsi:enumeration value="TUNERS_TEC_MANUAL_PWM_WIDTH"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="CCURegisterNameType">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="SOFT_RESET"/>
+					<xsi:enumeration value="FPGA_REV"/>
+					<xsi:enumeration value="SCRATCH_REG"/>
+					<xsi:enumeration value="IRQ"/>
+					<xsi:enumeration value="MONITOR_DAC_MODE"/>
+					<xsi:enumeration value="MONITOR_DAC_DET_TRIG_PER_WL"/>
+					<xsi:enumeration value="MONITOR_DAC_DET_DATA_MIN"/>
+					<xsi:enumeration value="MONITOR_DAC_DET_DATA_MAX"/>
+					<xsi:enumeration value="MONITOR_DAC_DET_DATA_INC"/>
+					<xsi:enumeration value="MONITOR_DAC_DET_DATA_HOLD"/>
+					<xsi:enumeration value="MONITOR_DAC_LUT_ADDR"/>
+					<xsi:enumeration value="MONITOR_DAC_LUT_DATA"/>
+					<xsi:enumeration value="GAIN_DAC"/>
+					<xsi:enumeration value="BIAS_DAC"/>
+					<xsi:enumeration value="SAMPLE_ADC_PWDN"/>
+					<xsi:enumeration value="SAMPLE_DELAY"/>
+					<xsi:enumeration value="SAMPLE_WIDTH"/>
+					<xsi:enumeration value="PREDARK_TO_LIGHT"/>
+					<xsi:enumeration value="LIGHT_TO_POSTDARK"/>
+					<xsi:enumeration value="SAMPLE_ENABLE"/>
+					<xsi:enumeration value="SAMPLE_STATUS"/>
+					<xsi:enumeration value="VOID_SAMPLES"/>
+					<xsi:enumeration value="LATEST_WL_DATA"/>
+					<xsi:enumeration value="DP0_U_BIN_CLEAR"/>
+					<xsi:enumeration value="DP1_U_BIN_CLEAR"/>
+					<xsi:enumeration value="DP2_U_BIN_CLEAR"/>
+					<xsi:enumeration value="DP3_U_BIN_CLEAR"/>
+					<xsi:enumeration value="DP0_U_BIN_OFFSET"/>
+					<xsi:enumeration value="DP1_U_BIN_OFFSET"/>
+					<xsi:enumeration value="DP2_U_BIN_OFFSET"/>
+					<xsi:enumeration value="DP3_U_BIN_OFFSET"/>
+					<xsi:enumeration value="DP0_STATUS"/>
+					<xsi:enumeration value="DP1_STATUS"/>
+					<xsi:enumeration value="DP2_STATUS"/>
+					<xsi:enumeration value="DP3_STATUS"/>
+					<xsi:enumeration value="DP0_U_BIN_ADDR"/>
+					<xsi:enumeration value="DP1_U_BIN_ADDR"/>
+					<xsi:enumeration value="DP2_U_BIN_ADDR"/>
+					<xsi:enumeration value="DP3_U_BIN_ADDR"/>
+					<xsi:enumeration value="DP0_U_BIN_DEBUG"/>
+					<xsi:enumeration value="DP1_U_BIN_DEBUG"/>
+					<xsi:enumeration value="DP2_U_BIN_DEBUG"/>
+					<xsi:enumeration value="DP3_U_BIN_DEBUG"/>
+					<xsi:enumeration value="DP0_U_BIN_DATA"/>
+					<xsi:enumeration value="DP1_U_BIN_DATA"/>
+					<xsi:enumeration value="DP2_U_BIN_DATA"/>
+					<xsi:enumeration value="DP3_U_BIN_DATA"/>
+					<xsi:enumeration value="TEMP_SETPOINT"/>
+					<xsi:enumeration value="TEMP_COEF_THRESH"/>
+					<xsi:enumeration value="TEMP_COEF_P_HI"/>
+					<xsi:enumeration value="TEMP_COEF_I_HI"/>
+					<xsi:enumeration value="TEMP_COEF_D_HI"/>
+					<xsi:enumeration value="TEMP_COEF_P_LO"/>
+					<xsi:enumeration value="TEMP_COEF_I_LO"/>
+					<xsi:enumeration value="TEMP_COEF_D_LO"/>
+					<xsi:enumeration value="TEMP_MAX"/>
+					<xsi:enumeration value="TEC_PWM_PERIOD"/>
+					<xsi:enumeration value="TEC_PWM_WIDTH_MAX"/>
+					<xsi:enumeration value="TEC_MANUAL"/>
+					<xsi:enumeration value="TEC_MANUAL_PWM_WIDTH"/>
+					<xsi:enumeration value="TEC_CURRENT_MAX"/>
+					<xsi:enumeration value="TEMP_CTL_MOD_EN"/>
+					<xsi:enumeration value="TEMP"/>
+					<xsi:enumeration value="TEC_CURRENT"/>
+					<xsi:enumeration value="THERM_STATUS"/>
+					<xsi:enumeration value="THERM_CLR_ERROR"/>
+					<xsi:enumeration value="CAPTURE_TIME"/>
+					<xsi:enumeration value="CAPTURE_DROP"/>
+					<xsi:enumeration value="CAPTURE_ENABLE"/>
+					<xsi:enumeration value="CAPTURE_STATUS"/>
+					<xsi:enumeration value="CAPTURE_DATA"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="ACURegisterValueType">
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="65535"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="CCURegisterValueType">
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="0"/>
+					<xsi:maxInclusive value="4294967295"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="RepeatCountType">
+				<xsi:annotation>
+					<xsi:documentation>**DEPRECATED**</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="1"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="SensorDataKind">
+				<xsi:annotation>
+					<xsi:documentation>This is a kind of sensor data to be read. Typically a set of these are provided to ReadSensors()</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Accelerometer"/>
+					<xsi:enumeration value="ActiveLaser"/>
+					<xsi:enumeration value="ActiveLaserWaveNumber"/>
+					<xsi:enumeration value="AmbientTemperature"/>
+					<xsi:enumeration value="DetectorTemperature"/>
+					<xsi:enumeration value="ElectricalBoardTemperature"/>
+					<xsi:enumeration value="LaserCurrent"/>
+					<xsi:enumeration value="LaserTemperature"/>
+					<xsi:enumeration value="LaserVoltage"/>
+					<xsi:enumeration value="MirrorTemperature"/>
+					<xsi:enumeration value="SystemHumidity"/>
+					<xsi:enumeration value="SystemTemperature"/>
+					<xsi:enumeration value="RangeFinder"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="SolenoidType">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="PowerCal"/>
+					<xsi:enumeration value="WavelengthCal"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="SolenoidStateType">
+				<xsi:restriction base="xs:string">
+					<xsi:enumeration value="Internal"/>
+					<xsi:enumeration value="External"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="SweepSpeedType">
+				<xsi:annotation>
+					<xsi:documentation>cm^-1/ms  (inverse centimeter per millisecond)</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minInclusive value="0"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="TemperatureType">
+				<xsi:annotation>
+					<xsi:documentation>Temperatures are all in degrees Centigrade</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="TunerNumberType">
+				<xsi:annotation>
+					<xsi:documentation>The system can have from 1 to 4 tuners, and this is used as an enumerated index of which tuner a given command is operating on.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:unsignedInt">
+					<xsi:minInclusive value="1"/>
+					<xsi:maxInclusive value="4"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="VoltageType">
+				<xsi:annotation>
+					<xsi:documentation>Always measured in volts</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double"/>
+			</xsi:simpleType>
+			<xsi:simpleType name="WaveNumberType">
+				<xsi:annotation>
+					<xsi:documentation>A WaveNumber is the reciprocal of wave-length. The units are in cm-1 (1/centimeters). WaveNumberType is a floating point number. The minimal legal value is zero (not inclusive) and there is no upper bound.
+However, the BLK15 device only supports wave numbers between 600.0 and 2438.4. The exact range for your device depends on the particular lasers and configuration. See the GetFactorySettings API for more details.
+This entire API is defined in terms of WaveNumbers, and not wave-lengths.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minInclusive value="0"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:simpleType name="WaveNumberDistanceType">
+				<xsi:annotation>
+					<xsi:documentation>The non-negative distance between two WaveNumbers</xsi:documentation>
+				</xsi:annotation>
+				<xsi:restriction base="xs:double">
+					<xsi:minInclusive value="0"/>
+				</xsi:restriction>
+			</xsi:simpleType>
+			<xsi:complexType name="AlarmSetType">
+				<xsi:sequence>
+					<xsi:element name="Alarm" type="blk15:AlarmType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="BatteryStatusType">
+				<xsi:sequence>
+					<xsi:element name="BatteryCapable" type="xs:boolean"/>
+					<xsi:element name="BatteryPresent" type="xs:boolean" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Only present if capable</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="BatteryPercentCharged" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Only present if present. Return result is a percentage charged</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="xs:float">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="100"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="ExternalPowerPresent" type="xs:boolean">
+						<xsi:annotation>
+							<xsi:documentation>Returns true if 'plugged in'</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="Charging" type="xs:boolean" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Only present if BatteryPresent, and only true if ExternalPowerPresent, but can be false if externalpowerpresent, either because charged, or because of a fault. </xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="StatusStates" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is only present if battery-capable (and maybe only if battery-present).
+
+It is a list of states - which could have been called 'faults' - but I avoided that word because it implies problems, and some states might not be real problems (like not charging due to temperature issues, or time the battery has been on, or other such matters).</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="State" minOccurs="0" maxOccurs="unbounded">
+									<xsi:annotation>
+										<xsi:documentation>***UNSUPPORTED-IN-THIS-VERSION***. TBD - these need to be enumerated and documented!</xsi:documentation>
+									</xsi:annotation>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="DeviceDescriptionType">
+				<xsi:annotation>
+					<xsi:documentation>Generic device information, like serial number and device model.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="DeviceFriendlyName" type="xs:string">
+						<xsi:annotation>
+							<xsi:documentation>This is the name that shows up primarily in SSDP. Reasonable for this to be the same as Model Name</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ModelName" type="xs:string"/>
+					<xsi:element name="ModelNumber" type="xs:string"/>
+					<xsi:element name="SerialNumber" type="xs:string"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="DeviceHealthType">
+				<xsi:annotation>
+					<xsi:documentation>***UNSUPPORTED-IN-THIS-VERSION*** ***DEPRECATED***</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Status" type="xs:string"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="FactorySettingsType">
+				<xsi:sequence>
+					<xsi:element name="EnvironmentalOperationTemperatures" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the allowed range of operational tempreatures, and a fault will result if this environmental temperature range is exceeded</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blk15:TemperatureType" use="required"/>
+							<xsi:attribute name="upperBound" type="blk15:TemperatureType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserWaveNumberStitchPoints" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>When the LaserrWaveNumberRanges overlap, this defines how to disambiguate.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:choice>
+								<xsi:element name="Automatic">
+									<xsi:complexType>
+										<xsi:sequence/>
+									</xsi:complexType>
+								</xsi:element>
+								<xsi:element name="Explicit">
+									<xsi:complexType>
+										<xsi:sequence>
+											<xsi:element name="After" maxOccurs="3">
+												<xsi:complexType>
+													<xsi:simpleContent>
+														<xsi:extension base="blk15:WaveNumberType">
+															<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+														</xsi:extension>
+													</xsi:simpleContent>
+												</xsi:complexType>
+											</xsi:element>
+										</xsi:sequence>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:choice>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserPulseDurationLimit" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This value bounds the values of the user settable 'PulseDuration'
+</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="xs:duration" use="required"/>
+							<xsi:attribute name="upperBound" type="xs:duration" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserDutyCycleLimit" type="blk15:DutyCycleType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the maximum value the user can set for the laser duty cycle. 
+
+This applies to each of the 4 lasers.
+
+DutyCycle = PulseDuration/PulsePeriod (expressed as a percentage).</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ColdPlateTECControlParameters" type="blk15:PIDType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>PID control parameters for temperature PID controller. Note - temperature setpoint set in PerUserDeviceSettings/SystemTemperature.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SweepCurveShape" type="xs:int" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>***UNSUPPORTED-IN-THIS-VERSION***</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ColdPlateTECCurrentUpperBound" type="blk15:CurrentType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This defines the upper bounds on the current allowed for the cold plateTEC (regardless of cooling or heating).
+
+Note - this values can be used to compute a percentage-of-max value in IDeviceManager::GetTECPowerConsumption</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="Tuners" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This list contians configuraiton data for exactly the set of installed tuners. This set can be disjoint (such as 1, and 3.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Tuner" minOccurs="0" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:complexContent>
+											<xsi:extension base="blk15:TunerFactorySettingsType">
+												<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:complexContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="PreDarkToLight" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the time from the end of the pre-dark sample to the start of the light sample.  This value must be greater than 0. </xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="LightToPostDark" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the time from the end of the light sample to the start of the post-dark sample.  The only restriction on this register value is that it must be greater than 0.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="BiasDAC" type="blk15:CCUDACValueType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Detector DAC Bias {to-be-reviewed - what units?}</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SampleDelayRange" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>See the user settings CCUSettings::SampleDelay</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="xs:duration" use="required"/>
+							<xsi:attribute name="upperBound" type="xs:duration" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="CCUTemperatureSetPointRange" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Constrian the ranges for the CCU TEC setpoints</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blk15:TemperatureType" use="required"/>
+							<xsi:attribute name="upperBound" type="blk15:TemperatureType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="CCUTECPIDParameters" type="blk15:PIDType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>PID control paramters for CCU FPGA TEC unit</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="FactoryDefaultsForUserSettings" type="blk15:PerDeviceUserSetttingsType" minOccurs="0"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="IntensityOverTimeMapType">
+				<xsi:annotation>
+					<xsi:documentation>Similar to SpectrumType, but associates intensity and time (time x axis, intensity y axis)</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Measurement" minOccurs="0" maxOccurs="unbounded">
+						<xsi:complexType>
+							<xsi:attribute name="time" type="xs:duration" use="required"/>
+							<xsi:attribute name="intensity" type="blk15:IntensityType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="WaveNumberToDriveVoltageCalibrationTableType">
+				<xsi:annotation>
+					<xsi:documentation>The WaveNumberToDriveVoltage calibration table is betwneen wave number and driving voltage. The driving voltage is in ADC counts.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Map" minOccurs="0" maxOccurs="unbounded">
+						<xsi:complexType>
+							<xsi:attribute name="waveNumber" type="blk15:WaveNumberType" use="required"/>
+							<xsi:attribute name="drivingVoltage" type="blk15:MirrorDACValueType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="LaserTuneStepType">
+				<xsi:choice>
+					<xsi:element name="Move">
+						<xsi:annotation>
+							<xsi:documentation>The Move operation simply turns the laser on, and on a particular wavenumber This is mostly the equivilent of a Step tune with dwellTime 0, start=end, stepSize meaningless, except that the laser is always ON at the end of a move tune.
+
+Note meaing of duringTransition is that if OFF, we force the laser off before the move. If duringTransition is ON, we simply skip that turn-off step. 'duringTransition' ON does not imply turning the laser on before move - just implies NOT turning it off before move.
+</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:attribute name="waveNumber" type="blk15:WaveNumberType" use="required"/>
+							<xsi:attribute name="duringTransition" use="required">
+								<xsi:simpleType>
+									<xsi:restriction base="blk15:LaserOnOffTransitionType"/>
+								</xsi:simpleType>
+							</xsi:attribute>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="Step">
+						<xsi:annotation>
+							<xsi:documentation>A step tune turns the laser on for each step from start to stop (by step size increments). The laser stops and weights 'dwellTime' at each increment. And at the end of a step tune, the laser is turned off.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:attribute name="startWaveNumber" type="blk15:WaveNumberType" use="required"/>
+							<xsi:attribute name="stopWaveNumber" type="blk15:WaveNumberType" use="required"/>
+							<xsi:attribute name="dwellTime" type="xs:duration" use="required"/>
+							<xsi:attribute name="stepSize" type="blk15:WaveNumberDistanceType" use="required"/>
+							<xsi:attribute name="duringTransition" type="blk15:LaserOnOffTransitionType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="Sweep">
+						<xsi:complexType>
+							<xsi:attribute name="startWaveNumber" type="blk15:WaveNumberType" use="required"/>
+							<xsi:attribute name="stopWaveNumber" type="blk15:WaveNumberType" use="required"/>
+							<xsi:attribute name="sweepSpeed" type="blk15:SweepSpeedType" use="required"/>
+							<xsi:attribute name="repeatCount" type="blk15:RepeatCountType" default="1"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="Delay">
+						<xsi:complexType>
+							<xsi:attribute name="duration" type="xs:duration" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:choice>
+			</xsi:complexType>
+			<xsi:complexType name="CurrentToWaveNumberCalibrationTableType">
+				<xsi:annotation>
+					<xsi:documentation>The CurrentToWaveNumber calibration table is between current readback and wave number. The ADC values are 12-bit ADC counts</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Map" minOccurs="0" maxOccurs="unbounded">
+						<xsi:complexType>
+							<xsi:attribute name="ADC" type="blk15:MirrorCurrentAtoDValueType" use="required"/>
+							<xsi:attribute name="waveNumber" type="blk15:WaveNumberType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="PerDeviceUserSetttingsType">
+				<xsi:sequence>
+					<xsi:element name="LaserTemperature" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This specifies the laser temprerature fore each laser (1..4). These numbers must be within the range specified by the factory settings LaserOperationTemperatures.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Tuner" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blk15:TemperatureType">
+												<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserPumpingVoltage" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>You may select either to use the builtin variable pumping voltage profiles defined in the per-tuner factory settings, or use a fixed profile</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:choice>
+								<xsi:element name="Fixed">
+									<xsi:annotation>
+										<xsi:documentation>Use exactlty the given voltages for each of the given tuners.
+
+These values must be in the range specified in the Factory settings per-tuner values LaserPumpingVoltageBounds</xsi:documentation>
+									</xsi:annotation>
+									<xsi:complexType>
+										<xsi:sequence>
+											<xsi:element name="Tuner" maxOccurs="4">
+												<xsi:complexType>
+													<xsi:simpleContent>
+														<xsi:extension base="blk15:VoltageType">
+															<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+														</xsi:extension>
+													</xsi:simpleContent>
+												</xsi:complexType>
+											</xsi:element>
+										</xsi:sequence>
+									</xsi:complexType>
+								</xsi:element>
+								<xsi:element name="Variable">
+									<xsi:annotation>
+										<xsi:documentation>This means using the factory set/specified laser profile</xsi:documentation>
+									</xsi:annotation>
+									<xsi:complexType>
+										<xsi:sequence/>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:choice>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="SystemTemperature" type="blk15:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the cold-plate temperature controlled by a TEC or Fan</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="PulseDuration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This applies to all 4 tuners.
+
+This value - though user settable - is constrained by the factory setting LaserPulseDurationLimit</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="xs:duration">
+								<xsi:minInclusive value="PT0S"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="PulsePeriod" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This period applies to all installed  tuners.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="xs:duration">
+								<xsi:minInclusive value="PT0S"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="TriggerMode" minOccurs="0">
+						<xsi:simpleType>
+							<xsi:restriction base="xs:string">
+								<xsi:enumeration value="ExternalPulseControl"/>
+								<xsi:enumeration value="Internal"/>
+								<xsi:enumeration value="External"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="PositionInputSelection" minOccurs="0">
+						<xsi:simpleType>
+							<xsi:restriction base="xs:string">
+								<xsi:enumeration value="Internal"/>
+								<xsi:enumeration value="External"/>
+								<xsi:enumeration value="ExternalSync"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="TriggerOutDelayTime" type="xs:duration" minOccurs="0"/>
+					<xsi:element name="PositionOut" minOccurs="0">
+						<xsi:simpleType>
+							<xsi:restriction base="xs:string">
+								<xsi:enumeration value="Analog"/>
+								<xsi:enumeration value="Digital"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="IdleAutoPowerStateChanges" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Timer based power level transitions.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Off" type="xsi:duration" minOccurs="0"/>
+								<xsi:element name="Hibernate" type="xsi:duration" minOccurs="0"/>
+								<xsi:element name="Sleep" type="xsi:duration" minOccurs="0"/>
+								<xsi:element name="LaserNotReady" type="xsi:duration" minOccurs="0"/>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="MonitorDACEnable" type="xs:boolean" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Setting this bit to '1' will enable the incoming detector ADC data to feed back out to the monitor DAC.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="GainDAC" type="blk15:CCUDACValueType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>A write to this register results in the write data being used to set the 16-bit DAC for detector gain.
+{to-be-reviewed - Should be ADC Value or other units?}
+</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SampleDelay" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the time from the rising sample trigger edge to the start of the light sample.  The only restriction on this register value is that it must be less than or equal to (2*SAMPLE_WIDTH + PREDARK_TO_LIGHT - 3).</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SampleWidth" type="xs:duration" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the futation of light sample.  This value must be greater than 0.  See SAMPLE_DELAY register description for other restriction.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="CCUTemperatureSetPoint" type="blk15:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Target (objective) temperature for CCU operation</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="LaserOperationResultsType">
+				<xsi:annotation>
+					<xsi:documentation>A given laser move (or step tune, or scan tune) MAY be confiugred to return a sequence (time series) of results.
+
+For a move-tune, this array will contain one result. For a step-tune, the number of results will depend upon the number of tune's implied by the step range, and granularity. And for a scan tune, the grantularity of reporting will be chosen by the BRK-15 automatically.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Measurement" type="blk15:LaserMoveResultsItemDetailType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="LaserMoveResultsItemDetailType">
+				<xsi:annotation>
+					<xsi:documentation>Internally measured wave-number result.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="WaveNumber" type="blk15:WaveNumberType"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="PIDType">
+				<xsi:annotation>
+					<xsi:documentation>See http://en.wikipedia.org/wiki/PID_controller</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="P">
+						<xsi:simpleType>
+							<xsi:restriction base="xsi:unsignedShort">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="65535"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="I">
+						<xsi:simpleType>
+							<xsi:restriction base="xsi:unsignedShort">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="65535"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+					<xsi:element name="D">
+						<xsi:simpleType>
+							<xsi:restriction base="xsi:unsignedShort">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="65535"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="ReadMirrorResultsType">
+				<xsi:sequence>
+					<xsi:element name="DriveVoltage" type="blk15:VoltageType" minOccurs="0"/>
+					<xsi:element name="DriveCurrent" type="blk15:CurrentType" minOccurs="0"/>
+					<xsi:element name="Sensor1" type="xs:double" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>***UNSUPPORTED-IN-THIS-VERSION***</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="Sensor2" type="xs:double" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>***UNSUPPORTED-IN-THIS-VERSION***</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ReferenceDetectorWaveNumber" type="blk15:WaveNumberType" minOccurs="0"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="SensorDataType">
+				<xsi:sequence>
+					<xsi:element name="AmbientTemperature" type="blk15:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the environemental temperature of the instrument</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="DetectorTemperature" type="blk15:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the temperature of the detector instrument</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SystemTemperature" type="blk15:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is the 'cold plate' temperature</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ElectricalBoardTemperature" type="blk15:TemperatureType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Temperature sersor to measure the temperature of the board.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="SystemHumidity" type="blk15:HumidityType" minOccurs="0"/>
+					<xsi:element name="LaserTemperature" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Sensor temperature readings from each laser.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Temperature" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blk15:TemperatureType">
+												<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserCurrent" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Current (I) actively being used to drive each laser.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Current" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blk15:CurrentType">
+												<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserVoltage" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Voltage (V) actively being used to drive each laser.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Voltage" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blk15:VoltageType">
+												<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="MirrorTemperature" minOccurs="0">
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="Temperature" maxOccurs="4">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blk15:TemperatureType">
+												<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="Accelerometer" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Speed in m/s,and acceleration in m/s^^2, and angular velocity in radians/second.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="AngularVelocityX" type="blk15:VelocityType"/>
+								<xsi:element name="AngularVelocityY" type="blk15:VelocityType"/>
+								<xsi:element name="AngularVelocityZ" type="blk15:VelocityType"/>
+								<xsi:element name="AccelerationX" type="blk15:AccelerationType"/>
+								<xsi:element name="AccelerationY" type="blk15:AccelerationType"/>
+								<xsi:element name="AccelerationZ" type="blk15:AccelerationType"/>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="ActiveLaser" type="blk15:TunerNumberType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>At most one laser can be active at a time. This returns an indicator of which if any is active.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ActiveLaserWaveNumber" type="blk15:WaveNumberType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Returns the active lasers current objective wave number.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="RangeFinder" type="blk15:RangeFinderDistanceType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Distance in meters</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="SensorRequestReadType">
+				<xsi:choice>
+					<xsi:element name="All">
+						<xsi:complexType>
+							<xsi:sequence/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:sequence>
+						<xsi:element name="Sensor" type="blk15:SensorDataKind" minOccurs="0" maxOccurs="unbounded"/>
+					</xsi:sequence>
+				</xsi:choice>
+			</xsi:complexType>
+			<xsi:complexType name="SpectrumType">
+				<xsi:annotation>
+					<xsi:documentation>A spectrum is stepwise approximation of the instensity of measurement across a freqency range. In practice, its a set of frequency/intensity measurements {(λ,I). See also IntensityOverTimeMapType.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Measurement" minOccurs="0" maxOccurs="unbounded">
+						<xsi:complexType>
+							<xsi:attribute name="waveNumber" type="blk15:WaveNumberType" use="required"/>
+							<xsi:attribute name="intensity" type="blk15:IntensityType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="SpectraType">
+				<xsi:annotation>
+					<xsi:documentation>An ordered sequence of SpectrumType</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="Spectrum" type="blk15:SpectrumType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="TECPowerConsumptionStatsType">
+				<xsi:annotation>
+					<xsi:documentation>This is used to define upper bounds, and to report back current (right now actual) current (electrons flying) usage.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="TunerTECCurrent" maxOccurs="4">
+						<xsi:annotation>
+							<xsi:documentation>Current being used for each installed tuner to drive the given tuner to the set-point temperature.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:simpleContent>
+								<xsi:extension base="blk15:CurrentType">
+									<xsi:attribute name="Tuner" type="blk15:TunerNumberType" use="required"/>
+								</xsi:extension>
+							</xsi:simpleContent>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="ColdPlateTECCurrent" type="blk15:CurrentType"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="TunerFactorySettingsType">
+				<xsi:annotation>
+					<xsi:documentation>per tuner factory settings</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="LaserOperationTemperatures" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This bounds the values users may set on the LaserTemperature settings.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blk15:TemperatureType" use="required"/>
+							<xsi:attribute name="upperBound" type="blk15:TemperatureType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserWaveNumberRanges" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This defines - per tuner - the range of wave numbers each tuner supports.
+
+Note - the wave number ranges across a set of tuners must not have holes (genus 0/contiguous). Tuners may (likely will) have overhapping ranges (disambiguated by Factory settings for stitching). 
+
+And there is no requirement of relative ordering of the wave length ranges corresponding in any way to the ordering of tuner numbers.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blk15:WaveNumberType" use="required"/>
+							<xsi:attribute name="upperBound" type="blk15:WaveNumberType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserPumpingVoltageBounds" minOccurs="0">
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blk15:VoltageType" use="required"/>
+							<xsi:attribute name="upperBound" type="blk15:VoltageType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserVariablePumpingVoltage" minOccurs="0">
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="PumpingVoltage" maxOccurs="unbounded">
+									<xsi:complexType>
+										<xsi:simpleContent>
+											<xsi:extension base="blk15:VoltageType">
+												<xsi:attribute name="waveNumber" type="blk15:WaveNumberType" use="required"/>
+											</xsi:extension>
+										</xsi:simpleContent>
+									</xsi:complexType>
+								</xsi:element>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="LaserMaximumPumpingCurrent" type="blk15:CurrentType" minOccurs="0"/>
+					<xsi:element name="LaserVoltageSettleTime" type="xsi:duration" minOccurs="0"/>
+					<xsi:element name="MirrorMovementRange" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>These values represent per-laser bounds on the possible values which the laser mirror can be set to. These are in the units of DAC counts, and so to map them to wave numbers, you must use the results of GetCurrentToWaveNumberCalibrartionTable()</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence/>
+							<xsi:attribute name="lowerBound" type="blk15:MirrorDACValueType" use="required"/>
+							<xsi:attribute name="upperBound" type="blk15:MirrorDACValueType" use="required"/>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="MirrorResonantFrequency" type="blk15:FrequencyType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This is used to compute the Step LUT rate</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="MirrorOperationFrequency" type="blk15:FrequencyType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This only applies to scans in interleaved mode.
+
+Measured in Hz</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="TunerTECControlParameters" type="blk15:PIDType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>PID control parameters for laser temperature PID controller (PID values - but separately specify setpoint).
+There is one of these set of PID parameters for each installed tuner.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="WaveNumberToDriveVoltageCalibrationTable" type="blk15:WaveNumberToDriveVoltageCalibrationTableType" minOccurs="0"/>
+					<xsi:element name="CurrentToWaveNumberCalibrationTable" type="blk15:CurrentToWaveNumberCalibrationTableType" minOccurs="0"/>
+					<xsi:element name="ReferenceNormalizationParameters" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Parameters used in conjunction with the normalizaiton sensors to in the field re-calibrate WaveNumberToDriveVoltage and CurrentToWaveNumber calibration tables.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:complexType>
+							<xsi:sequence>
+								<xsi:element name="ScanningSpeed" type="blk15:SweepSpeedType"/>
+								<xsi:element name="StartPosition" type="blk15:MirrorCurrentAtoDValueType"/>
+								<xsi:element name="StopPosition" type="blk15:MirrorCurrentAtoDValueType"/>
+								<xsi:element name="NumberOfSamples" type="xsi:unsignedInt"/>
+								<xsi:element name="LaserTemperature" type="blk15:TemperatureType"/>
+							</xsi:sequence>
+						</xsi:complexType>
+					</xsi:element>
+					<xsi:element name="TECCurrentUpperBound" type="blk15:CurrentType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>This defines the upper bounds on the current allowed for the tuner TEC (regardless of cooling or heating).
+
+Note - these values can be used to compute a percentage-of-max value in IDeviceManager::GetTECPowerConsumption</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ReferenceMirrorPosition" type="blk15:MirrorCurrentAtoDValueType" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Where at factory we measured the impedence of laser. This has todo with drift as the laser ages.</xsi:documentation>
+						</xsi:annotation>
+					</xsi:element>
+					<xsi:element name="ReferenceLaserVoltage" minOccurs="0">
+						<xsi:annotation>
+							<xsi:documentation>Where at factory we measured the impedence of laser. This has todo with drift as the laser ages.</xsi:documentation>
+						</xsi:annotation>
+						<xsi:simpleType>
+							<xsi:restriction base="blk15:VoltageType">
+								<xsi:minInclusive value="0"/>
+								<xsi:maxInclusive value="100"/>
+							</xsi:restriction>
+						</xsi:simpleType>
+					</xsi:element>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:complexType name="VersionInfoType">
+				<xsi:annotation>
+					<xsi:documentation>Description of the firmware and OS images, as well as serial numbers</xsi:documentation>
+				</xsi:annotation>
+				<xsi:sequence>
+					<xsi:element name="ModelName" type="xsi:string"/>
+					<xsi:element name="ModelNumber" type="xsi:string"/>
+					<xsi:element name="FactorySerialNumber" type="xsi:string"/>
+					<xsi:element name="ACU-FPGA-SoftwareVersion" type="xsi:string"/>
+					<xsi:element name="CCU-FPGA-SoftwareVersion" type="xsi:string"/>
+					<xsi:element name="BLK-Controller-SoftwareVersion" type="xsi:string"/>
+					<xsi:element name="OS-SoftwareVersion" type="xsi:string"/>
+				</xsi:sequence>
+			</xsi:complexType>
+			<xsi:element name="GetFactorySettings">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetFactorySettingsResponse" type="blk15:FactorySettingsType">
+				<xsi:annotation>
+					<xsi:documentation>For the factory settings, all elements will be provided in the response</xsi:documentation>
+				</xsi:annotation>
+			</xsi:element>
+			<xsi:element name="GetUserSettings">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetUserSettingsResponse" type="blk15:PerDeviceUserSetttingsType"/>
+			<xsi:element name="SetUserSettings" type="blk15:PerDeviceUserSetttingsType"/>
+			<xsi:element name="SetUserSettingsResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetWaveNumberToDriveVoltageCalibrationTable">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:choice>
+							<xsi:element name="RawData">
+								<xsi:complexType>
+									<xsi:sequence/>
+								</xsi:complexType>
+							</xsi:element>
+							<xsi:element name="Normalized">
+								<xsi:complexType>
+									<xsi:sequence/>
+								</xsi:complexType>
+							</xsi:element>
+						</xsi:choice>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetWaveNumberToDriveVoltageCalibrationTableResponse" type="blk15:WaveNumberToDriveVoltageCalibrationTableType"/>
+			<xsi:element name="GetCurrentToWaveNumberCalibrationTable">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:choice>
+							<xsi:element name="RawData">
+								<xsi:complexType>
+									<xsi:sequence/>
+								</xsi:complexType>
+							</xsi:element>
+							<xsi:element name="Normalized">
+								<xsi:complexType>
+									<xsi:sequence/>
+								</xsi:complexType>
+							</xsi:element>
+						</xsi:choice>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetCurrentToWaveNumberCalibrationTableResponse" type="blk15:CurrentToWaveNumberCalibrationTableType"/>
+			<xsi:element name="NormalizeCalbration">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="NormalizeCalbrationResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ResetToFactoryDefaults">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ResetToFactoryDefaultsResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="RunLasers">
+				<xsi:annotation>
+					<xsi:documentation>**DEPRECATED**</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Steps">
+							<xsi:complexType>
+								<xsi:sequence>
+									<xsi:element name="Operation" maxOccurs="unbounded">
+										<xsi:complexType>
+											<xsi:complexContent>
+												<xsi:extension base="blk15:LaserTuneStepType">
+													<xsi:attribute name="operationResultKey" type="blk15:LaserOperationResultKey">
+														<xsi:annotation>
+															<xsi:documentation>IFF this value is specified, then results of the given move operation will appear in the results of the RunLaser call, keyed by this paramter</xsi:documentation>
+														</xsi:annotation>
+													</xsi:attribute>
+												</xsi:extension>
+											</xsi:complexContent>
+										</xsi:complexType>
+									</xsi:element>
+								</xsi:sequence>
+								<xsi:attribute name="repeatCount" type="blk15:RepeatCountType" default="1">
+									<xsi:annotation>
+										<xsi:documentation>**DEPRECATED**</xsi:documentation>
+									</xsi:annotation>
+								</xsi:attribute>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="RunLasersResponse">
+				<xsi:annotation>
+					<xsi:documentation>**DEPRECATED**</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="LaserOperationMeasurements" minOccurs="0" maxOccurs="unbounded">
+							<xsi:annotation>
+								<xsi:documentation>If every laser optionation returns no results, this entire element may be omitted.
+
+But otherwise, it will contain one result for each laser tune operation that reports results. Callers can either associate step operations with results by ordering, or by passing in a operationResultKey parameter to the laserResults option.
+
+Please note that because of the repeatCount paramter in running a sequence of laser operations, a optiotionResultKey may occur more than once.
+</xsi:documentation>
+							</xsi:annotation>
+							<xsi:complexType>
+								<xsi:sequence>
+									<xsi:element name="ResultsForLaserOperation">
+										<xsi:annotation>
+											<xsi:documentation>Result of a single step tune, move tune, or scan tune operation.</xsi:documentation>
+										</xsi:annotation>
+										<xsi:complexType>
+											<xsi:complexContent>
+												<xsi:extension base="blk15:LaserOperationResultsType">
+													<xsi:attribute name="operationResultKey" type="blk15:LaserOperationResultKey" use="required">
+														<xsi:annotation>
+															<xsi:documentation>Passed through from the original requested laser step request SOAP call.</xsi:documentation>
+														</xsi:annotation>
+													</xsi:attribute>
+												</xsi:extension>
+											</xsi:complexContent>
+										</xsi:complexType>
+									</xsi:element>
+								</xsi:sequence>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StopLasers">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="AndAllPendingForUp" type="xs:duration" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>If this parameter is preovided, StopLasers will disable all pending laser operations for up to the argument duration timeframe.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StopLasersResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ReadSensors" type="blk15:SensorRequestReadType"/>
+			<xsi:element name="ReadSensorsResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Sensors" type="blk15:SensorDataType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetLaserPointerOn">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetLaserPointerOnResponse" type="xs:boolean"/>
+			<xsi:element name="SetLaserPointerOn" type="xs:boolean"/>
+			<xsi:element name="SetLaserPointerOnResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetSolenoid">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Which" type="blk15:SolenoidType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetSolenoidResponse" type="blk15:SolenoidStateType"/>
+			<xsi:element name="SetSolenoid">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Which" type="blk15:SolenoidType"/>
+						<xsi:element name="State" type="blk15:SolenoidStateType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetSolenoidResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetVersionDetails">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetVersionDetailsResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Version" type="blk15:VersionInfoType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetPowerState">
+				<xsi:simpleType>
+					<xsi:restriction base="blk15:PowerStateType"/>
+				</xsi:simpleType>
+			</xsi:element>
+			<xsi:element name="SetPowerStateResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetDeviceName">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetDeviceNameResponse" type="xsi:string"/>
+			<xsi:element name="SetDeviceName" type="xs:string"/>
+			<xsi:element name="SetDeviceNameResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetFactorySettings" type="blk15:FactorySettingsType"/>
+			<xsi:element name="SetFactorySettingsResponse"/>
+			<xsi:element name="GetLogLevel"/>
+			<xsi:element name="GetLogLevelResponse"/>
+			<xsi:element name="SetLogLevel"/>
+			<xsi:element name="SetLogLevelResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetLogHistoryLength" type="xsi:duration"/>
+			<xsi:element name="SetLogHistoryLengthResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetLogHistoryLength">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetLogHistoryLengthResponse" type="xsi:duration"/>
+			<xsi:element name="ClearLogs">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="OlderThan" type="xsi:duration" minOccurs="0"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ClearLogsResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetLogs">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="StartAfter" type="xsi:dateTime" minOccurs="0"/>
+						<xsi:element name="ApproximatePageSize" type="xsi:unsignedInt" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Approximate because we need to return the last of a series of elements which all had the exact same data, or you couldnt't use the last received data as a guide for the next page.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetLogsResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="LogLine" minOccurs="0" maxOccurs="unbounded">
+							<xsi:complexType>
+								<xsi:sequence>
+									<xsi:element name="Date"/>
+									<xsi:element name="LogLevel"/>
+									<xsi:element name="Detail"/>
+								</xsi:sequence>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetAlarms">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetAlarmsResponse" type="blk15:AlarmSetType"/>
+			<xsi:element name="ClearAlarms">
+				<xsi:complexType>
+					<xsi:choice>
+						<xsi:element name="All">
+							<xsi:complexType>
+								<xsi:sequence/>
+							</xsi:complexType>
+						</xsi:element>
+						<xsi:element name="Alarms" type="blk15:AlarmSetType"/>
+					</xsi:choice>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ClearAlarmsResponse">
+				<xsi:complexType>
+					<xsi:complexContent>
+						<xsi:extension base="blk15:AlarmSetType">
+							<xsi:sequence>
+								<xsi:element name="RemainingAlarms" type="blk15:AlarmSetType"/>
+							</xsi:sequence>
+						</xsi:extension>
+					</xsi:complexContent>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="RunMirror">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Tuner" type="blk15:TunerNumberType"/>
+						<xsi:element name="Amplitude" type="blk15:VoltageType"/>
+						<xsi:element name="Frequency" type="blk15:FrequencyType">
+							<xsi:annotation>
+								<xsi:documentation>Note: if frequency is zero, this means the mirrors are parked.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="Offset" type="blk15:VoltageType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="RunMirrorResponse"/>
+			<xsi:element name="StopMirror">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StopMirrorResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetLaserOff"/>
+			<xsi:element name="SetLaserOffResponse"/>
+			<xsi:element name="ReadMirror">
+				<xsi:annotation>
+					<xsi:documentation>***UNSUPPORTED-IN-THIS-VERSION***</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ReadMirrorResponse">
+				<xsi:annotation>
+					<xsi:documentation>***UNSUPPORTED-IN-THIS-VERSION***</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Result" type="blk15:ReadMirrorResultsType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetLaserOn">
+				<xsi:annotation>
+					<xsi:documentation>Laser pulse duration, laser pulse period.
+
+Note - duty cycle can be computed (PulseDuration / PulsePeriod)) from the pulse period and pulse duration</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="PulsePeriod" type="xs:duration"/>
+						<xsi:element name="PulseDuration" type="xs:duration"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetLaserOnResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetLaserTemperature">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Tuner" type="blk15:TunerNumberType"/>
+						<xsi:element name="Temperature" type="blk15:TemperatureType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SetLaserTemperatureResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ACUPeek">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="RegisterName" type="blk15:ACURegisterNameType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ACUPeekResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Value" type="blk15:ACURegisterValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ACUPoke">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="RegisterName" type="blk15:ACURegisterNameType"/>
+						<xsi:element name="Value" type="blk15:ACURegisterValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="ACUPokeResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CCUPeek">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="RegisterName" type="blk15:CCURegisterNameType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CCUPeekResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Value" type="blk15:CCURegisterValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CCUPoke">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="RegisterName" type="blk15:CCURegisterNameType"/>
+						<xsi:element name="Value" type="blk15:CCURegisterValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="CCUPokeResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetDeviceHealth">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetDeviceHealthResponse" type="blk15:DeviceHealthType"/>
+			<xsi:element name="MirrorMove">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="ADCValue" type="blk15:MirrorCurrentAtoDValueType"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="MirrorMoveResponse" type="blk15:WaveNumberType"/>
+			<xsi:element name="GetBatteryStatus">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetBatteryStatusResponse" type="blk15:BatteryStatusType"/>
+			<xsi:element name="GetTECPowerConsumption">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetTECPowerConsumptionResponse" type="blk15:TECPowerConsumptionStatsType"/>
+			<xsi:element name="MonitorScan">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="WaveNumber" type="blk15:WaveNumberType" maxOccurs="unbounded"/>
+						<xsi:element name="Duration" type="xs:duration"/>
+						<xsi:element name="DeltaResolution" type="blk15:WaveNumberDistanceType" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>This is the width of wave-number ranges accepted as within the bin for the given wave number. THis defaults to a width of 1 wave-number.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="InterleavedScan">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="DeltaResolution" type="blk15:WaveNumberDistanceType"/>
+						<xsi:element name="SingleSpectrumMeasurementTime" type="xs:duration">
+							<xsi:annotation>
+								<xsi:documentation/>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="SpectrumResultCount" type="xs:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ScansPerResult" type="xsi:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenCoAdds" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenSpectrumResults" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="InterleavedScanResponse" type="blk15:SpectraType"/>
+			<xsi:element name="MonitorScanResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="IntensityOverTimeMap" maxOccurs="unbounded">
+							<xsi:complexType>
+								<xsi:complexContent>
+									<xsi:extension base="blk15:IntensityOverTimeMapType">
+										<xsi:attribute name="WaveNumber" type="blk15:WaveNumberType" use="required"/>
+									</xsi:extension>
+								</xsi:complexContent>
+							</xsi:complexType>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StepScan">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Start" type="blk15:WaveNumberType"/>
+						<xsi:element name="End" type="blk15:WaveNumberType"/>
+						<xsi:element name="Delta" type="blk15:WaveNumberDistanceType">
+							<xsi:annotation>
+								<xsi:documentation>Note this delta is both the step size - space between scans, and  the resulting bin size of the spectrum results.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DuringTransition" type="blk15:LaserOnOffTransitionType" default="LaserOn" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to LaserOn</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="StepDwellTime" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="SettlingTime" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="SpectrumResultCount" type="xs:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ScansPerResult" type="xsi:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenCoAdds" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenSpectrumResults" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StepScanResponse" type="blk15:SpectraType"/>
+			<xsi:element name="SweepScan">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Start" type="blk15:WaveNumberType"/>
+						<xsi:element name="End" type="blk15:WaveNumberType"/>
+						<xsi:element name="SweepRate" type="blk15:SweepSpeedType"/>
+						<xsi:element name="ScanResolution" type="blk15:WaveNumberDistanceType" default="10" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>The ScanResolution speciifies the number of 'bins' (histograms) in the Spectrum Result. This defaults to 10.</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DuringTransition" type="blk15:LaserOnOffTransitionType" default="LaserOn" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>***DEPRECATED*** ***NOT IMPLEMENTED***</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="SettlingTime" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="SpectrumResultCount" type="xs:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="ScansPerResult" type="xsi:unsignedInt" default="1" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to one if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenCoAdds" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+						<xsi:element name="DelayBetweenSpectrumResults" type="xs:duration" default="PT0S" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>Defaults to zero if not present</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SweepScanResponse" type="blk15:SpectraType"/>
+			<xsi:element name="GetInstalledTuners">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetInstalledTunersResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Tuner" type="blk15:TunerNumberType" minOccurs="0" maxOccurs="4"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetPowerState">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetPowerStateResponse" type="blk15:PowerStateType"/>
+			<xsi:element name="GetPowerStateSupported" type="blk15:PowerStateType"/>
+			<xsi:element name="GetPowerStateSupportedResponse" type="xs:boolean"/>
+			<xsi:element name="GetDeviceDescription">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetDeviceDescriptionResponse" type="blk15:DeviceDescriptionType"/>
+			<xsi:element name="SetDeviceDescription" type="blk15:DeviceDescriptionType"/>
+			<xsi:element name="SetDeviceDescriptionResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetCurrentOperationStatus">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="GetCurrentOperationStatusResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="TextSummary" type="xs:string"/>
+						<xsi:element name="MajorOperation" minOccurs="0">
+							<xsi:annotation>
+								<xsi:documentation>This element - if present - is the current major operation ongoing.</xsi:documentation>
+							</xsi:annotation>
+							<xsi:complexType>
+								<xsi:choice>
+									<xsi:element name="MoveTune">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="StepTune">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="SweepTune">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="Delay">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="StepScan">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="SweepScan">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="InterleavedScan">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="MonitorScan">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="UpdatingFactorySettings">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="UpdatingUserSettings">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+									<xsi:element name="InitializingHardware">
+										<xsi:complexType>
+											<xsi:sequence/>
+										</xsi:complexType>
+									</xsi:element>
+								</xsi:choice>
+							</xsi:complexType>
+						</xsi:element>
+						<xsi:element name="LaserFiring" type="xs:boolean">
+							<xsi:annotation>
+								<xsi:documentation>This returns whether or not the major operation in progress calls for having the laser on right now, or not.
+
+ReadSensors() - in contrast - returns the instantaneous value of which laser is active (which due to duty cycle might not be any - even while concpetually firing).</xsi:documentation>
+							</xsi:annotation>
+						</xsi:element>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="MoveTune">
+				<xsi:annotation>
+					<xsi:documentation>The Move operation simply turns the laser on, and on a particular wavenumber This is mostly the equivilent of a Step tune with dwellTime 0, start=end, stepSize meaningless, except that the laser is always ON at the end of a move tune.
+
+Note meaing of duringTransition is that if OFF, we force the laser off before the move. If duringTransition is ON, we simply skip that turn-off step. 'duringTransition' ON does not imply turning the laser on before move - just implies NOT turning it off before move.
+</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:attribute name="waveNumber" type="blk15:WaveNumberType" use="required"/>
+					<xsi:attribute name="duringTransition" use="required">
+						<xsi:simpleType>
+							<xsi:restriction base="blk15:LaserOnOffTransitionType"/>
+						</xsi:simpleType>
+					</xsi:attribute>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="MoveTuneResponse" type="blk15:LaserMoveResultsItemDetailType"/>
+			<xsi:element name="StepTune">
+				<xsi:annotation>
+					<xsi:documentation>A step tune turns the laser on for each step from start to stop (by step size increments). The laser stops and waits 'dwellTime' at each increment. And at the end of a step tune, the laser is turned off.</xsi:documentation>
+				</xsi:annotation>
+				<xsi:complexType>
+					<xsi:attribute name="startWaveNumber" type="blk15:WaveNumberType" use="required"/>
+					<xsi:attribute name="stopWaveNumber" type="blk15:WaveNumberType" use="required"/>
+					<xsi:attribute name="stepSize" type="blk15:WaveNumberDistanceType" use="required"/>
+					<xsi:attribute name="dwellTime" type="xsi:duration" use="required"/>
+					<xsi:attribute name="duringTransition" type="blk15:LaserOnOffTransitionType" use="required"/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="StepTuneResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Measurement" type="blk15:LaserMoveResultsItemDetailType" minOccurs="0" maxOccurs="unbounded"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SweepTune">
+				<xsi:complexType>
+					<xsi:attribute name="startWaveNumber" type="blk15:WaveNumberType" use="required"/>
+					<xsi:attribute name="stopWaveNumber" type="blk15:WaveNumberType" use="required"/>
+					<xsi:attribute name="sweepSpeed" type="blk15:SweepSpeedType" use="required"/>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="SweepTuneResponse">
+				<xsi:complexType>
+					<xsi:sequence>
+						<xsi:element name="Measurement" type="blk15:LaserMoveResultsItemDetailType" minOccurs="0" maxOccurs="unbounded"/>
+					</xsi:sequence>
+				</xsi:complexType>
+			</xsi:element>
+			<xsi:element name="Delay" type="xs:duration"/>
+			<xsi:element name="DelayResponse">
+				<xsi:complexType>
+					<xsi:sequence/>
+				</xsi:complexType>
+			</xsi:element>
+		</xsi:schema>
+	</wsdl:types>
+	<wsdl:message name="GetFactorySettings">
+		<wsdl:part name="parameter" element="blk15:GetFactorySettings"/>
+	</wsdl:message>
+	<wsdl:message name="GetFactorySettingsResponse">
+		<wsdl:part name="parameter" element="blk15:GetFactorySettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetWaveNumberToDriveVoltageCalibrationTable">
+		<wsdl:part name="parameter" element="blk15:GetWaveNumberToDriveVoltageCalibrationTable"/>
+	</wsdl:message>
+	<wsdl:message name="GetWaveNumberToDriveVoltageCalibrationTableResponse">
+		<wsdl:part name="parameter" element="blk15:GetWaveNumberToDriveVoltageCalibrationTableResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetCurrentToWaveNumberCalibrationTable">
+		<wsdl:part name="parameter" element="blk15:GetCurrentToWaveNumberCalibrationTable"/>
+	</wsdl:message>
+	<wsdl:message name="GetCurrentToWaveNumberCalibrationTableResponse">
+		<wsdl:part name="parameter" element="blk15:GetCurrentToWaveNumberCalibrationTableResponse"/>
+	</wsdl:message>
+	<wsdl:message name="NormalizeCalibration">
+		<wsdl:part name="parameter" element="blk15:NormalizeCalbration"/>
+	</wsdl:message>
+	<wsdl:message name="NormalizeCalibrationResponse">
+		<wsdl:part name="parameter" element="blk15:NormalizeCalbrationResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ResetToFactoryDefaults">
+		<wsdl:part name="parameter" element="blk15:ResetToFactoryDefaults"/>
+	</wsdl:message>
+	<wsdl:message name="ResetToFactoryDefaultsResponse">
+		<wsdl:part name="parameter" element="blk15:ResetToFactoryDefaultsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="RunLasers">
+		<wsdl:part name="parameter" element="blk15:RunLasers"/>
+	</wsdl:message>
+	<wsdl:message name="RunLasersResponse">
+		<wsdl:part name="parameter" element="blk15:RunLasersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StopLasers">
+		<wsdl:part name="parameter" element="blk15:StopLasers"/>
+	</wsdl:message>
+	<wsdl:message name="StopLasersResponse">
+		<wsdl:part name="parameter" element="blk15:StopLasersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ReadSensors">
+		<wsdl:part name="parameter" element="blk15:ReadSensors"/>
+	</wsdl:message>
+	<wsdl:message name="ReadSensorsResponse">
+		<wsdl:part name="parameter" element="blk15:ReadSensorsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetLaserPointerOn">
+		<wsdl:part name="parameter" element="blk15:GetLaserPointerOn"/>
+	</wsdl:message>
+	<wsdl:message name="GetLaserPointerOnResponse">
+		<wsdl:part name="parameter" element="blk15:GetLaserPointerOnResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetSolenoid">
+		<wsdl:part name="parameter" element="blk15:GetSolenoid"/>
+	</wsdl:message>
+	<wsdl:message name="GetSolenoidResponse">
+		<wsdl:part name="parameter" element="blk15:GetSolenoidResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserPointerOn">
+		<wsdl:part name="parameter" element="blk15:SetLaserPointerOn"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserPointerOnResponse">
+		<wsdl:part name="parameter" element="blk15:SetLaserPointerOnResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetSolenoid">
+		<wsdl:part name="parameter" element="blk15:SetSolenoid"/>
+	</wsdl:message>
+	<wsdl:message name="SetSolenoidResponse">
+		<wsdl:part name="parameter" element="blk15:SetSolenoidResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetVersionDetails">
+		<wsdl:part name="parameter" element="blk15:GetVersionDetails"/>
+	</wsdl:message>
+	<wsdl:message name="GetVersionDetailsResponse">
+		<wsdl:part name="parameter" element="blk15:GetVersionDetailsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceName">
+		<wsdl:part name="parameter" element="blk15:GetDeviceName"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceNameResponse">
+		<wsdl:part name="parameter" element="blk15:GetDeviceNameResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetDeviceName">
+		<wsdl:part name="parameter" element="blk15:SetDeviceName"/>
+	</wsdl:message>
+	<wsdl:message name="SetDeviceNameResponse">
+		<wsdl:part name="parameter" element="blk15:SetDeviceNameResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetPowerState">
+		<wsdl:part name="parameter" element="blk15:SetPowerState"/>
+	</wsdl:message>
+	<wsdl:message name="SetPowerStateResponse">
+		<wsdl:part name="parameter" element="blk15:SetPowerStateResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetFactorySettings">
+		<wsdl:part name="parameter" element="blk15:SetFactorySettings"/>
+	</wsdl:message>
+	<wsdl:message name="SetFactorySettingsResponse">
+		<wsdl:part name="parameter" element="blk15:SetFactorySettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetUserSettings">
+		<wsdl:part name="parameter" element="blk15:GetUserSettings"/>
+	</wsdl:message>
+	<wsdl:message name="GetUserSettingsResponse">
+		<wsdl:part name="parameter" element="blk15:GetUserSettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetUserSettings">
+		<wsdl:part name="parameter" element="blk15:SetUserSettings"/>
+	</wsdl:message>
+	<wsdl:message name="SetUserSettingsResponse">
+		<wsdl:part name="parameter" element="blk15:SetUserSettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetLogLevel">
+		<wsdl:part name="parameter" element="blk15:GetLogLevel"/>
+	</wsdl:message>
+	<wsdl:message name="GetLogLevelResponse">
+		<wsdl:part name="parameter" element="blk15:GetLogLevelResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetLogLevel">
+		<wsdl:part name="parameter" element="blk15:SetLogLevel"/>
+	</wsdl:message>
+	<wsdl:message name="SetLogLevelResponse">
+		<wsdl:part name="parameter" element="blk15:SetLogLevelResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetLogHistoryLength">
+		<wsdl:part name="parameter" element="blk15:GetLogHistoryLength"/>
+	</wsdl:message>
+	<wsdl:message name="GetLogHistoryLengthResponse">
+		<wsdl:part name="parameter" element="blk15:GetLogHistoryLengthResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetLogHistoryLength">
+		<wsdl:part name="parameter" element="blk15:SetLogHistoryLength"/>
+	</wsdl:message>
+	<wsdl:message name="SetLogHistoryLengthResponse">
+		<wsdl:part name="parameter" element="blk15:SetLogHistoryLengthResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ClearLogs">
+		<wsdl:part name="parameter" element="blk15:ClearLogs"/>
+	</wsdl:message>
+	<wsdl:message name="ClearLogsResponse">
+		<wsdl:part name="parameter" element="blk15:ClearLogsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetLogs">
+		<wsdl:part name="parameter" element="blk15:GetLogs"/>
+	</wsdl:message>
+	<wsdl:message name="GetLogsResponse">
+		<wsdl:part name="parameter" element="blk15:GetLogsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetAlarms">
+		<wsdl:part name="parameter" element="blk15:GetAlarms"/>
+	</wsdl:message>
+	<wsdl:message name="GetAlarmsResponse">
+		<wsdl:part name="parameter" element="blk15:GetAlarmsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ClearAlarms">
+		<wsdl:part name="parameter" element="blk15:ClearAlarms"/>
+	</wsdl:message>
+	<wsdl:message name="ClearAlarmsResponse">
+		<wsdl:part name="parameter" element="blk15:ClearAlarmsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="RunMirror">
+		<wsdl:part name="parameter" element="blk15:RunMirror"/>
+	</wsdl:message>
+	<wsdl:message name="RunMirrorResponse">
+		<wsdl:part name="parameter" element="blk15:RunMirrorResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StopMirror">
+		<wsdl:part name="parameter" element="blk15:StopMirror"/>
+	</wsdl:message>
+	<wsdl:message name="StopMirrorResponse">
+		<wsdl:part name="parameter" element="blk15:StopMirrorResponse"/>
+	</wsdl:message>
+	<wsdl:message name="MirrorMove">
+		<wsdl:part name="parameter" element="blk15:MirrorMove"/>
+	</wsdl:message>
+	<wsdl:message name="MirrorMoveResponse">
+		<wsdl:part name="parameter" element="blk15:MirrorMoveResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ReadMirror">
+		<wsdl:part name="parameter" element="blk15:ReadMirror"/>
+	</wsdl:message>
+	<wsdl:message name="ReadMirrorResponse">
+		<wsdl:part name="parameter" element="blk15:ReadMirrorResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserOn">
+		<wsdl:part name="parameter" element="blk15:SetLaserOn"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserOnResponse">
+		<wsdl:part name="parameter" element="blk15:SetLaserOnResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserOff">
+		<wsdl:part name="parameter" element="blk15:SetLaserOff"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserOffResponse">
+		<wsdl:part name="parameter" element="blk15:SetLaserOffResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceHealth">
+		<wsdl:part name="parameter" element="blk15:GetDeviceHealth"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceHealthResponse">
+		<wsdl:part name="parameter" element="blk15:GetDeviceHealthResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserTemperature">
+		<wsdl:part name="parameter" element="blk15:SetLaserTemperature"/>
+	</wsdl:message>
+	<wsdl:message name="SetLaserTemperatureResponse">
+		<wsdl:part name="parameter" element="blk15:SetLaserTemperatureResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ACUPeek">
+		<wsdl:part name="parameter" element="blk15:ACUPeek"/>
+	</wsdl:message>
+	<wsdl:message name="ACUPeekResponse">
+		<wsdl:part name="parameter" element="blk15:ACUPeekResponse"/>
+	</wsdl:message>
+	<wsdl:message name="ACUPoke">
+		<wsdl:part name="parameter" element="blk15:ACUPoke"/>
+	</wsdl:message>
+	<wsdl:message name="ACUPokeResponse">
+		<wsdl:part name="parameter" element="blk15:ACUPokeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="CCUPeek">
+		<wsdl:part name="parameter" element="blk15:CCUPeek"/>
+	</wsdl:message>
+	<wsdl:message name="CCUPeekResponse">
+		<wsdl:part name="parameter" element="blk15:CCUPeekResponse"/>
+	</wsdl:message>
+	<wsdl:message name="CCUPoke">
+		<wsdl:part name="parameter" element="blk15:CCUPoke"/>
+	</wsdl:message>
+	<wsdl:message name="CCUPokeResponse">
+		<wsdl:part name="parameter" element="blk15:CCUPokeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetBatteryStatus">
+		<wsdl:part name="parameter" element="blk15:GetBatteryStatus"/>
+	</wsdl:message>
+	<wsdl:message name="GetBatteryStatusResponse">
+		<wsdl:part name="parameter" element="blk15:GetBatteryStatusResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetTECPowerConsumption">
+		<wsdl:part name="parameter" element="blk15:GetTECPowerConsumption"/>
+	</wsdl:message>
+	<wsdl:message name="GetTECPowerConsumptionResponse">
+		<wsdl:part name="parameter" element="blk15:GetTECPowerConsumptionResponse"/>
+	</wsdl:message>
+	<wsdl:message name="MonitorScan">
+		<wsdl:part name="parameter" element="blk15:MonitorScan"/>
+	</wsdl:message>
+	<wsdl:message name="MonitorScanResponse">
+		<wsdl:part name="parameter" element="blk15:MonitorScanResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StepScan">
+		<wsdl:part name="parameter" element="blk15:StepScan"/>
+	</wsdl:message>
+	<wsdl:message name="StepScanResponse">
+		<wsdl:part name="parameter" element="blk15:StepScanResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetInstalledTuners">
+		<wsdl:part name="parameter" element="blk15:GetInstalledTuners"/>
+	</wsdl:message>
+	<wsdl:message name="GetInstalledTunersResponse">
+		<wsdl:part name="parameter" element="blk15:GetInstalledTunersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetPowerState">
+		<wsdl:part name="parameter" element="blk15:GetPowerState"/>
+	</wsdl:message>
+	<wsdl:message name="GetPowerStateResponse">
+		<wsdl:part name="parameter" element="blk15:GetPowerStateResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetPowerStateSupported">
+		<wsdl:part name="parameter" element="blk15:GetPowerStateSupported"/>
+	</wsdl:message>
+	<wsdl:message name="GetPowerStateSupportedResponse">
+		<wsdl:part name="parameter" element="blk15:GetPowerStateSupportedResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SweepScan">
+		<wsdl:part name="parameter" element="blk15:SweepScan"/>
+	</wsdl:message>
+	<wsdl:message name="SweepScanResponse">
+		<wsdl:part name="parameter" element="blk15:SweepScanResponse"/>
+	</wsdl:message>
+	<wsdl:message name="InterleavedScan">
+		<wsdl:part name="parameter" element="blk15:InterleavedScan"/>
+	</wsdl:message>
+	<wsdl:message name="InterleavedScanResponse">
+		<wsdl:part name="parameter" element="blk15:InterleavedScanResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceDescription">
+		<wsdl:part name="parameter" element="blk15:GetDeviceDescription"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceDescriptionResponse">
+		<wsdl:part name="parameter" element="blk15:GetDeviceDescriptionResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetDeviceDescription">
+		<wsdl:part name="parameter" element="blk15:SetDeviceDescription"/>
+	</wsdl:message>
+	<wsdl:message name="SetDeviceDescriptionResponse">
+		<wsdl:part name="parameter" element="blk15:SetDeviceDescriptionResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetCurrentOperationStatus">
+		<wsdl:part name="parameter" element="blk15:GetCurrentOperationStatus"/>
+	</wsdl:message>
+	<wsdl:message name="GetCurrentOperationStatusResponse">
+		<wsdl:part name="parameter" element="blk15:GetCurrentOperationStatusResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StepTune">
+		<wsdl:part name="parameter" element="blk15:StepTune"/>
+	</wsdl:message>
+	<wsdl:message name="StepTuneResponse">
+		<wsdl:part name="parameter" element="blk15:StepTuneResponse"/>
+	</wsdl:message>
+	<wsdl:message name="MoveTune">
+		<wsdl:part name="parameter" element="blk15:MoveTune"/>
+	</wsdl:message>
+	<wsdl:message name="MoveTuneResponse">
+		<wsdl:part name="parameter" element="blk15:MoveTuneResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SweepTune">
+		<wsdl:part name="parameter" element="blk15:SweepTune"/>
+	</wsdl:message>
+	<wsdl:message name="SweepTuneResponse">
+		<wsdl:part name="parameter" element="blk15:SweepTuneResponse"/>
+	</wsdl:message>
+	<wsdl:message name="Delay">
+		<wsdl:part name="parameter" element="blk15:Delay"/>
+	</wsdl:message>
+	<wsdl:message name="DelayResponse">
+		<wsdl:part name="parameter" element="blk15:DelayResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="IConfiguration">
+		<wsdl:documentation>This interface provides read/write support to setup information for the laser which is independent of any
+particular laser run. 
+
+Most of the information this interface provides read-only access (set through the manufacturing interface),
+however, some of the settings are under user control (user overrides).
+</wsdl:documentation>
+		<wsdl:operation name="GetFactorySettings">
+			<wsdl:documentation>FactorySettingsType GetFactorySettings();
+
+Returns the factory settings for calibration tables, and user-settable configuration options.  
+
+See also GetUserSettings, and ResetToFactoryDefaults.
+
+N.B. These values are all persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blk15:GetFactorySettings"/>
+			<wsdl:output message="blk15:GetFactorySettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetUserSettings">
+			<wsdl:documentation>PerDeviceUserSettingsaType GetUserSettings();
+
+Returns current, effective configuraion settings. 
+
+This does not include the WaveNumberToDriveVoltage nor CurrentToWaveNumber calibration tables.
+
+N.B. These values are all persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blk15:GetUserSettings"/>
+			<wsdl:output message="blk15:GetUserSettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetUserSettings">
+			<wsdl:documentation>void SetUserSettings (PerDeviceUserSettings (each elt optional));
+
+This allows resetting the user-settable options. 
+
+Only options provided are changed.
+
+N.B. These values are all persistent across reboots.
+
+Note it is illegal to set values on tuners that are not installed.</wsdl:documentation>
+			<wsdl:input message="blk15:SetUserSettings"/>
+			<wsdl:output message="blk15:SetUserSettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetWaveNumberToDriveVoltageCalibrationTable">
+			<wsdl:documentation>Mapping[WaveNumber,DrivingVoltage] GetWaveNumberToDriveVoltageCalibrationTable(Raw or Normalized);
+
+Returns WaveNumberToDriveVoltage table BEFORE or AFTER normalization. 
+
+To get original settings use GetFactorySettings
+
+Each mirror voltage must have at least 4096 control increments.  
+Each mirror position is equated to mirror current readback which uses a 12-bit ADC so there are 4096 readback positions.
+</wsdl:documentation>
+			<wsdl:input message="blk15:GetWaveNumberToDriveVoltageCalibrationTable"/>
+			<wsdl:output message="blk15:GetWaveNumberToDriveVoltageCalibrationTableResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentToWaveNumberCalibrationTable">
+			<wsdl:documentation>Mapping[ADC,WaveNumber] GetCurrentToWaveNumberCalibrationTable(Raw or Normalized);
+
+Returns CurrentToWaveNumber table BEFORE or AFTER normalization. 
+
+To get the original settings: use GetFactorySettings.
+
+Each mirror is controlled with a 16-bit DAC so there are 65,536 counts for setting a mirror position.</wsdl:documentation>
+			<wsdl:input message="blk15:GetCurrentToWaveNumberCalibrationTable"/>
+			<wsdl:output message="blk15:GetCurrentToWaveNumberCalibrationTableResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="NormalizeCalibration">
+			<wsdl:documentation>Adjust the effective calibration values for the WaveNumberToDriveVoltage and CurrentToWaveNumber calibration tables.
+
+This procedure causes the laser to run through a series of internal settings, 
+and send laser signals to an internal calibration sensor.
+
+This takes approximately N minutes to run, and will prevent other operations (such as RunLasers) while ruinning.
+
+Note that the changes made to calibration data are all persistent.</wsdl:documentation>
+			<wsdl:input message="blk15:NormalizeCalibration"/>
+			<wsdl:output message="blk15:NormalizeCalibrationResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ResetToFactoryDefaults">
+			<wsdl:documentation>
+This throws away all user customizations, including device name, and normalized calibration tables.
+
+It does not re-install any particular software/firmware versions - it merely throws away user settings (and clears the log).
+
+All these changes are persisent.</wsdl:documentation>
+			<wsdl:input message="blk15:ResetToFactoryDefaults"/>
+			<wsdl:output message="blk15:ResetToFactoryDefaultsResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ILaserOperation">
+		<wsdl:documentation>This interface is for basic operational control of the laser system. 
+
+It turns lasers on and off (including scans, sweeps, programmed sequences etc), and reads back sensor data.</wsdl:documentation>
+		<wsdl:operation name="RunLasers">
+			<wsdl:documentation>***API DEPRECATED ** - USE StepTune/MoveTune/SweepTune instead
+
+ Synchronously perform a series of lasers operations.
+
+
+struct  OperationResult {
+	String                          TagForCorrelation;  // Note - this is NOT a KEY - as we can repeat multiple times
+	Sequence&lt;WaveNumberType&gt;        Measurements;
+};
+typedef Sequence&lt;OperationResult&gt;   ResultsType;
+
+
+struct  Operation {
+    Operation (Move m, String operationResultKey);
+    Operation (Step s, String operationResultKey);
+    Operation (Sweep s, String operationResultKey);
+    Operation (Delay s);
+
+    variant-union of {Move,Step,Sweep,Delay} fDetails;
+};
+
+struct  Move {
+    WaveNumberType              WaveNumber;
+    LaserOnOffTransitionType    DuringTransition;
+};
+struct  Step {
+    WaveNumberType              StartWaveNumber;
+    WaveNumberType              StopWaveNumber;
+    WaveNumberDiistanceType              StepSize;
+    Duration                    DwellTime;
+    LaserOnOffTransitionType    DuringTransition;
+};
+struct  Sweep {
+    WaveNumberType          StartWaveNumber;
+    WaveNumberType          StopWaveNumber;
+    SweepSpeedType          SweepSpeed;
+};
+struct  Delay {
+    Duration          DelayTime;
+};
+
+
+ResultsType	RunLasers(Sequence&lt;Operation&gt; operations, RepeatCount rc = 1);
+
+If a RunLaser is already running, this will not fail, but block waiting for that to complete, and then this one will begin.
+
+
+Pseduocode example
+    RunLasers (repeatCount=1, 
+                 {
+                 move (operationResultKey = "mainMove", duringTransiation="LaserOn", waveNumber=43),
+                 delay ("PT0.001S"),
+                 step (operationResultKey="theStepTune", duringTransition="LaserOff", settlingTime="0" stepSize="1" dwellTime="PT.001S" stopWaveNumber="1283" startWaveNumber="33)
+                 }
+        )
+
+PRODUCES:
+     [
+           Result (operationResultKey="mainMove", [ 544.3]),
+           Result (operationResultKey="theStepTune, [33.6, 37.8, 39.6, ....])
+     ]
+
+Note - this may or may not leave the lasers on at its end of execution. Use StopLasers() to turn off the lasers.</wsdl:documentation>
+			<wsdl:input message="blk15:RunLasers"/>
+			<wsdl:output message="blk15:RunLasersResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StopLasers">
+			<wsdl:documentation>void StopLasers(optional duration AndAllPendingForUp);
+
+Stop just the current, or all pending Laser operations (this includes operations started with RunLasers or with Scan/StepScan/etc).
+This also turns off the lasers (which could be left on via a RunLasers operation).
+
+If andAllPendingForUpTo is provided, then any future RunLasers calls for that period will be rejected. This can be useful with a value of 1second for example - to accomodate separate communications pipelines.</wsdl:documentation>
+			<wsdl:input message="blk15:StopLasers"/>
+			<wsdl:output message="blk15:StopLasersResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ReadSensors">
+			<wsdl:documentation>struct SensorData {
+         float      AmbientTemperature;
+         float      SystemTemperature;
+         float      SystemHumidity;
+         float      MirrorSensorTemprature[4];
+         float      Accelerometer;
+         Tuner    ActiveLaser; // if any
+}
+SensorData ReadSensors();  // read all sensors
+SensorData ReadSensors([set of sensors to read]);
+</wsdl:documentation>
+			<wsdl:input message="blk15:ReadSensors"/>
+			<wsdl:output message="blk15:ReadSensorsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetLaserPointerOn">
+			<wsdl:documentation>bool GetLaserPointerOn ()
+
+The laser is invisible, but for visual alignment, a visible auxiliary laser can be turned on as a pointer.</wsdl:documentation>
+			<wsdl:input message="blk15:GetLaserPointerOn"/>
+			<wsdl:output message="blk15:GetLaserPointerOnResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserPointerOn">
+			<wsdl:documentation>void SetLaserPointerOn (bool on)
+
+The laser is invisible, but for visual alignment, a visible auxiliary laser can be turned on as a pointer.</wsdl:documentation>
+			<wsdl:input message="blk15:SetLaserPointerOn"/>
+			<wsdl:output message="blk15:SetLaserPointerOnResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetSolenoid">
+			<wsdl:documentation>SolenoidType = (PowerCal, WavelengthCal);
+SollenoidStateType = (Internal, External);
+
+SolenoidState GetSolenoid (SolenoidType  Which);
+
+Return the state of the given solenoid.
+</wsdl:documentation>
+			<wsdl:input message="blk15:GetSolenoid"/>
+			<wsdl:output message="blk15:GetSolenoidResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetSolenoid">
+			<wsdl:documentation>SolenoidType = (PowerCal, WavelengthCal);
+SollenoidStateType = (Internal, External);
+
+void SetSolenoid (SolenoidType  Which, SolenoidStateType targetState);
+
+Set the given Solenoid (which) to the given SolenoidState (Internal or External)</wsdl:documentation>
+			<wsdl:input message="blk15:SetSolenoid"/>
+			<wsdl:output message="blk15:SetSolenoidResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="MonitorScan">
+			<wsdl:documentation>Scan on a given WaveNumber, for a given time period, and return a 2d set of data points measuring intensity at a given time.
+Note that MonitorScan() can perform multiple scans at once - taking either a single wavenumber, or an array of wave numbers.
+
+DeltaResolution  is the number of buckets returned.
+
+IntensityOverTimeMapType[N] MonitorScan (WaveNumberType waveNumbers[N], xs:duration timespanToMeasure, uint DeltaResolution = 10);
+IntensityOverTimeMapType MonitorScan (WaveNumberType waveNumber, xs:duration timespanToMeasure, uint DeltaResolution = 10);
+</wsdl:documentation>
+			<wsdl:input message="blk15:MonitorScan"/>
+			<wsdl:output message="blk15:MonitorScanResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StepScan">
+			<wsdl:documentation>SpectrumType StepScan (
+            WaveNumberType start, WaveNumberType end, WaveNumberDistanceType delta,
+            LaserOnOffTransitionType duringTransition = LaserOn,
+            Duration stepDwellTime = 0,
+            Duration settlingTime = 0,
+            unsigned int spectrumResultCount = 1,
+            unsigned int scansPerResult = 1,
+            Duration delayBetweenCoAdds = 0,
+            Duration delayBetweenSpectrumResults = 0
+        );
+Note that SpectrumType is defined to be a functional mapping of  lambda to intensity (x is lambda, y is intesity).
+
+Or - the more fancy overload with averaging:
+SpectrumType[spectrumResultCount] StepScan (
+                                         WaveNumberType start, 
+                                         WaveNumberType end, 
+                                         WaveNumberDistanceType delta, 
+                                         duringTransiation = LaserOn,
+                                         duration stepDwellTime = 0,
+                                         duration settlingTime = 0
+		         unsigned int spectrumResultCount= 1,
+		         unsigned int scansPerResult= 1,
+                                         duration delayBetweenCoAdds = 0,
+                                         duration delayBetweenSpectrumResults = 0
+        );
+
+                                         
+</wsdl:documentation>
+			<wsdl:input message="blk15:StepScan"/>
+			<wsdl:output message="blk15:StepScanResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SweepScan">
+			<wsdl:documentation>SpectrumType SweepScan (
+                                         WaveNumberType start, 
+                                         WaveNumberType end, 
+                                          SweepSpeedType sweepSpeed, 
+                                         unsigned int resolution = 10,
+                                         duringTransiation = LaserOn,
+                                         duration settlingTime = 0
+        );
+Note that SpectrumType is defined to be a functional mapping of  lambda to intensity (x is lambda, y is intesity).
+
+Or - the more fancy overload with averaging:
+SpectrumType[spectrumResultCount] SweepScan (
+                                         WaveNumberType start, 
+                                         WaveNumberType end, 
+                                         SweepSpeedType sweepSpeed, 
+                                         unsigned int resolution = 10,
+                                         duringTransiation = LaserOn,
+                                         duration settlingTime = 0
+		         unsigned int spectrumResultCount= 1,
+		         unsigned int scansPerResult= 1,
+                                         duration delayBetweenCoAdds = 0,
+                                         duration delayBetweenSpectrumResults = 0
+        );</wsdl:documentation>
+			<wsdl:input message="blk15:SweepScan"/>
+			<wsdl:output message="blk15:SweepScanResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="InterleavedScan">
+			<wsdl:documentation>SpectrumType InterleavedScan (
+                                         WaveNumberType deltaResolution, 
+                                         duration singleSpectrumMeasurementTime
+        );
+Note that SpectrumType is defined to be a functional mapping of  lambda to intensity (x is lambda, y is intesity).
+
+Or - the more fancy overload with averaging:
+SpectrumType[spectrumResultCount] InterleavedScan (
+                                         WaveNumberType deltaResolution, 
+                                         duration singleSpectrumMeasurementTime,
+		         unsigned int spectrumResultCount= 1,
+		         unsigned int scansPerResult= 1,
+                                         duration delayBetweenCoAdds = 0,
+                                         duration delayBetweenSpectrumResults = 0
+        );</wsdl:documentation>
+			<wsdl:input message="blk15:InterleavedScan"/>
+			<wsdl:output message="blk15:InterleavedScanResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StepTune">
+			<wsdl:input message="blk15:StepTune"/>
+			<wsdl:output message="blk15:StepTuneResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="MoveTune">
+			<wsdl:input message="blk15:MoveTune"/>
+			<wsdl:output message="blk15:MoveTuneResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SweepTune">
+			<wsdl:input message="blk15:SweepTune"/>
+			<wsdl:output message="blk15:SweepTuneResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="Delay">
+			<wsdl:documentation>This does nothing but wait the giiven amount of time. This can be used as part of a pipelined sequence of operations to adjust the timing of operations (since operations run one after the other within a given command channel).</wsdl:documentation>
+			<wsdl:input message="blk15:Delay"/>
+			<wsdl:output message="blk15:DelayResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="IDeviceManagement">
+		<wsdl:documentation>For Basic device operations, getting version info, faults, power management, etc.
+
+[POSSIBLE FUTURE ADDITION: Software Update? API that takes URL? 
+Or API that queries list of (from net) avail updates, and one that takes versionstring, and forces firware
+down download .deb file and install itself?]</wsdl:documentation>
+		<wsdl:operation name="GetVersionDetails">
+			<wsdl:documentation>struct VersionInfoType {
+   string PLDVersion;
+   string DCUVersion;
+};
+
+VersionInfoType GetVersionDetails();
+
+This returns the software versions, and serial numbers of several major system components. 
+
+[NOTE; VersionInfoType details need to be nailed down]</wsdl:documentation>
+			<wsdl:input message="blk15:GetVersionDetails"/>
+			<wsdl:output message="blk15:GetVersionDetailsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceName">
+			<wsdl:documentation>String GetDeviceName()
+
+N.B. The Device Name is persistent.</wsdl:documentation>
+			<wsdl:input message="blk15:GetDeviceName"/>
+			<wsdl:output message="blk15:GetDeviceNameResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetDeviceName">
+			<wsdl:documentation>void SetDeviceName(String deviceName);
+
+N.B. The Device Name is persistent.</wsdl:documentation>
+			<wsdl:input message="blk15:SetDeviceName"/>
+			<wsdl:output message="blk15:SetDeviceNameResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetPowerStateSupported">
+			<wsdl:documentation>Return a boolean indication of whether or not the given device supports the argument power mode (like hibernate)</wsdl:documentation>
+			<wsdl:input message="blk15:GetPowerStateSupported"/>
+			<wsdl:output message="blk15:GetPowerStateSupportedResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetPowerState">
+			<wsdl:documentation>Return current power state:
+  Off, Hibernate, Sleep, ReadyForCommands,ReadyToFire.
+
+Note - if the device is still starting up and initializing, GetPowerState() will return Off.</wsdl:documentation>
+			<wsdl:input message="blk15:GetPowerState"/>
+			<wsdl:output message="blk15:GetPowerStateResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetPowerState">
+			<wsdl:documentation>Go to power state:
+  Off, Hibernate, Sleep, ReadyForCommands,ReadyToFire
+
+To shutdown, call SetPowerState(off);
+
+To hibernbate, call SetPowerState(hibernate);
+
+To assure the system is ready to fire lasers (heated up) - call SetPowerState(readytofire);
+</wsdl:documentation>
+			<wsdl:input message="blk15:SetPowerState"/>
+			<wsdl:output message="blk15:SetPowerStateResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetAlarms">
+			<wsdl:documentation>Set(String) GetAlarms();
+
+Get the set of all current alarms. 
+
+Some alarms may clear automatically, while others will only clear if you call ClearAlarms.</wsdl:documentation>
+			<wsdl:input message="blk15:GetAlarms"/>
+			<wsdl:output message="blk15:GetAlarmsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ClearAlarms">
+			<wsdl:documentation>void ClearAlarms ();
+void ClearAlarms(Set(String));
+
+See also GetAlarms. Clears either all alarms, or the given set of alarms. 
+
+Note - requesting that an alarm clears doesn't gaurantee that it clears. 
+This is why ClearAlarms returns the new set of current alarms.</wsdl:documentation>
+			<wsdl:input message="blk15:ClearAlarms"/>
+			<wsdl:output message="blk15:ClearAlarmsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceHealth">
+			<wsdl:documentation>***UNSUPPORTED-IN-THIS-VERSION*** ***DEPRECATED****</wsdl:documentation>
+			<wsdl:input message="blk15:GetDeviceHealth"/>
+			<wsdl:output message="blk15:GetDeviceHealthResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetBatteryStatus">
+			<wsdl:documentation>Return the status (including presense) of the devices battery</wsdl:documentation>
+			<wsdl:input message="blk15:GetBatteryStatus"/>
+			<wsdl:output message="blk15:GetBatteryStatusResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetTECPowerConsumption">
+			<wsdl:documentation>This returns the actual (current in the time sense) Current (in the electrons sense) being used for each installed tuner to drive the given tuner to the set-point temperature (as well as for the cold-plate TEC). 
+This current usage could be for either cooling or warning.
+
+Please note that GetFactorysettings().TECCurrentLimits can be combined with these above values to produce a perctage of max current.</wsdl:documentation>
+			<wsdl:input message="blk15:GetTECPowerConsumption"/>
+			<wsdl:output message="blk15:GetTECPowerConsumptionResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentOperationStatus">
+			<wsdl:documentation>Return status information about major, high level activities the BLK15 is performing</wsdl:documentation>
+			<wsdl:input message="blk15:GetCurrentOperationStatus"/>
+			<wsdl:output message="blk15:GetCurrentOperationStatusResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="IManufacturing">
+		<wsdl:documentation>This interface is only indtended for use by special BlockEngineering software, and should not be used by customers, 
+as it can damage the equipment, and cause unsafe operation. 
+
+This interface is intended for use in initial manufactguring, as well as in re-manufacturing/service.
+
+Note: This interface will enjoy some form of protection [tbd, perhaps simple HTTP Basic Auth password, or client side cert].</wsdl:documentation>
+		<wsdl:operation name="SetFactorySettings">
+			<wsdl:documentation>void SetFactorySettings ([optioanl-params]*)
+
+See FactorySettingsType for a list of all the settings, but these include:
+
+    InstalledLaserCount integer(1..4)
+    blk15:LaserDutyCycleLimit
+...
+
+Beacause each paramter is optional, SetFactorySettings can be used to update individiaul paramters.
+Those note specified, won't be updated (so there is no need for GetAll, make a change, and then SetAll).
+
+N.B. These values are all persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blk15:SetFactorySettings"/>
+			<wsdl:output message="blk15:SetFactorySettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserOn">
+			<wsdl:documentation>void SetLaserOn (TunerNumberType n, PulseDuration, PulsePeriod)
+
+This turns the laser on in manufacturing mode, with the given pluse duration and pluse period parameters.
+
+Note - this is an unsafe API, the pulse-duration and period will be used as requested, 
+and not validated against any factory default limits!</wsdl:documentation>
+			<wsdl:input message="blk15:SetLaserOn"/>
+			<wsdl:output message="blk15:SetLaserOnResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserOff">
+			<wsdl:documentation>void SetLaserOff (TunerNumberType n)
+
+If there is a current SetLaserOn operation, it is terminated. 
+
+Otherwise, a fault is reported.</wsdl:documentation>
+			<wsdl:input message="blk15:SetLaserOff"/>
+			<wsdl:output message="blk15:SetLaserOffResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="RunMirror">
+			<wsdl:documentation>void RunMirror (TunerNumberType n, Amplutude, Frequency, Offset)
+
+Begin continuous oscillation (using the argument amplitude, frequency and offset).
+
+If there is already an operation running on this tuner, an fault will result on this operation.
+</wsdl:documentation>
+			<wsdl:input message="blk15:RunMirror"/>
+			<wsdl:output message="blk15:RunMirrorResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StopMirror">
+			<wsdl:documentation>void StopMirror (TunerNumberType n);
+
+If there is an active RunMirror operation on tuner n, this terminates it.
+
+Otherwise, it results in a fault.</wsdl:documentation>
+			<wsdl:input message="blk15:StopMirror"/>
+			<wsdl:output message="blk15:StopMirrorResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="MirrorMove">
+			<wsdl:documentation>14BitDACValue MirrorMove (14BitDACValue)
+
+Like RunLaser (MOVE) - but takes DAC values and returns DACValues.
+This does NOT USE any calibration data, but is used to generate calibration data.
+
+[TODO: This should document the meaning of the input and output values better]</wsdl:documentation>
+			<wsdl:input message="blk15:MirrorMove"/>
+			<wsdl:output message="blk15:MirrorMoveResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ReadMirror">
+			<wsdl:documentation>struct ReadMirrorResultType {
+    VoltageType drive-voltage;   // optional
+    CurrentType drive-current;// optional
+    float sensor1,;// optional
+    float  sensor2;// optional
+    WaveNumberType refDetector;// optional
+}; 
+ReadMirrorResultType ReadMirror (Tuner number);
+
+Note - sensor1, sensodr2 bogus to start with - not wired.</wsdl:documentation>
+			<wsdl:input message="blk15:ReadMirror"/>
+			<wsdl:output message="blk15:ReadMirrorResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserTemperature">
+			<wsdl:documentation>void SetLaserTemperature (TunerNumberType n, TemperatureType t);
+
+This function sets the current laser temperature (for the given tuner index).
+
+Note that this is nearly identical to IConfiguration::SetUserSettings(LaserTemperatureSettings)
+except that it ignores any validation – and just forces the setting.
+
+Warning: this could produce a situation where the laser temperature was set outside the allowed 
+factory settings range, so use this option with care!</wsdl:documentation>
+			<wsdl:input message="blk15:SetLaserTemperature"/>
+			<wsdl:output message="blk15:SetLaserTemperatureResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceDescription">
+			<wsdl:input message="blk15:GetDeviceDescription"/>
+			<wsdl:output message="blk15:GetDeviceDescriptionResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetDeviceDescription">
+			<wsdl:input message="blk15:SetDeviceDescription"/>
+			<wsdl:output message="blk15:SetDeviceDescriptionResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetInstalledTuners">
+			<wsdl:documentation>Set&lt;TunerNumberType&gt; GetInstalledTuners()
+
+This returns the set of all installed tuners. Only the installed tuners can be configured, and only the installed tuners will
+have configuraiton data returned about them. The set of installed tuners cannot change without turning off the BLK15 device, and turning it back on (with changed hardware installation).
+
+Note that this set can be disjoint (e.g tuner 1, and tuner 3, but no tuner 2).</wsdl:documentation>
+			<wsdl:input message="blk15:GetInstalledTuners"/>
+			<wsdl:output message="blk15:GetInstalledTunersResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ILogging">
+		<wsdl:documentation>***UNSUPPORTED-IN-THIS-VERSION***
+Interface to configure the device's logging behavior - how much and how detailed logging to preserve, and to fetch that log data.
+</wsdl:documentation>
+		<wsdl:operation name="GetLogLevel">
+			<wsdl:documentation>LogLevelType GetLogLevel();
+
+LogLevelType based on http://en.wikipedia.org/wiki/Syslog log levels.
+
+Configure BRK-15 logging facility, and access those logs
+
+N.B. This value is persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blk15:GetLogLevel"/>
+			<wsdl:output message="blk15:GetLogLevelResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetLogLevel">
+			<wsdl:documentation>void SetLogLevel (LogLevelType);
+
+LogLevelType based on http://en.wikipedia.org/wiki/Syslog log levels.
+
+N.B. This value is persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blk15:SetLogLevel"/>
+			<wsdl:output message="blk15:SetLogLevelResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetLogHistoryLength">
+			<wsdl:documentation>DurationType GetLogHistoryLength();
+
+Keep the last time interval (ISO6801) of log data.
+
+N.B. This value is persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blk15:GetLogHistoryLength"/>
+			<wsdl:output message="blk15:GetLogHistoryLengthResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetLogHistoryLength">
+			<wsdl:documentation>void SetHistoryLength (DurationType duration);
+
+Keep the last time interval (ISO6801) of log data.
+
+N.B. This value is persistent across reboots.</wsdl:documentation>
+			<wsdl:input message="blk15:SetLogHistoryLength"/>
+			<wsdl:output message="blk15:SetLogHistoryLengthResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ClearLogs">
+			<wsdl:documentation>void ClearLogs();
+
+Clear out all log data from before the argument date/time (IS8601) - or all log data if no argument given.</wsdl:documentation>
+			<wsdl:input message="blk15:ClearLogs"/>
+			<wsdl:output message="blk15:ClearLogsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetLogs">
+			<wsdl:documentation>LogLineType[] GetLogs (TimeStampType from, unsigned int approximatePageSize = infinite);
+
+Return the log lines from the given argument data (defaults to begin of time) - in page units of about (optional argument pagesize log items).
+Because of paging argument, caller can retrieve log data in dribs and drabs.</wsdl:documentation>
+			<wsdl:input message="blk15:GetLogs"/>
+			<wsdl:output message="blk15:GetLogsResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ILowLevelHardwareAccess">
+		<wsdl:documentation>This is a very low level, and dangerous API, just intended for software and hardware developers - in building the system.
+
+This is not intended for use in manufacturing or QA.
+
+Note: This interface will enjoy some form of protection [Perhaps simple HTTP Basic Auth password, or client side cert].</wsdl:documentation>
+		<wsdl:operation name="ACUPeek">
+			<wsdl:documentation>uint16_t ACUPeek(ACURegisterNameType);
+
+Read back the named (enumerated) register.
+
+[NB: for now this list of registers is restricted to the FPGA, but later could be extended]</wsdl:documentation>
+			<wsdl:input message="blk15:ACUPeek"/>
+			<wsdl:output message="blk15:ACUPeekResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="ACUPoke">
+			<wsdl:documentation>void ACUPoke (ACURegisterNameType, uint16_t value);
+
+Set the named (enumerated) hardware register.
+
+[NB: for now this list of registers is restricted to the FPGA, but later could be extended]</wsdl:documentation>
+			<wsdl:input message="blk15:ACUPoke"/>
+			<wsdl:output message="blk15:ACUPokeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="CCUPeek">
+			<wsdl:documentation>uint16_t CCUPeek(CCURegisterNameType);
+
+Read back the named (enumerated) register.
+
+[NB: for now this list of registers is restricted to the FPGA, but later could be extended]</wsdl:documentation>
+			<wsdl:input message="blk15:CCUPeek"/>
+			<wsdl:output message="blk15:CCUPeekResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="CCUPoke">
+			<wsdl:documentation>void CCUPoke (CCURegisterNameType, uint16_t value);
+
+Set the named (enumerated) hardware register.
+
+[NB: for now this list of registers is restricted to the FPGA, but later could be extended]</wsdl:documentation>
+			<wsdl:input message="blk15:CCUPoke"/>
+			<wsdl:output message="blk15:CCUPokeResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="SOAP-IConfiguration" type="blk15:IConfiguration">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="GetFactorySettings">
+			<soap:operation soapAction="GetFactorySettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetWaveNumberToDriveVoltageCalibrationTable">
+			<soap:operation soapAction="GetWaveNumberToDriveVoltageCalibrationTable"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentToWaveNumberCalibrationTable">
+			<soap:operation soapAction="GetCurrentToWaveNumberCalibrationTable"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="NormalizeCalibration">
+			<soap:operation soapAction="NormalizeCalibration"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ResetToFactoryDefaults">
+			<soap:operation soapAction="ResetToFactoryDefaults"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetUserSettings">
+			<soap:operation soapAction="GetUserSettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetUserSettings">
+			<soap:operation soapAction="SetUserSettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-ILaserOperation" type="blk15:ILaserOperation">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="RunLasers">
+			<soap:operation soapAction="RunLasers"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StopLasers">
+			<soap:operation soapAction="StopLasers"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ReadSensors">
+			<soap:operation soapAction="ReadSensors"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetLaserPointerOn">
+			<soap:operation soapAction="GetLaserPointerOn"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserPointerOn">
+			<soap:operation soapAction="SetLaserPointerOn"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetSolenoid">
+			<soap:operation soapAction="GetSolenoid"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetSolenoid">
+			<soap:operation soapAction="SetSolenoid"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="MonitorScan">
+			<soap:operation soapAction="MonitorScan"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StepScan">
+			<soap:operation soapAction="StepScan"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SweepScan">
+			<soap:operation soapAction="SweepScan"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="InterleavedScan">
+			<soap:operation soapAction="InterleavedScan"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StepTune">
+			<soap:operation soapAction="StepTune"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="MoveTune">
+			<soap:operation soapAction="MoveTune"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SweepTune">
+			<soap:operation soapAction="SweepTune"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="Delay">
+			<soap:operation soapAction="Delay"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-IDeviceManagement" type="blk15:IDeviceManagement">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="GetVersionDetails">
+			<soap:operation soapAction="GetVersionDetails"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceName">
+			<soap:operation soapAction="GetDeviceName"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetDeviceName">
+			<soap:operation soapAction="SetDeviceName"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetPowerStateSupported">
+			<soap:operation soapAction="GetPowerStateSupported"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetPowerState">
+			<soap:operation soapAction="GetPowerState"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetPowerState">
+			<soap:operation soapAction="SetPowerState"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetAlarms">
+			<soap:operation soapAction="GetAlarms"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ClearAlarms">
+			<soap:operation soapAction="ClearAlarms"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceHealth">
+			<soap:operation soapAction="GetDeviceHealth"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetBatteryStatus">
+			<soap:operation soapAction="GetBatteryStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetTECPowerConsumption">
+			<soap:operation soapAction="GetTECPowerConsumption"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentOperationStatus">
+			<soap:operation soapAction="GetCurrentOperationStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-IManufacturing" type="blk15:IManufacturing">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="SetFactorySettings">
+			<soap:operation soapAction="SetFactorySettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RunMirror">
+			<soap:operation soapAction="RunMirror"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StopMirror">
+			<soap:operation soapAction="StopMirror"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="MirrorMove">
+			<soap:operation soapAction="MirrorMove"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ReadMirror">
+			<soap:operation soapAction="ReadMirror"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserOn">
+			<soap:operation soapAction="SetLaserOn"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserOff">
+			<soap:operation soapAction="SetLaserOff"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetLaserTemperature">
+			<soap:operation soapAction="SetLaserTemperature"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetDeviceDescription">
+			<soap:operation soapAction="GetDeviceDescription"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetDeviceDescription">
+			<soap:operation soapAction="SetDeviceDescription"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetInstalledTuners">
+			<soap:operation soapAction="urn:#NewOperation"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-ILogging" type="blk15:ILogging">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="GetLogLevel">
+			<soap:operation soapAction="GetLogLevel"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetLogLevel">
+			<soap:operation soapAction="SetLogLevel"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetLogHistoryLength">
+			<soap:operation soapAction="GetLogHistoryLength"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetLogHistoryLength">
+			<soap:operation soapAction="SetLogHistoryLength"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ClearLogs">
+			<soap:operation soapAction="ClearLogs"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetLogs">
+			<soap:operation soapAction="GetLogs"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SOAP-ILowLevelHardwareAccess" type="blk15:ILowLevelHardwareAccess">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ACUPeek">
+			<soap:operation soapAction="ACUPeek"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ACUPoke">
+			<soap:operation soapAction="ACUPoke"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CCUPeek">
+			<soap:operation soapAction="CCUPeek"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CCUPoke">
+			<soap:operation soapAction="CCUPoke"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SOAP-IConfiguration">
+		<wsdl:port name="SOAP-IConfiguration" binding="blk15:SOAP-IConfiguration">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="SOAP-ILaserOperation">
+		<wsdl:port name="SOAP-ILaserOperation" binding="blk15:SOAP-ILaserOperation">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="SOAP-IDeviceManagement">
+		<wsdl:port name="SOAP-IDeviceManagement" binding="blk15:SOAP-IDeviceManagement">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="SOAP-IManufacturing">
+		<wsdl:port name="SOAP-IManufacturing" binding="blk15:SOAP-IManufacturing">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="SOAP-ILogging">
+		<wsdl:port name="SOAP-ILogging" binding="blk15:SOAP-ILogging">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:service name="SOAP-ILowLevelHardwareAccess">
+		<wsdl:port name="SOAP-ILowLevelHardwareAccess" binding="blk15:SOAP-ILowLevelHardwareAccess">
+			<soap:address location="http://TARGET:8080"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
