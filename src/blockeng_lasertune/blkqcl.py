@@ -68,7 +68,6 @@ class BLKQCL_Proxy:
     """
     SensorDataKind - enumeration of different kinds of sensors.
     """
-
     class SensorDataKind:
         Accelerometer = "Accelerometer"
         ActiveLaser = "ActiveLaser"
@@ -93,12 +92,11 @@ class BLKQCL_Proxy:
     """
     AlarmKind
     """
-    kAllAlarms = {}
+    kAllAlarms: dict = {}
 
     """
     AlarmType - enumeration of different alarms.
     """
-
     class AlarmType:
         Critical_CannotTalkToFPGA = "Critical_CannotTalkToFPGA"
         Critical_LaserOverDriving = "Critical_LaserOverDriving"
@@ -133,7 +131,6 @@ class BLKQCL_Proxy:
     """
     ToggleStateType - TBD.
     """
-
     class ToggleStateType:
         Off = "Off"
         On = "On"
@@ -141,7 +138,6 @@ class BLKQCL_Proxy:
     """
     SOAPFault
     """
-
     class SOAPFault(BaseException):
         OriginalException = None
         FaultString = ""
@@ -164,15 +160,15 @@ class BLKQCL_Proxy:
         __useMsg = None
 
         def __init__(self, numberOfPrefetches=2):
-            # print "***HomogeneousPipeline::CTOR"
+            # print("***HomogeneousPipeline::CTOR")
             self.__numberOfPrefetches = numberOfPrefetches
             self.__buffer = []
             self.__sock = None
 
         def doSend(self, proxy, httpHeaders, soapEnvelope):
-            # print "***ENTER doSend"
+            # print ("***ENTER doSend")
             if self.__closeOnNextCall:
-                # print "***got self.__closeOnNextCall"
+                # print ("***got self.__closeOnNextCall")
                 self.__closeOnNextCall = False
                 self.doClose()
             openingConnection = (self.__sock is None)
@@ -200,19 +196,19 @@ class BLKQCL_Proxy:
                 for i in range(1, self.__numberOfPrefetches):
                     self.__sock.sendall(self.__useMsg)
 
-        def doRecieveNext(self):
-            # print "***ENTER doRecieveNext"
+        def doReceiveNext(self):
+            # print ("***ENTER doReceiveNext")
             kwds: dict = {"method": "POST"}
             kwds["buffering"] = True
             response = http.client.HTTPResponse(self.__sock, **kwds)
             try:
                 response.begin()
                 if response.will_close:
-                    # print "***response.will_close =", response.will_close
-                    # print "***AND response.status =", response.status
+                    # print ("***response.will_close =", response.will_close)
+                    # print ("***AND response.status =", response.status)
                     self.__closeOnNextCall = True
             except:
-                # print "***doRecieveNext exception caught - setting __closeOnNextCall"
+                # print ("***doReceiveNext exception caught - setting __closeOnNextCall")
                 self.__closeOnNextCall = True
                 raise
 
@@ -227,7 +223,7 @@ class BLKQCL_Proxy:
 
         def __mkConnIfNeeded(self, proxy):
             if self.__sock is None:
-                # print "***opening new sock"
+                # print ("***opening new sock")
                 timeout = 12
                 source_address = None
                 host = urlparse(proxy.GetEffectiveURL()).hostname
@@ -339,7 +335,9 @@ class BLKQCL_Proxy:
             )
         self.__authorization_credentials = authorization_credentials
         if self.__authorization_credentials is None and authentication_username is not None:
-            self.__authorization_credentials = self.__make_base_auth(authentication_username, authentication_password)
+            self.__authorization_credentials = (
+                self.__make_base_auth(authentication_username, authentication_password)
+            )
 
         if pipelined is True:
             pipelined = 2
@@ -360,7 +358,7 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:GetFactorySettings/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         responseRoot = root.find(".//blk:GetFactorySettingsResponse", self.__namespaces)
 
@@ -396,7 +394,9 @@ class BLKQCL_Proxy:
                 result["DetectorTECPIDParameters"] = self.__extractPID(tmp)
 
         self.__Add2DictIf(
-            result, "DetectorDarkMode", responseRoot.find(".//blk:DetectorDarkMode", self.__namespaces),
+            result,
+            "DetectorDarkMode",
+            responseRoot.find(".//blk:DetectorDarkMode", self.__namespaces),
             (lambda elt: elt.text)
         )
 
@@ -414,16 +414,20 @@ class BLKQCL_Proxy:
         if tmp is not None:
             result["LaserPulseDurationLimit"] = self.__extractRange(tmp)
         self.__Add2DictIf(
-            result, "LaserDutyCycleLimit",
+            result,
+            "LaserDutyCycleLimit",
             responseRoot.find(".//blk:LaserDutyCycleLimit", self.__namespaces),
             (lambda elt: float(elt.text))
         )
         self.__Add2DictIf(
-            result, "LightToPostDark", responseRoot.find(".//blk:LightToPostDark", self.__namespaces),
+            result,
+            "LightToPostDark",
+            responseRoot.find(".//blk:LightToPostDark", self.__namespaces),
             (lambda elt: elt.text)
         )
         self.__Add2DictIf(
-            result, "MirrorMoveSmoothingDuration",
+            result,
+            "MirrorMoveSmoothingDuration",
             responseRoot.find(".//blk:MirrorMoveSmoothingDuration", self.__namespaces),
             (lambda elt: elt.text)
         )
@@ -482,9 +486,12 @@ class BLKQCL_Proxy:
             tmp = tunerNode.find(".//blk:TunerTECControlParameters", self.__namespaces)
             if tmp is not None:
                 tunerN["TunerTECControlParameters"] = self.__extractPID(tmp)
-            self.__Add2DictIf(tunerN, "TECCurrentUpperBound",
-                              tunerNode.find(".//blk:TECCurrentUpperBound", self.__namespaces),
-                              (lambda elt: float(elt.text)))
+            self.__Add2DictIf(
+                tunerN,
+                "TECCurrentUpperBound",
+                tunerNode.find(".//blk:TECCurrentUpperBound", self.__namespaces),
+                (lambda elt: float(elt.text))
+            )
             tmp = tunerNode.find(".//blk:MirrorCurrentToDriveVoltageRelation", self.__namespaces)
             if tmp is not None:
                 xxx = {}
@@ -598,7 +605,7 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:GetUserSettings/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         result = self.__extractUserSettings(root.find(".//blk:GetUserSettingsResponse", self.__namespaces))
         if resultEnvelope is not None:
@@ -632,7 +639,7 @@ class BLKQCL_Proxy:
         innerCmdText = self.__serializeUserSettings(settings)
         response = self.__doSendInnerCommandText_("<blk:SetUserSettings>" + innerCmdText + "</blk:SetUserSettings>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -653,11 +660,13 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:ResetToFactoryDefaults/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
-                resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
                 (lambda elt: float(elt.text))
             )
 
@@ -674,11 +683,15 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:GetAlarms/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
-            self.__Add2DictIf(resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
-                              (lambda elt: float(elt.text)))
+            self.__Add2DictIf(
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
+                (lambda elt: float(elt.text))
+            )
         alarms = []
         for a in root.findall(".//blk:Alarm", self.__namespaces):
             alarms.append(a.text)
@@ -708,7 +721,7 @@ class BLKQCL_Proxy:
 
         response = self.__doSendInnerCommandText_(innerText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -733,7 +746,7 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:GetBatteryStatus/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -785,7 +798,7 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:GetDeviceName/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -808,11 +821,13 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:SetDeviceName>" + deviceName + "</blk:SetDeviceName>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
-                resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
                 (lambda elt: float(elt.text))
             )
 
@@ -827,11 +842,15 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:GetPowerState/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
-            self.__Add2DictIf(resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
-                              (lambda elt: float(elt.text)))
+            self.__Add2DictIf(
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
+                (lambda elt: float(elt.text))
+            )
         return root.find(".//blk:GetPowerStateResponse", self.__namespaces).text
 
     def SetPowerState(self, powerState, envelopeArgs=None, resultEnvelope=None):
@@ -846,11 +865,13 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:SetPowerState>" + powerState + "</blk:SetPowerState>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
-                resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
                 (lambda elt: float(elt.text))
             )
 
@@ -865,25 +886,55 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:GetVersionDetails/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
-            self.__Add2DictIf(resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
-                              (lambda elt: float(elt.text)))
+            self.__Add2DictIf(
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
+                (lambda elt: float(elt.text))
+            )
         result = {}
-        self.__Add2DictIf(result, "ModelName", root.find(".//blk:ModelName", self.__namespaces), (lambda elt: elt.text))
-        self.__Add2DictIf(result, "ModelNumber", root.find(".//blk:ModelNumber", self.__namespaces),
-                          (lambda elt: elt.text))
-        self.__Add2DictIf(result, "FactorySerialNumber", root.find(".//blk:FactorySerialNumber", self.__namespaces),
-                          (lambda elt: elt.text))
-        self.__Add2DictIf(result, "ACU-FPGA-SoftwareVersion",
-                          root.find(".//blk:ACU-FPGA-SoftwareVersion", self.__namespaces), (lambda elt: elt.text))
-        self.__Add2DictIf(result, "CCU-FPGA-SoftwareVersion",
-                          root.find(".//blk:CCU-FPGA-SoftwareVersion", self.__namespaces), (lambda elt: elt.text))
-        self.__Add2DictIf(result, "BLK-Controller-SoftwareVersion",
-                          root.find(".//blk:BLK-Controller-SoftwareVersion", self.__namespaces), (lambda elt: elt.text))
-        self.__Add2DictIf(result, "OS-SoftwareVersion", root.find(".//blk:OS-SoftwareVersion", self.__namespaces),
-                          (lambda elt: elt.text))
+        self.__Add2DictIf(
+            result,
+            "ModelName",
+            root.find(".//blk:ModelName", self.__namespaces),
+            (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result,
+            "ModelNumber",
+            root.find(".//blk:ModelNumber", self.__namespaces),
+            (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result,
+            "FactorySerialNumber",
+            root.find(".//blk:FactorySerialNumber", self.__namespaces),
+            (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result,
+            "ACU-FPGA-SoftwareVersion",
+            root.find(".//blk:ACU-FPGA-SoftwareVersion", self.__namespaces),
+            (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result, "CCU-FPGA-SoftwareVersion",
+            root.find(".//blk:CCU-FPGA-SoftwareVersion", self.__namespaces),
+            (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result, "BLK-Controller-SoftwareVersion",
+            root.find(".//blk:BLK-Controller-SoftwareVersion", self.__namespaces),
+            (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result, "OS-SoftwareVersion",
+            root.find(".//blk:OS-SoftwareVersion", self.__namespaces),
+            (lambda elt: elt.text)
+        )
         return result
 
     def GetLaserPointerOn(self, envelopeArgs=None, resultEnvelope=None) -> bool:
@@ -897,11 +948,13 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:GetLaserPointerOn/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
-                resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
                 (lambda elt: float(elt.text))
             )
         return root.find(".//blk:GetLaserPointerOnResponse", self.__namespaces).text == "true"
@@ -917,13 +970,16 @@ class BLKQCL_Proxy:
         :return:
         """
         response = self.__doSendInnerCommandText_(
-            "<blk:SetLaserPointerOn>" + str(laserPointerOn) + "</blk:SetLaserPointerOn>")
+            "<blk:SetLaserPointerOn>" + str(laserPointerOn) + "</blk:SetLaserPointerOn>"
+        )
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
-                resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
                 (lambda elt: float(elt.text))
             )
 
@@ -947,7 +1003,7 @@ class BLKQCL_Proxy:
         response = self.__doSendInnerCommandText_(
             "<blk:GetToggleSwitchState><blk:Which>" + which + "</blk:Which></blk:GetToggleSwitchState>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -986,7 +1042,7 @@ class BLKQCL_Proxy:
             + "</blk:State></blk:SetToggleSwitchState>"
         )
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -1017,7 +1073,7 @@ class BLKQCL_Proxy:
         if sensorsToRead == self.kAllSensors:
             args = "<blk:All/>"
         else:
-            if type(sensorsToRead) != str:
+            if type(sensorsToRead) is not str:
                 for sensori in sensorsToRead:
                     args += "<blk:Sensor>" + sensori + "</blk:Sensor>"
             else:
@@ -1025,7 +1081,7 @@ class BLKQCL_Proxy:
         msg = "<blk:ReadSensors>" + args + "</blk:ReadSensors>"
         response = self.__doSendInnerCommandText_(msg)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         result = {}
 
@@ -1076,7 +1132,8 @@ class BLKQCL_Proxy:
             (lambda elt: float(elt.text))
         )
         self.__Add2DictIf(
-            result, "ExternalTemperature3", root.find(".//blk:ExternalTemperature3", self.__namespaces),
+            result, "ExternalTemperature3",
+            root.find(".//blk:ExternalTemperature3", self.__namespaces),
             (lambda elt: float(elt.text))
         )
         self.__Add2DictIf(
@@ -1231,7 +1288,7 @@ class BLKQCL_Proxy:
         msg = "<blk:StopLasers>" + "" + "</blk:StopLasers>"
         response = self.__doSendInnerCommandText_(msg)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -1286,7 +1343,7 @@ class BLKQCL_Proxy:
 
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -1350,7 +1407,7 @@ class BLKQCL_Proxy:
         innerCmdText += "/>"
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         measurements = []
         for measurement in root.findall(".//blk:WaveNumber", self.__namespaces):
@@ -1365,7 +1422,13 @@ class BLKQCL_Proxy:
         return measurements
 
     def SweepTune(
-            self, start, end, sweepRate, repeatCount=1, interRepeatDelay="PTOS", envelopeArgs=None,
+            self,
+            start,
+            end,
+            sweepRate,
+            repeatCount=1,
+            interRepeatDelay="PTOS",
+            envelopeArgs=None,
             resultEnvelope=None
     ):
         """
@@ -1377,7 +1440,15 @@ class BLKQCL_Proxy:
                         interRepeatDelay = PT0S
                     ) -> void;
 
-        [python]	void	SweepTune (start, end, sweepRate, repeatCount = 1, interRepeatDelay = "PTOS", envelopeArgs = None, resultEnvelope = None)
+        [python]	void	SweepTune (
+                        start,
+                        end,
+                        sweepRate,
+                        repeatCount = 1,
+                        interRepeatDelay = "PTOS",
+                        envelopeArgs = None,
+                        resultEnvelope = None
+                    )
 
         :param start:
         :param end:
@@ -1408,7 +1479,7 @@ class BLKQCL_Proxy:
         else:
             response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -1429,7 +1500,7 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:ExternallyControlledTune/>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -1451,21 +1522,27 @@ class BLKQCL_Proxy:
         """
         response = self.__doSendInnerCommandText_("<blk:Delay>" + delay + "</blk:Delay>")
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
-                resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//blk:timestamp", self.__namespaces),
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//blk:timestamp", self.__namespaces),
                 (lambda elt: float(elt.text))
             )
 
-    """
-
-    """
-
     def StepScan(
-            self, start, end, delta, dwellTime, duringTransition="LaserOn", scansPerSpectrum=1,
-            delayBetweenCoAdds="PT0S", envelopeArgs=None, resultEnvelope=None
+            self,
+            start,
+            end,
+            delta,
+            dwellTime,
+            duringTransition="LaserOn",
+            scansPerSpectrum=1,
+            delayBetweenCoAdds="PT0S",
+            envelopeArgs=None,
+            resultEnvelope=None
     ):
         """
         [public]    ILaserOperations.StepScan (
@@ -1518,11 +1595,13 @@ class BLKQCL_Proxy:
 
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         measurements = self.__ParseMeasurementsFromResult(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
-                resultEnvelope, self.kMESSAGE_TIMESTAMP, self.__ParseSOAPTimestampFromSOAPResult(resp)
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                self.__ParseSOAPTimestampFromSOAPResult(resp)
             )
         return measurements
 
@@ -1531,8 +1610,15 @@ class BLKQCL_Proxy:
     """
 
     def SweepScan(
-            self, start, end, sweepRate, scanResolution=10.0, scansPerSpectrum=1, delayBetweenCoAdds="PT0S",
-            envelopeArgs=None, resultEnvelope=None
+            self,
+            start,
+            end,
+            sweepRate,
+            scanResolution=10.0,
+            scansPerSpectrum=1,
+            delayBetweenCoAdds="PT0S",
+            envelopeArgs=None,
+            resultEnvelope=None
     ):
         """
         [public]    ILaserOperations.SweepScan (
@@ -1576,15 +1662,27 @@ class BLKQCL_Proxy:
         innerCmdText += "</blk:SweepScan>"
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         measurements = self.__ParseMeasurementsFromResult(resp)
         if resultEnvelope is not None:
-            self.__Add2DictIf(resultEnvelope, self.kMESSAGE_TIMESTAMP, self.__ParseSOAPTimestampFromSOAPResult(resp))
+            self.__Add2DictIf(
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                self.__ParseSOAPTimestampFromSOAPResult(resp)
+            )
         return measurements
 
     kScanResolution_NaturalBinning = "NaturalBinning"
 
     """
+        
+    """
+
+    def InterleavedScan(
+            self, singleSpectrumMeasurementTime, scanResolution=10.0, scansPerSpectrum=1,
+            delayBetweenCoAdds="PT0S", envelopeArgs=None, resultEnvelope=None
+    ):
+        """
         [public]    ILaserOperations.InterleavedScan (
                             duration singleSpectrumMeasurementTime,
                             WaveNumberDistanceType scanResolution = 10.0,
@@ -1592,13 +1690,23 @@ class BLKQCL_Proxy:
                             duration delayBetweenCoAdds = PT0S
                     ) -> SpectrumType;
 
-        [python]	dictionary	InterleavedScan (singleSpectrumMeasurementTime, scanResolution = 10.0, scansPerSpectrum = 1, delayBetweenCoAdds = "PT0S", envelopeArgs = None, resultEnvelope = None)
-    """
+        [python]	dictionary	InterleavedScan (
+                            singleSpectrumMeasurementTime,
+                            scanResolution = 10.0,
+                            scansPerSpectrum = 1,
+                            delayBetweenCoAdds = "PT0S",
+                            envelopeArgs = None,
+                            resultEnvelope = None
+                    )
 
-    def InterleavedScan(
-            self, singleSpectrumMeasurementTime, scanResolution=10.0, scansPerSpectrum=1,
-            delayBetweenCoAdds="PT0S", envelopeArgs=None, resultEnvelope=None
-    ):
+        :param singleSpectrumMeasurementTime:
+        :param scanResolution:
+        :param scansPerSpectrum:
+        :param delayBetweenCoAdds:
+        :param envelopeArgs:
+        :param resultEnvelope:
+        :return:
+        """
         innerCmdText = ""
         innerCmdText += "<blk:InterleavedScan>"
         if self.__ns == self.kNS_2014_04:
@@ -1614,13 +1722,17 @@ class BLKQCL_Proxy:
         innerCmdText += "</blk:InterleavedScan>"
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         measurements = self.__ParseMeasurementsFromResult(resp)
         if resultEnvelope is not None:
-            self.__Add2DictIf(resultEnvelope, self.kMESSAGE_TIMESTAMP, self.__ParseSOAPTimestampFromSOAPResult(resp))
+            self.__Add2DictIf(
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                self.__ParseSOAPTimestampFromSOAPResult(resp)
+            )
         return measurements
 
-    ###REMAINGIN TO ORGNAIZE - BUT ALL PRIVATE OR MANUFACTURING OR LOW LEVEL DEBUGGING
+    # REMAINING TO ORGANIZE - BUT ALL PRIVATE OR MANUFACTURING OR LOW LEVEL DEBUGGING
 
     def SetFactorySettings(self, factorySettings, envelopeArgs=None, resultEnvelope=None):
         """
@@ -1658,7 +1770,7 @@ class BLKQCL_Proxy:
         innerCmdText += self.__writeValueIfNeeded("LaserDutyCycleLimit", factorySettings)
         innerCmdText += self.__writeValueIfNeeded("MirrorMoveSmoothingDuration", factorySettings)
 
-        if ("Tuners" in factorySettings):
+        if "Tuners" in factorySettings:
             innerCmdText += "<blk:Tuners>"
             for ti in factorySettings["Tuners"]:
                 innerCmdText += "<blk:Tuner Tuner=\"" + ti + "\">"
@@ -1704,7 +1816,7 @@ class BLKQCL_Proxy:
             "<blk:SetFactorySettings>" + innerCmdText + "</blk:SetFactorySettings>"
         )
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -1715,19 +1827,19 @@ class BLKQCL_Proxy:
             )
 
     """
-    PROTETED-INTERFACE
+    PROTECTED-INTERFACE
     """
 
     def ACUPeek(self, registerName, repeatCount=1, envelopeArgs=None, resultEnvelope=None):
         innerCmdText = ""
         innerCmdText += "<blk:ACUPeek>"
         innerCmdText += "<blk:RegisterName>" + registerName + "</blk:RegisterName>"
-        if (self.__ns != self.kNS_2014_04 and self.__ns != self.kNS_2014_07):
+        if self.__ns != self.kNS_2014_04 and self.__ns != self.kNS_2014_07:
             innerCmdText += "<blk:RepeatCount>" + str(repeatCount) + "</blk:RepeatCount>"
         innerCmdText += "</blk:ACUPeek>"
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
             self.__Add2DictIf(
@@ -1759,11 +1871,15 @@ class BLKQCL_Proxy:
         )
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
-            self.__Add2DictIf(resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//timestamp", self.__namespaces),
-                              (lambda elt: float(elt.text)))
+            self.__Add2DictIf(
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//timestamp", self.__namespaces),
+                (lambda elt: float(elt.text))
+            )
 
     """
     PROTECTED-INTERFACE
@@ -1778,12 +1894,16 @@ class BLKQCL_Proxy:
         innerCmdText += "</blk:CCUPeek>"
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
-            self.__Add2DictIf(resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//timestamp", self.__namespaces),
-                              (lambda elt: float(elt.text)))
-        if (repeatCount == 1):
+            self.__Add2DictIf(
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//timestamp", self.__namespaces),
+                (lambda elt: float(elt.text))
+            )
+        if repeatCount == 1:
             return int(root.find(".//blk:Value", self.__namespaces).text)
         else:
             values = []
@@ -1797,15 +1917,24 @@ class BLKQCL_Proxy:
 
     def CCUPoke(self, registerName, value, envelopeArgs=None, resultEnvelope=None):
         innerCmdText = ""
-        innerCmdText += "<blk:CCUPoke><blk:RegisterName>" + registerName + "</blk:RegisterName><blk:Value>" + str(
-            value) + "</blk:Value></blk:CCUPoke>"
+        innerCmdText += (
+                "<blk:CCUPoke><blk:RegisterName>"
+                + registerName
+                + "</blk:RegisterName><blk:Value>"
+                + str(value)
+                + "</blk:Value></blk:CCUPoke>"
+        )
         response = self.__doSendInnerCommandText_(innerCmdText)
         resp = response.read()
-        # print "raw response=", resp, "\n"
+        # print ("raw response=", resp, "\n")
         root = ET.fromstring(resp)
         if resultEnvelope is not None:
-            self.__Add2DictIf(resultEnvelope, self.kMESSAGE_TIMESTAMP, root.find(".//timestamp", self.__namespaces),
-                              (lambda elt: float(elt.text)))
+            self.__Add2DictIf(
+                resultEnvelope,
+                self.kMESSAGE_TIMESTAMP,
+                root.find(".//timestamp", self.__namespaces),
+                (lambda elt: float(elt.text))
+            )
 
     # Helper to formulate a SOAP request
     def __WrapRequestInEnvelope(self, r):
@@ -1843,7 +1972,7 @@ class BLKQCL_Proxy:
                 if self.__authorization_credentials is not None:
                     headers["Authorization"] = self.__authorization_credentials
                 self.__pipeline.doSend(self, headers, msgBody)
-                response = self.__pipeline.doRecieveNext()
+                response = self.__pipeline.doReceiveNext()
                 # if (500 <= response.status) and (response.status <= 599):
                 if 500 <= response.status <= 599:
                     self.__ThrowCorrectHTTPException(response)
@@ -1860,10 +1989,9 @@ class BLKQCL_Proxy:
                 else:
                     conn = self.__savedConn
                 # conn.debuglevel = 1
-                # 				print(innerCmdText,'\n\n\n', msgBody)
+                # print(innerCmdText,'\n\n\n', msgBody)
                 conn.request("POST", "/", msgBody, headers)
                 response = conn.getresponse()
-                # if 500 <= response.status and response.status <= 599:
                 if 500 <= response.status <= 599:
                     self.__ThrowCorrectHTTPException(response)
                 return response
@@ -1928,19 +2056,27 @@ class BLKQCL_Proxy:
                 else:
                     t = {}
                     self.__Add2DictIf(
-                        t, "1", tmpFixedData.find(".//blk:Tuner[@Tuner='1']", self.__namespaces),
+                        t,
+                        "1",
+                        tmpFixedData.find(".//blk:Tuner[@Tuner='1']", self.__namespaces),
                         (lambda elt: float(elt.text))
                     )
                     self.__Add2DictIf(
-                        t, "2", tmpFixedData.find(".//blk:Tuner[@Tuner='2']", self.__namespaces),
+                        t,
+                        "2",
+                        tmpFixedData.find(".//blk:Tuner[@Tuner='2']", self.__namespaces),
                         (lambda elt: float(elt.text))
                     )
                     self.__Add2DictIf(
-                        t, "3", tmpFixedData.find(".//blk:Tuner[@Tuner='3']", self.__namespaces),
+                        t,
+                        "3",
+                        tmpFixedData.find(".//blk:Tuner[@Tuner='3']", self.__namespaces),
                         (lambda elt: float(elt.text))
                     )
                     self.__Add2DictIf(
-                        t, "4", tmpFixedData.find(".//blk:Tuner[@Tuner='4']", self.__namespaces),
+                        t,
+                        "4",
+                        tmpFixedData.find(".//blk:Tuner[@Tuner='4']", self.__namespaces),
                         (lambda elt: float(elt.text))
                     )
                     lpv["Fixed"] = t
@@ -1958,30 +2094,57 @@ class BLKQCL_Proxy:
                     )
             result["LaserPumpingVoltage"] = lpv
 
-        self.__Add2DictIf(result, "SystemTemperature",
-                          userSettingsNode.find(".//blk:SystemTemperature", self.__namespaces),
-                          (lambda elt: float(elt.text)))
-        self.__Add2DictIf(result, "PulsePeriod", userSettingsNode.find(".//blk:PulsePeriod", self.__namespaces),
-                          (lambda elt: elt.text))
-        self.__Add2DictIf(result, "PulseDuration", userSettingsNode.find(".//blk:PulseDuration", self.__namespaces),
-                          (lambda elt: elt.text))
-        self.__Add2DictIf(result, "LaserControlMode",
-                          userSettingsNode.find(".//blk:LaserControlMode", self.__namespaces), (lambda elt: elt.text))
-        self.__Add2DictIf(result, "ContinueFiringAfterInterleavedScans",
-                          userSettingsNode.find(".//blk:ContinueFiringAfterInterleavedScans", self.__namespaces),
-                          (lambda elt: elt.text == "true"))
-        self.__Add2DictIf(result, "AutomaticallyAdjustInterleavedScanLag",
-                          userSettingsNode.find(".//blk:AutomaticallyAdjustInterleavedScanLag", self.__namespaces),
-                          (lambda elt: elt.text == "true"))
-        self.__Add2DictIf(result, "TRIG_OUTDelayTime",
-                          userSettingsNode.find(".//blk:TRIG_OUTDelayTime", self.__namespaces), (lambda elt: elt.text))
+        self.__Add2DictIf(
+            result,
+            "SystemTemperature",
+            userSettingsNode.find(".//blk:SystemTemperature", self.__namespaces),
+            (lambda elt: float(elt.text))
+        )
+        self.__Add2DictIf(
+            result,
+            "PulsePeriod",
+            userSettingsNode.find(".//blk:PulsePeriod", self.__namespaces),
+            (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result,
+            "PulseDuration",
+            userSettingsNode.find(".//blk:PulseDuration", self.__namespaces),
+            (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result,
+            "LaserControlMode",
+            userSettingsNode.find(".//blk:LaserControlMode", self.__namespaces), (lambda elt: elt.text)
+        )
+        self.__Add2DictIf(
+            result,
+            "ContinueFiringAfterInterleavedScans",
+            userSettingsNode.find(".//blk:ContinueFiringAfterInterleavedScans", self.__namespaces),
+            (lambda elt: elt.text == "true")
+        )
+        self.__Add2DictIf(
+            result,
+            "AutomaticallyAdjustInterleavedScanLag",
+            userSettingsNode.find(".//blk:AutomaticallyAdjustInterleavedScanLag", self.__namespaces),
+            (lambda elt: elt.text == "true")
+        )
+        self.__Add2DictIf(
+            result,
+            "TRIG_OUTDelayTime",
+            userSettingsNode.find(".//blk:TRIG_OUTDelayTime", self.__namespaces),
+            (lambda elt: elt.text)
+        )
 
-        idleAutoPowerStateChanges = userSettingsNode.find(".//blk:IdleAutoPowerStateChanges", self.__namespaces)
+        idleAutoPowerStateChanges = (
+            userSettingsNode.find(".//blk:IdleAutoPowerStateChanges", self.__namespaces)
+        )
         if idleAutoPowerStateChanges is not None:
             iapsc = {}
             self.__Add2DictIf(
                 iapsc,
-                "Off", idleAutoPowerStateChanges.find(".//blk:Off", self.__namespaces),
+                "Off",
+                idleAutoPowerStateChanges.find(".//blk:Off", self.__namespaces),
                 (lambda elt: elt.text)
             )
             self.__Add2DictIf(
@@ -2005,32 +2168,39 @@ class BLKQCL_Proxy:
             result["IdleAutoPowerStateChanges"] = iapsc
 
         self.__Add2DictIf(
-            result, "MonitorDACEnable",
+            result,
+            "MonitorDACEnable",
             userSettingsNode.find(".//blk:MonitorDACEnable", self.__namespaces),
             (lambda elt: elt.text == "true")
         )
         self.__Add2DictIf(
-            result, "GainDAC",
+            result,
+            "GainDAC",
             userSettingsNode.find(".//blk:GainDAC", self.__namespaces),
             (lambda elt: int(elt.text))
         )
         self.__Add2DictIf(
-            result, "SampleDelay",
+            result,
+            "SampleDelay",
             userSettingsNode.find(".//blk:SampleDelay", self.__namespaces),
             (lambda elt: elt.text)
         )
         self.__Add2DictIf(
-            result, "SampleWidth",
+            result,
+            "SampleWidth",
             userSettingsNode.find(".//blk:SampleWidth", self.__namespaces),
             (lambda elt: elt.text)
         )
         self.__Add2DictIf(
-            result, "DetectorTemperatureSetPoint",
+            result,
+            "DetectorTemperatureSetPoint",
             userSettingsNode.find(".//blk:CCUTemperatureSetPoint", self.__namespaces),
             (lambda elt: float(elt.text))
         )
         self.__Add2DictIf(
-            result, "OnDiskspaceLow", userSettingsNode.find(".//blk:OnDiskspaceLow", self.__namespaces),
+            result,
+            "OnDiskspaceLow",
+            userSettingsNode.find(".//blk:OnDiskspaceLow", self.__namespaces),
             (lambda elt: elt.text)
         )
         self.__Add2DictIf(
@@ -2044,7 +2214,7 @@ class BLKQCL_Proxy:
     # [private]
     def __serializeUserSettings(self, settings):
         innerCmdText = ""
-        if ("LaserTemperature" in settings):
+        if "LaserTemperature" in settings:
             innerCmdText += "<blk:LaserTemperature>"
             lt = settings["LaserTemperature"]
             if 1 in lt:
@@ -2081,8 +2251,18 @@ class BLKQCL_Proxy:
                         if lt[str(i)] == "Variable":
                             txt = "<blk:Variable/>"
                         elif "Fixed" in lt[str(i)]:
-                            txt = "<blk:Fixed Voltage=\"" + str(lt[str(i)]["Fixed"]) + "\"/>"
-                        innerCmdText += "<blk:Tuner Tuner=\"" + str(i) + "\">" + txt + "</blk:Tuner>"
+                            txt = (
+                                    "<blk:Fixed Voltage=\""
+                                    + str(lt[str(i)]["Fixed"])
+                                    + "\"/>"
+                            )
+                        innerCmdText += (
+                                "<blk:Tuner Tuner=\""
+                                + str(i)
+                                + "\">"
+                                + txt
+                                + "</blk:Tuner>"
+                        )
             innerCmdText += "</blk:LaserPumpingVoltage>"
         innerCmdText += self.__writeValueIfNeeded("PulseDuration", settings)
         innerCmdText += self.__writeValueIfNeeded("PulsePeriod", settings)
@@ -2141,7 +2321,15 @@ class BLKQCL_Proxy:
         if eltName in settings:
             lb = settings[eltName]["lowerBound"]
             ub = settings[eltName]["upperBound"]
-            accumCmdText += "<blk:" + eltName + " upperBound=\"" + str(ub) + "\" lowerBound=\"" + str(lb) + "\"/>"
+            accumCmdText += (
+                    "<blk:"
+                    + eltName
+                    + " upperBound=\""
+                    + str(ub)
+                    + "\" lowerBound=\""
+                    + str(lb)
+                    + "\"/>"
+            )
         return accumCmdText
 
     # [private]
@@ -2185,12 +2373,12 @@ class BLKQCL_Proxy:
             kTS_TAG_ = "<timestamp>"
             kTS_TAG_LEN = len(kTS_TAG_)
             nextI = soapResponseString.find(kTS_TAG_, i)
-            if (nextI < 0):
+            if nextI < 0:
                 if doWithXPath:
                     if xPathTS is not None:
                         print("OOPS")
                 return None
-            # print "thiselt = ", soapResponseString[nextI:nextI + 70]
+            # print ("thiselt = ", soapResponseString[nextI:nextI + 70])
             i = nextI + kTS_TAG_LEN
             endOfElt = soapResponseString.find("<", i)
             if endOfElt < 0:
@@ -2199,7 +2387,7 @@ class BLKQCL_Proxy:
                         print("OOPS")
                 return None
             if doWithXPath:
-                if (xPathTS != float(soapResponseString[i:endOfElt])):
+                if xPathTS != float(soapResponseString[i:endOfElt]):
                     print("OOPS")
             return float(soapResponseString[i:endOfElt])
 
@@ -2224,7 +2412,7 @@ class BLKQCL_Proxy:
                 nextI = soapResponseString.find(kMEASUREMENT_TAG, i)
                 if nextI < 0:
                     break
-                # print "thiselt = ", soapResponseString[nextI:nextI + 70]
+                # print ("thiselt = ", soapResponseString[nextI:nextI + 70])
                 i = nextI + kMEASUREMENT_TAG_LEN
 
                 intensityStartQuote = soapResponseString.find(kINTENSITY_ATTR, i)
@@ -2233,18 +2421,18 @@ class BLKQCL_Proxy:
                 intensityStartQuote = soapResponseString.find('\"', intensityStartQuote) + 1
                 intensityEndQuote = soapResponseString.find('\"', intensityStartQuote)
                 intensityStr = soapResponseString[intensityStartQuote:intensityEndQuote]
-                # print"intensityStr=", intensityStr
+                # print ("intensityStr=", intensityStr)
 
                 waveNumberStartQuote = soapResponseString.find(kWAVENUMBER_ATTR, i)
-                if (waveNumberStartQuote < 0):
+                if waveNumberStartQuote < 0:
                     break
                 waveNumberStartQuote = soapResponseString.find('\"', waveNumberStartQuote) + 1
                 waveNumberEndQuote = soapResponseString.find('\"', waveNumberStartQuote)
                 waveNumberStr = soapResponseString[waveNumberStartQuote:waveNumberEndQuote]
-                # print"waveNumberStr=", waveNumberStr
+                # print("waveNumberStr=", waveNumberStr)
                 stringManipMeasurements[float(waveNumberStr)] = float(intensityStr)
         if doWithStringManip and doWithXPath:
-            if (set(stringManipMeasurements.items()) != set(xpMeasurements.items())):
+            if set(stringManipMeasurements.items()) != set(xpMeasurements.items()):
                 print("****OOPS")
         if doWithStringManip:
             return stringManipMeasurements

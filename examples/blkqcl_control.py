@@ -1,8 +1,10 @@
+import time
+
 from blockeng_lasertune.blkqcl import BLKQCL_Proxy
 
 
 if __name__ == "__main__":
-    lasertune = BLKQCL_Proxy(url="http://169.254.83.220:8080")
+    lasertune = BLKQCL_Proxy(url="http://192.168.0.2:8080")
 
     version_details: dict = lasertune.GetVersionDetails()
 
@@ -23,6 +25,8 @@ if __name__ == "__main__":
     sensors: dict = lasertune.ReadSensors(sensorsToRead={})
 
     # Laser remains on after MoveTune()
-    move_tune: float = lasertune.MoveTune(waveNumber=1599.2)  # returns wavenumber of laser after move tune
+    move_tune: float = lasertune.MoveTune(waveNumber=1699.2)  # returns wavenumber of laser after move tune
+
+    lasertune.StopLasers()
 
     print("Pause...")
